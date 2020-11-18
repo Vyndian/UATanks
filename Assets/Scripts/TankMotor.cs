@@ -19,6 +19,9 @@ public class TankMotor : MonoBehaviour {
     // References the transform on the projectile spawn point beloning to the cannon's barrel.
     [SerializeField] private Transform projSpawnPnt_tf;
 
+    // The amount of damage dealt by shells fired from this tank.
+    [SerializeField] private float shellDamage = 10f;
+
     // Private fields --v
 
     // References the CharacterMovement component.
@@ -118,15 +121,24 @@ public class TankMotor : MonoBehaviour {
             data.time_ShellReady = Time.time + data.shootDelay;
 
             // Instantiate a shell.
-            GameObject currentShell =  GameObject.Instantiate
+            GameObject shell =  GameObject.Instantiate
                 (
                     prefab_ShellProjectile,
                     projSpawnPnt_tf.position,
                     projSpawnPnt_tf.rotation
                 );
 
+            // Get the shell's behavior script.
+            ShellBehavior shellBehavior = shell.GetComponent<ShellBehavior>();
+
+            // Set the shell's damage.
+            shellBehavior.damage = shellDamage;
+
+            // Set the shell's firedBy to this tank's TankData.
+            shellBehavior.firedBy = data;
+
             // Add force to the shell, firing it away from the cannon at speed.
-            currentShell.GetComponent<Rigidbody>().AddForce(transform.forward * speed);
+            shell.GetComponent<Rigidbody>().AddForce(transform.forward * speed);
         }
     }
     #endregion Dev-Defined Methods

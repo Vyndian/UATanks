@@ -13,7 +13,7 @@ public class Skeleton : MonoBehaviour {
 
     #region Unity Methods
     // Called before the first frame.
-    public void Start()
+    void Start()
     {
         // Set variables --v
 
@@ -21,7 +21,7 @@ public class Skeleton : MonoBehaviour {
     }
 
     // Called every frame.
-    public void Update()
+    void Update()
     {
 
     }

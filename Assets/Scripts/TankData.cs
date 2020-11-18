@@ -5,6 +5,14 @@ public class TankData : MonoBehaviour {
     #region Fields
     // Public fields --v
 
+    [Header("Score")]
+    // This player's current score.
+    public int currentScore = 0;
+
+    // The amount of point awarded to the player that kills this tank.
+    public int pointsForKilling = 100;
+
+    [Header("Time/Speeds")]
     // The speed at which this tank will move.
     public float moveSpeed = 3f;
 
@@ -32,6 +40,13 @@ public class TankData : MonoBehaviour {
     // The speed at which shell projectiles are fired from the tank cannons.
     public float shellSpeed = 1500f;
 
+    [Header("Health")]
+    // The maxHealth of the tank.
+    public float maxHealth = 100f;
+
+    // The currentHealth of the tank.
+    public float currentHealth;
+
     // Serialized private fields --v
 
     // Private fields --v
@@ -44,7 +59,8 @@ public class TankData : MonoBehaviour {
     {
         // Set variables --v
 
-
+        // Set currentHealth to maxHealth.
+        currentHealth = maxHealth;
     }
 
     // Called every frame.
@@ -55,6 +71,42 @@ public class TankData : MonoBehaviour {
     #endregion Unity Methods
 
     #region Dev-Defined Methods
+    // Change the tank's health by the amount given. -change for damage, +change for healing/repair.
+    public void ChangeHealth(float change, TankData dealtBy)
+    {
+        // Apply the change.
+        currentHealth += change;
 
+        // If tank is dead,
+        if (currentHealth <= 0)
+        {
+            // then kill the tank.
+            Death(dealtBy);
+        }
+        // Else, if the new health is too high,
+        else if (currentHealth > maxHealth)
+        {
+            // then set it back down to maximum.
+            currentHealth = maxHealth;
+        }
+    }
+
+    // Kill the tank.
+    public void Death(TankData killedBy)
+    {
+        // Add to the score of the player that killed this tank.
+        killedBy.ChangeScore(pointsForKilling);
+
+        // Destroy this tank.
+        Destroy(gameObject);
+    }
+
+    public void ChangeScore(int change)
+    {
+        // Apply the change.
+        currentScore += change;
+    }
     #endregion Dev-Defined Methods
 }
+
+
