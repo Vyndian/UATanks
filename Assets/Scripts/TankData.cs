@@ -49,7 +49,17 @@ public class TankData : MonoBehaviour {
 
     // Serialized private fields --v
 
+    [Header("Object References")]
+    // The CameraPosition object, childed to the cannon, where this player's camera should go.
+    [SerializeField] private GameObject cameraPosition;
+
     // Private fields --v
+
+    // Reference for the GM.
+    private GameManager gm;
+
+    // Whether or not this is a player tank or AI. Initialized as false as default.
+    private bool isPlayer = false;
 
     #endregion Fields
 
@@ -61,12 +71,79 @@ public class TankData : MonoBehaviour {
 
         // Set currentHealth to maxHealth.
         currentHealth = maxHealth;
+
+        // Set the GameManager reference.
+        gm = GameManager.instance;
+
+        // If this is a player tank and not an AI,
+        if (GetComponent<InputController>())
+        {
+            // then set isPlayer to true.
+            isPlayer = true;
+
+            // Put this TankData on the GM's list of all players.
+            gm.allPlayers.Add(this);
+
+            // Put this TankData on the GM's list of alive players.
+            gm.alivePlayers.Add(this);
+
+            // Set camera.
+            AssignCamera();
+        }
+        // Else, this is an AI. Leave isPlayer as false.
+        else
+        {
+            // Put this TankData on the GM's list of all AIs.
+            gm.allAIs.Add(this);
+
+            // Put this TankData on the GM's list of alive AIs.
+            gm.aliveAIs.Add(this);
+        }
     }
 
     // Called every frame.
     public void Update()
     {
 
+    }
+
+    // Called when this script is being destroyed.
+    void OnDestroy()
+    {
+        // If this is a player,
+        if (isPlayer)
+        {
+            // Iterate through the GM's list of alive players.
+            foreach (TankData data in gm.alivePlayers)
+            {
+                // If the current iteration matches this player's TankData,
+                if (data == this)
+                {
+                    // then remove it from the list.
+                    gm.alivePlayers.Remove(data);
+
+                    // We are done, so return. Otherwise, will get an unumeration error.
+                    return;
+                }
+            }
+        }
+        // Else, this is an AI.
+        else
+        {
+            // Iterate through the GM's list of alive AIs.
+            foreach (TankData data in gm.aliveAIs)
+            {
+                // If the current iteration matches this AI's TankData,
+                if (data == this)
+                {
+                    // then remove it from the list.
+                    gm.aliveAIs.Remove(data);
+
+                    // We are done, so return. Otherwise, will get an unumeration error.
+                    return;
+                }
+            }
+        }
     }
     #endregion Unity Methods
 
@@ -101,10 +178,18 @@ public class TankData : MonoBehaviour {
         Destroy(gameObject);
     }
 
+    // Change the score for this player by the amount provided.
     public void ChangeScore(int change)
     {
         // Apply the change.
         currentScore += change;
+    }
+
+    // Assign a camera to this player.
+    private void AssignCamera()
+    {
+        // then call AssignCamera on the GM.
+        GameManager.instance.AssignCamera(cameraPosition.transform);
     }
     #endregion Dev-Defined Methods
 }

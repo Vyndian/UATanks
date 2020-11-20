@@ -44,7 +44,10 @@ public class ShellBehavior : MonoBehaviour {
             Destroy(gameObject);
         }
     }
+    #endregion Unity Methods
 
+
+    #region Callback Methods
     // Called when the rigidbody on this shell comes in contact with another rigidbody or collider.
     void OnCollisionEnter(Collision collision)
     {
@@ -54,19 +57,15 @@ public class ShellBehavior : MonoBehaviour {
         // If the result is NOT null,
         if (data != null)
         {
-            Debug.Log("A tank was hit by a shell.");
             // then deal damage to the tank that was hit.
             data.ChangeHealth(-damage, firedBy);
-        }
-        else
-        {
-            Debug.Log("A shell was fired but did not hit a tank.");
         }
 
         // Destroy the shell.
         Destroy(gameObject);
     }
-    #endregion Unity Methods
+    #endregion Callback Methods
+
 
     #region Dev-Defined Methods
 

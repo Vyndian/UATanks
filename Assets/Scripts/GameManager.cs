@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
 
@@ -7,6 +8,18 @@ public class GameManager : MonoBehaviour {
 
     // The single instance of GameManager allowed.
     public static GameManager instance;
+
+    // A list of ALL Players' TankData components (dead or alive).
+    public List<TankData> allPlayers;
+
+    // A list of the currently ALIVE players' TankData Components.
+    public List<TankData> alivePlayers;
+
+    // A list of ALL AIs' TankData components (dead or alive).
+    public List<TankData> allAIs;
+
+    // A list of the currently ALIVE AIs' TankData Components.
+    public List<TankData> aliveAIs;
 
     // Serialized private fields --v
 
@@ -50,6 +63,16 @@ public class GameManager : MonoBehaviour {
     #endregion Unity Methods
 
     #region Dev-Defined Methods
+    // Assign a camera to the tank that called this method.
+    // Currently only works with main camera.
+    public void AssignCamera(Transform newParent)
+    {
+        Transform mainCamTf = Camera.main.transform;
+        mainCamTf.parent = newParent;
+        mainCamTf.position = newParent.position;
+        mainCamTf.rotation = newParent.rotation;
 
+
+    }
     #endregion Dev-Defined Methods
 }

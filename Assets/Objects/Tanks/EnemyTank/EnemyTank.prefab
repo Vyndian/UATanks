@@ -482,8 +482,9 @@ MonoBehaviour:
   shootDelay: 5
   time_ShellReady: 0
   shellSpeed: 1500
-  maxHealth: 30
+  maxHealth: 10
   currentHealth: 0
+  cameraPosition: {fileID: 0}
 --- !u!114 &114978029086437608
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -496,7 +497,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cannon_tf: {fileID: 4270175958736466}
-  prefab_ShellProjectile: {fileID: 1865002092473402, guid: 2766a929bd4ca8f419312d6317ee4c10,
+  prefab_ShellProjectile: {fileID: 1557841587920104, guid: 1920cd07ce4cd954a952b34e329185df,
     type: 2}
   projSpawnPnt_tf: {fileID: 4778405914828004}
   shellDamage: 10
