@@ -13,8 +13,11 @@ public class TankData : MonoBehaviour {
     public int pointsForKilling = 100;
 
     [Header("Time/Speeds")]
-    // The speed at which this tank will move.
-    public float moveSpeed = 3f;
+    // The speed at which this tank will move forward.
+    [Tooltip("Must be positive")] public float moveSpeed_Forward = 3f;
+
+    // The speed at which this tank will move in reverse.
+    [Tooltip("Must be negative")] public float moveSpeed_Reverse = -1.0f;
 
     // The speed at which this tank will rotate.
     public float turnSpeed = 180f;

@@ -63,13 +63,13 @@ public class InputController : MonoBehaviour {
                 if (Input.GetKey(KeyCode.W))
                 {
                     // Move the tank forward.
-                    motor.Move(data.moveSpeed);
+                    motor.Move(data.moveSpeed_Forward);
                 }
                 // Else, if the player is pressing S,
                 else if (Input.GetKey(KeyCode.S))
                 {
                     // Move the tank backward.
-                    motor.Move(-data.moveSpeed);
+                    motor.Move(data.moveSpeed_Reverse);
                 }
 
                 // If player is pressing A,
@@ -99,13 +99,13 @@ public class InputController : MonoBehaviour {
                 if (Input.GetKey(KeyCode.UpArrow))
                 {
                     // Move the tank forward.
-                    motor.Move(data.moveSpeed);
+                    motor.Move(data.moveSpeed_Forward);
                 }
                 // Else, if the player is pressing downArrow,
                 else if (Input.GetKey(KeyCode.DownArrow))
                 {
                     // Move the tank backward.
-                    motor.Move(-data.moveSpeed);
+                    motor.Move(data.moveSpeed_Reverse);
                 }
 
                 // If player is pressing leftArrow,
