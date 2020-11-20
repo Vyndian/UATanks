@@ -1,29 +1,15 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
-
 ### What is this repository for? ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* This repo houses the code and necessary Unity files to run the UATanks game in the editor. UATanks is a 3D Tank game.
+* 1.2
 
 ### How do I get set up? ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
+* Have a folder that contains all folders and files bepicted in this repo. Add that folder as a project in the Unity Hub. Open the project via the Hub.
 
 ### Who do I talk to? ###
 
-* Repo owner or admin
-* Other community or team contact
+* Repo owner & admin: Joshua Thornton, Game Developer
+* Course Professor: Hue Henry, UAT
