@@ -152,7 +152,7 @@ GameObject:
   - component: {fileID: 114214979723759970}
   - component: {fileID: 114209757940971576}
   m_Layer: 0
-  m_Name: EnemyTank
+  m_Name: Standard_EnemyTank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -473,7 +473,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentScore: 0
   pointsForKilling: 100
-  moveSpeed: 3
+  moveSpeed_Forward: 3
+  moveSpeed_Reverse: -1
   turnSpeed: 180
   cannon_turnSpeed: 180
   cannon_elevateSpeed: 180

@@ -34,9 +34,10 @@ public class TankMotor : MonoBehaviour {
     private TankData data;
     #endregion Fields
 
+
     #region Unity Methods
-    // Called before the first frame.
-    public void Start()
+    // Awake is performed before Start().
+    void Awake()
     {
         // Set variables --v
 
@@ -60,6 +61,12 @@ public class TankMotor : MonoBehaviour {
             // Get the TankData on this tank.
             data = GetComponent<TankData>();
         }
+    }
+
+    // Called before the first frame.
+    public void Start()
+    {
+        
     }
     #endregion Unity Methods
 
@@ -139,6 +146,33 @@ public class TankMotor : MonoBehaviour {
 
             // Add force to the shell, firing it away from the cannon at speed.
             shell.GetComponent<Rigidbody>().AddForce(transform.forward * speed);
+        }
+    }
+
+    // Used by AI to rotate towards a specific direction.
+    // Returns true if the tank can rotate in that direction, and false if it can't (already facing that direction).
+    public bool RotateTowards(Vector3 target, float speed)
+    {
+        // The vector towards the target. Difference between target vector and tank's current vector.
+        Vector3 vectorToTarget = target - tf.position;
+
+        // Determine the Quaternion that would look down the vectorToTarget.
+        Quaternion targetRotation = Quaternion.LookRotation(vectorToTarget);
+
+        // If the targetRotation is NOT exactly equal to our current rotation,
+        if (targetRotation != tf.rotation)
+        {
+            // then now we actually rotate a little each frame.
+            tf.rotation = Quaternion.RotateTowards(tf.rotation, targetRotation, (data.turnSpeed * Time.deltaTime));
+
+            // Return true, we rotated a bit this frame.
+            return true;
+        }
+        // Else, we are already looking the correct direction.
+        else
+        {
+            // Return false.
+            return false;
         }
     }
     #endregion Dev-Defined Methods
