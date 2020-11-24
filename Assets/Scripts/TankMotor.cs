@@ -151,10 +151,10 @@ public class TankMotor : MonoBehaviour {
 
     // Used by AI to rotate towards a specific direction.
     // Returns true if the tank can rotate in that direction, and false if it can't (already facing that direction).
-    public bool RotateTowards(Vector3 target, float speed)
+    public bool RotateTowards(Vector3 targetPosition, float speed)
     {
         // The vector towards the target. Difference between target vector and tank's current vector.
-        Vector3 vectorToTarget = target - tf.position;
+        Vector3 vectorToTarget = targetPosition - tf.position;
 
         // Determine the Quaternion that would look down the vectorToTarget.
         Quaternion targetRotation = Quaternion.LookRotation(vectorToTarget);

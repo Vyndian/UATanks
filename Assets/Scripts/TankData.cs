@@ -20,7 +20,7 @@ public class TankData : MonoBehaviour {
     [Tooltip("Must be negative")] public float moveSpeed_Reverse = -1.0f;
 
     // The speed at which this tank will rotate.
-    public float turnSpeed = 180f;
+    public float turnSpeed = 150f;
 
     // The speed at which the tank's cannon rotates side-to-side.
     public float cannon_turnSpeed = 180f;
@@ -67,6 +67,12 @@ public class TankData : MonoBehaviour {
     #endregion Fields
 
     #region Unity Methods
+    // Performed before Start.
+    public void Awake()
+    {
+        
+    }
+
     // Called before the first frame.
     public void Start()
     {

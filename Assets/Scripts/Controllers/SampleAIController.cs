@@ -41,7 +41,7 @@ public class SampleAIController : MonoBehaviour {
     private int currentWaypoint = 0;
 
     // The square of the closeEnough variable, computed once at awake to save computational effort.
-    private float closeEnough_Squared;
+    private float waypoint_CloseEnough_Squared;
 
     // Whether or not the tank is heading forward through the waypoint array or not (backwards).
     // Used only for the PingPong behavior.
@@ -60,7 +60,7 @@ public class SampleAIController : MonoBehaviour {
         // Set variables --v
 
         // Square the closeEnough variable once and save it to save the computer effort later.
-        closeEnough_Squared = closeEnough * closeEnough;
+        waypoint_CloseEnough_Squared = closeEnough * closeEnough;
 
         // If this var is null,
         if (tf == null)
@@ -130,7 +130,7 @@ public class SampleAIController : MonoBehaviour {
         }
 
         // If we are close to the waypoint,
-        if (Vector3.SqrMagnitude(waypoints[currentWaypoint].position - tf.position) < (closeEnough_Squared))
+        if (Vector3.SqrMagnitude(waypoints[currentWaypoint].position - tf.position) <= (waypoint_CloseEnough_Squared))
         {
             // then advance to the next waypoint according to the chosen behavior.
             NextWaypoint_Dispatch();
