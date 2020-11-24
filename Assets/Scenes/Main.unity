@@ -2208,10 +2208,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 1262897164088008, guid: fced5738215b8be438d0509488909411, type: 2}
-      propertyPath: m_Name
-      value: WaypointAI_EnemyTank
-      objectReference: {fileID: 0}
     - target: {fileID: 114997578174800816, guid: fced5738215b8be438d0509488909411,
         type: 2}
       propertyPath: waypoints.Array.data[0]
@@ -2227,13 +2223,7 @@ Prefab:
       propertyPath: waypoints.Array.data[2]
       value: 
       objectReference: {fileID: 80168507}
-    - target: {fileID: 143466754767848238, guid: fced5738215b8be438d0509488909411,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 0}
+    m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: fced5738215b8be438d0509488909411, type: 2}
   m_IsPrefabParent: 0
 --- !u!4 &1928497822 stripped
