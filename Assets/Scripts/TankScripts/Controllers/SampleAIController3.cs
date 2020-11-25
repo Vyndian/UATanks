@@ -22,6 +22,10 @@ public class SampleAIController3 : MonoBehaviour {
     // The Transform of the target this tank will Chase.
     [SerializeField] private Transform tracker_Target;
 
+    // The multiplier for the original raycast's length when
+    // firing raycasts at 45 deg angles to determine which direction to turn. 1 for the same, 2 for double, etc.
+    [SerializeField] private float raycastLength_Modifier = 1.2f;
+
     [Header("Component References")]
     // The transform on this gameObject.
     [SerializeField] private Transform tf;
@@ -239,7 +243,7 @@ public class SampleAIController3 : MonoBehaviour {
     private int DetermineTurnDirection(Transform obstacle, float speed)
     {
         // The distance these rays should cast to. Double the speed of the original ray that found an obstacle.
-        float raySpeed = 2 * speed;
+        float raySpeed = speed * raycastLength_Modifier;
 
         // Holds the hit info for the raycasts.
         RaycastHit hit;
