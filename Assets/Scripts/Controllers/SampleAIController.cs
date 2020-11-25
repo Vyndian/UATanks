@@ -50,12 +50,11 @@ public class SampleAIController : MonoBehaviour {
     // Whether or not the tank has reached the end of the waypoint system.
     // Used only for the Stop behavior.
     private bool isStopped = false;
-
     #endregion Fields
 
     #region Unity Methods
     // Awake is performed before Start().
-    void Awake()
+    public void Awake()
     {
         // Set variables --v
 
@@ -85,7 +84,7 @@ public class SampleAIController : MonoBehaviour {
     }
 
     // Called before the first frame.
-    void Start()
+    public void Start()
     {
         // If waypoints has been left empty,
         if (waypoints.Length == 0)
@@ -108,7 +107,7 @@ public class SampleAIController : MonoBehaviour {
     }
 
     // Called every frame.
-    void Update()
+    public void Update()
     {
         // If stopped (meaning Tank is set to Stop behavior and has reached the end of the waypoint system),
         if (isStopped)
@@ -117,7 +116,7 @@ public class SampleAIController : MonoBehaviour {
             // This prevents tank from turning constantly while standing on the final waypoint.
         }
         // Else, if we can rotate towards the current waypoint (done during the if call),
-        else if (motor.RotateTowards(waypoints[currentWaypoint].position, data.turnSpeed))
+        else if (motor.RotateTowards(waypoints[currentWaypoint].position))
         {
             // then the tank was able to rotate towards the waypoint this frame.
             // Do nothing.

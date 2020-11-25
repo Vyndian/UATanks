@@ -69,6 +69,7 @@ GameObject:
   - component: {fileID: 143020499059977256}
   - component: {fileID: 114460372126154680}
   - component: {fileID: 114754970967145914}
+  - component: {fileID: 114652438279012664}
   - component: {fileID: 114475180083626266}
   m_Layer: 0
   m_Name: PlayerTank
@@ -488,10 +489,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cannon_tf: {fileID: 4637877146440182}
-  prefab_ShellProjectile: {fileID: 1557841587920104, guid: 1920cd07ce4cd954a952b34e329185df,
-    type: 2}
-  projSpawnPnt_tf: {fileID: 4251502029735230}
-  shellDamage: 10
 --- !u!114 &114475180083626266
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -506,6 +503,22 @@ MonoBehaviour:
   input: 0
   motor: {fileID: 114460372126154680}
   data: {fileID: 114754970967145914}
+  cannon: {fileID: 0}
+--- !u!114 &114652438279012664
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1240554008317346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c42355175453573488dd11e3cc7bff62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: 0}
+  prefab_ShellProjectile: {fileID: 1557841587920104, guid: 1920cd07ce4cd954a952b34e329185df,
+    type: 2}
+  projSpawnPnt_tf: {fileID: 0}
 --- !u!114 &114754970967145914
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -519,7 +532,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentScore: 0
   pointsForKilling: 100
-  moveSpeed: 3
+  moveSpeed_Forward: 3
+  moveSpeed_Reverse: -1
   turnSpeed: 180
   cannon_turnSpeed: 180
   cannon_elevateSpeed: 180
@@ -530,6 +544,7 @@ MonoBehaviour:
   shellSpeed: 700
   maxHealth: 100
   currentHealth: 0
+  shellDamage: 10
   cameraPosition: {fileID: 1199916466699970}
 --- !u!143 &143020499059977256
 CharacterController:

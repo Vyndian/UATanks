@@ -107,7 +107,7 @@ public class SampleAIController2 : MonoBehaviour {
         if (attackMode == AttackMode.Chase)
         {
             // then rotate towards the target.
-            motor.RotateTowards(tracker_Target.position, data.turnSpeed);
+            motor.RotateTowards(tracker_Target.position);
 
             // If not already close enough to the target,
             if (Vector3.SqrMagnitude(tracker_Target.position - tf.position) > tracker_CloseEnough_Squared)
@@ -133,7 +133,7 @@ public class SampleAIController2 : MonoBehaviour {
             Vector3 fleePosition = tf.position + vectorAwayFromTarget;
 
             // Now rotate towards that position.
-            motor.RotateTowards(fleePosition, data.turnSpeed);
+            motor.RotateTowards(fleePosition);
 
             // Move forward.
             motor.Move(data.moveSpeed_Forward);

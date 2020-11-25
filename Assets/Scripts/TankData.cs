@@ -43,12 +43,15 @@ public class TankData : MonoBehaviour {
     // The speed at which shell projectiles are fired from the tank cannons.
     public float shellSpeed = 1500f;
 
-    [Header("Health")]
+    [Header("Health & Damage")]
     // The maxHealth of the tank.
     public float maxHealth = 100f;
 
     // The currentHealth of the tank.
     public float currentHealth;
+
+    // The amount of damage dealt by shells fired from this tank.
+    [Tooltip("The amount of damage dealt by shells fired from this tank.")] public float shellDamage = 10f;
 
     // Serialized private fields --v
 
@@ -117,7 +120,7 @@ public class TankData : MonoBehaviour {
     }
 
     // Called when this script is being destroyed.
-    void OnDestroy()
+    public void OnDestroy()
     {
         // If this is a player,
         if (isPlayer)

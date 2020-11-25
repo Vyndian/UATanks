@@ -3,6 +3,9 @@
 // Require a TankData script on the same object as this script. One will be placed automatically with a TankMotor.
 [RequireComponent(typeof(TankData))]
 
+// Require a TankCannon script on the same object as this script. One will be placed automatically with a TankMotor.
+[RequireComponent(typeof(TankCannon))]
+
 public class TankMotor : MonoBehaviour {
 
     #region Fields
@@ -12,15 +15,6 @@ public class TankMotor : MonoBehaviour {
 
     // References the transform on the cannon of this tank.
     [SerializeField] private Transform cannon_tf;
-
-    // References the prefab used for instantiating shells when the tank shoots.
-    [SerializeField] private GameObject prefab_ShellProjectile;
-
-    // References the transform on the projectile spawn point beloning to the cannon's barrel.
-    [SerializeField] private Transform projSpawnPnt_tf;
-
-    // The amount of damage dealt by shells fired from this tank.
-    [SerializeField] private float shellDamage = 10f;
 
     // Private fields --v
 
@@ -37,7 +31,7 @@ public class TankMotor : MonoBehaviour {
 
     #region Unity Methods
     // Awake is performed before Start().
-    void Awake()
+    public void Awake()
     {
         // Set variables --v
 
@@ -117,41 +111,9 @@ public class TankMotor : MonoBehaviour {
         cannon_tf.Rotate(rotateVector, Space.Self);
     }
 
-    // Fires a shell from the cannon in the direction the cannon is facing.
-    public void Shoot(float speed)
-    {
-        // Check if the tank can shoot again yet.
-        // If we have reached the time necessary to shoot again,
-        if (Time.time >= data.time_ShellReady)
-        {
-            // then we can fire. First, determine the next time the shell can fire again.
-            data.time_ShellReady = Time.time + data.shootDelay;
-
-            // Instantiate a shell.
-            GameObject shell =  GameObject.Instantiate
-                (
-                    prefab_ShellProjectile,
-                    projSpawnPnt_tf.position,
-                    projSpawnPnt_tf.rotation
-                );
-
-            // Get the shell's behavior script.
-            ShellBehavior shellBehavior = shell.GetComponent<ShellBehavior>();
-
-            // Set the shell's damage.
-            shellBehavior.damage = shellDamage;
-
-            // Set the shell's firedBy to this tank's TankData.
-            shellBehavior.firedBy = data;
-
-            // Add force to the shell, firing it away from the cannon at speed.
-            shell.GetComponent<Rigidbody>().AddForce(transform.forward * speed);
-        }
-    }
-
     // Used by AI to rotate towards a specific direction.
     // Returns true if the tank can rotate in that direction, and false if it can't (already facing that direction).
-    public bool RotateTowards(Vector3 targetPosition, float speed)
+    public bool RotateTowards(Vector3 targetPosition)
     {
         // The vector towards the target. Difference between target vector and tank's current vector.
         Vector3 vectorToTarget = targetPosition - tf.position;

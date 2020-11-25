@@ -19,13 +19,16 @@ public class InputController : MonoBehaviour {
     // The TankData on this gameObject.
     [SerializeField] private TankData data;
 
+    // The TankCannon on this gameObject.
+    [SerializeField] private TankCannon cannon;
+
     // Private fields --v
 
     #endregion Fields
 
     #region Unity Methods
-    // Called before the first frame.
-    public void Start()
+    // Performed before Start.
+    public void Awake()
     {
         // Set variables --v
 
@@ -42,6 +45,19 @@ public class InputController : MonoBehaviour {
             // Get the TankData on this gameObject.
             data = gameObject.GetComponent<TankData>();
         }
+
+        // If this var is null,
+        if (cannon == null)
+        {
+            // Get the TankCannon on this gameObject.
+            cannon = gameObject.GetComponent<TankCannon>();
+        }
+    }
+
+    // Called before the first frame.
+    public void Start()
+    {
+
     }
 
     // Called every frame.
@@ -56,7 +72,7 @@ public class InputController : MonoBehaviour {
                 if (Input.GetKey(KeyCode.Space))
                 {
                     // Attempt to fire the cannon.
-                    motor.Shoot(data.shellSpeed);
+                    cannon.Fire(data.shellSpeed);
                 }
 
                 // If player is pressing W,
@@ -92,7 +108,7 @@ public class InputController : MonoBehaviour {
                 if (Input.GetKey(KeyCode.RightControl))
                 {
                     // Attempt to fire the cannon.
-                    motor.Shoot(data.shellSpeed);
+                    cannon.Fire(data.shellSpeed);
                 }
 
                 // If player is pressing upArrow,
