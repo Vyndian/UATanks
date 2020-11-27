@@ -22,10 +22,10 @@ public class SampleAIController2 : MonoBehaviour {
     [SerializeField] private Transform tracker_Target;
 
     // The distance at which the TrackerAI is close enough to the player.
-    [SerializeField] private float tracker_CloseEnough = 7.0f;
+    [SerializeField] private float chasing_CloseEnough = 7.0f;
 
     // The distance the Tracker should flee towards when running away from the target (player).
-    [SerializeField] private float tracker_FleeDistance = 1.0f;
+    [SerializeField] private float fleeDistance = 1.0f;
 
     [Header("Component References")]
     // The transform on this gameObject.
@@ -47,8 +47,8 @@ public class SampleAIController2 : MonoBehaviour {
     // The enum blueprint for which AttackMode the tank is in.
     private enum AttackMode {  Chase, Flee };
 
-    // The square of tracker_CloseEnough. Determined by maths at Awake.
-    private float tracker_CloseEnough_Squared;
+    // The square of chasing_CloseEnough. Determined by maths at Awake.
+    private float chasing_CloseEnough_Squared;
     #endregion Fields
 
 
@@ -80,7 +80,7 @@ public class SampleAIController2 : MonoBehaviour {
         }
 
         // Square the tracker's closeEnough var and set it.
-        tracker_CloseEnough_Squared = tracker_CloseEnough * tracker_CloseEnough;
+        chasing_CloseEnough_Squared = chasing_CloseEnough * chasing_CloseEnough;
     }
 
     // Called before the first frame.
@@ -110,7 +110,7 @@ public class SampleAIController2 : MonoBehaviour {
             motor.RotateTowards(tracker_Target.position);
 
             // If not already close enough to the target,
-            if (Vector3.SqrMagnitude(tracker_Target.position - tf.position) > tracker_CloseEnough_Squared)
+            if (Vector3.SqrMagnitude(tracker_Target.position - tf.position) > chasing_CloseEnough_Squared)
             {
                 // then move forward.
                 motor.Move(data.moveSpeed_Forward);
@@ -127,7 +127,7 @@ public class SampleAIController2 : MonoBehaviour {
             vectorAwayFromTarget.Normalize();
 
             // Multiply the normalized vector * the designer-chosen fleeDistance.
-            vectorAwayFromTarget *= tracker_FleeDistance;
+            vectorAwayFromTarget *= fleeDistance;
 
             // Add that value to the tank's current position to determine the place we are traveling to.
             Vector3 fleePosition = tf.position + vectorAwayFromTarget;

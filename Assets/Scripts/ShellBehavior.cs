@@ -58,7 +58,7 @@ public class ShellBehavior : MonoBehaviour {
         if (data != null)
         {
             // then deal damage to the tank that was hit.
-            data.ChangeHealth(-damage, firedBy);
+            data.TakeDamage(-damage, firedBy);
         }
 
         // Destroy the shell.

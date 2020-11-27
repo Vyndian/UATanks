@@ -50,6 +50,10 @@ public class TankData : MonoBehaviour {
     // The currentHealth of the tank.
     public float currentHealth;
 
+    // The percentage of this tank's health that, if it falls below the threshold, the tank will flee.
+    [Range(1, 100)]
+    public int fleeThreshold_Percentage = 50;
+
     // The amount of damage dealt by shells fired from this tank.
     [Tooltip("The amount of damage dealt by shells fired from this tank.")] public float shellDamage = 10f;
 
@@ -160,11 +164,11 @@ public class TankData : MonoBehaviour {
     #endregion Unity Methods
 
     #region Dev-Defined Methods
-    // Change the tank's health by the amount given. -change for damage, +change for healing/repair.
-    public void ChangeHealth(float change, TankData dealtBy)
+    // The tank takes damage equal to the prescribed amount.
+    public void TakeDamage(float damage, TankData dealtBy)
     {
-        // Apply the change.
-        currentHealth += change;
+        // Apply the damage.
+        currentHealth -= damage;
 
         // If tank is dead,
         if (currentHealth <= 0)
@@ -172,12 +176,16 @@ public class TankData : MonoBehaviour {
             // then kill the tank.
             Death(dealtBy);
         }
-        // Else, if the new health is too high,
-        else if (currentHealth > maxHealth)
-        {
-            // then set it back down to maximum.
-            currentHealth = maxHealth;
-        }
+    }
+
+    // The tank repairs/heals by the prescribed amount.
+    public void Repair(float healing)
+    {
+        // Apply the healing/repair.
+        currentHealth += healing;
+
+        // Ensure the health is not higher than the maximum.
+        currentHealth = Mathf.Min(currentHealth, maxHealth);
     }
 
     // Kill the tank.
