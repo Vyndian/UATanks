@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class AI_Controller : MonoBehaviour {
 
@@ -16,13 +17,23 @@ public class AI_Controller : MonoBehaviour {
     public AIState aiState = AIState.Chase;
 
     // The radius at which the tank can sense other tanks.
-    [SerializeField] private float aiSenseRadius;
+    [SerializeField] private readonly float aiSenseRadius = 30.0f;
 
     // The square of aiSenseRadius, mathed out in Awake.
     private float aiSenseRadius_Squared;
 
     // The time that the tank entered this state.
     private float timeStateEntered;
+
+    // Reference to the GameManager.
+    private GameManager gm;
+
+    // Reference to the GameManager's list of player tanks.
+    private List<TankData> playerList;
+
+    // A STATIC int representing the index of the next player to be targeted.
+    // The index is for the GM's list of alive players.
+    static private int playerToTarget = 0;
 
 
     [Header("Repair/Healing variables")]
@@ -35,7 +46,7 @@ public class AI_Controller : MonoBehaviour {
 
     // The amount of HP healed per second when in rest state for this tank.
     [SerializeField, Tooltip("Either the amount healed per second or per tick, depending on the Repair Type.")]
-    private float restingHealRate;
+    private float restingHealRate = 0.8f;
 
     // The time that the last tick occurred. Initialized at 0 so it won't be null for the first check.
     private float timeLastTick = 0.0f;
@@ -45,11 +56,17 @@ public class AI_Controller : MonoBehaviour {
     // The Transform of the target this tank will Chase.
     [SerializeField] private Transform target;
 
+    // The distance at which the tank is close enough to the player (when chasing) to stop moving closer.
+    [SerializeField] private readonly float chasing_CloseEnough = 7.0f;
+
+    // The square of chasing_CloseEnough. Determined by maths at Awake.
+    private float chasing_CloseEnough_Squared;
+
 
     [Header("Obstacle Avoidance variables")]
     // The multiplier for the original raycast's length when
     // firing raycasts at 45 deg angles to determine which direction to turn. 1 for the same, 2 for double, etc.
-    [SerializeField] private float raycastLength_Modifier = 1.2f;
+    [SerializeField] private float raycastLength_Modifier = 1.8f;
 
     // The amounce of time this tank will stay in avoidance stage 2.
     [SerializeField] private float avoidanceTime = 2.0f;
@@ -78,7 +95,7 @@ public class AI_Controller : MonoBehaviour {
 
     // A decimal representing the threshold of percentage of health that the tank will flee.
     // Determined at Start based on value held in data.
-    private float fleeThreshold_Decimal;
+    [SerializeField] private float fleeThreshold_Decimal;
 
     [Header("Component References")]
     // The transform on this gameObject.
@@ -131,19 +148,54 @@ public class AI_Controller : MonoBehaviour {
 
         // Get the square of aiSenseRadius and save it.
         aiSenseRadius_Squared = aiSenseRadius * aiSenseRadius;
+
+        // Get the square of chasing_CloseEnough and save it.
+        chasing_CloseEnough_Squared = chasing_CloseEnough * chasing_CloseEnough;
     }
 
     // Called before the first frame.
     public void Start()
     {
-        // Take the fleethresholdPercentage from data and save it as a decimal here.
+        // Take the fleethresholdPercentage from data and save it as a float temporarily.
+        float temp = data.fleeThreshold_Percentage;
+
+        // Convert that new float to a decimal.
         // Must be in Start so that data has had time to initialize its values.
-        fleeThreshold_Decimal = data.fleeThreshold_Percentage / 100;
+        fleeThreshold_Decimal = temp / 100;
+
+
     }
 
     // Called every frame.
     public void Update()
     {
+        // This cannot be done at Start or earlier because the players and GM need time to set up.
+        // If gm is not set,
+        if (gm == null)
+        {
+            // then set it up.
+            // Get a reference to the GM.
+            gm = GameManager.instance;
+        }
+
+        // If playerList is not set,
+        if (playerList == null)
+        {
+            // then set it up.
+            // Get a reference to the GM's list of players and save it.
+            playerList = gm.player_tanks;
+        }
+
+        // If target is null,
+        if (target == null)
+        {
+            // Get the transform component from the next player tank in the GM's list.
+            target = playerList[playerToTarget].gameObject.transform;
+
+            // Advance to the next player so that all the tanks don't focus on one player.
+            NextPlayerToTarget();
+        }
+
         // Act depending on the current asState.
         switch (aiState)
         {
@@ -170,7 +222,7 @@ public class AI_Controller : MonoBehaviour {
                     ChangeState(AIState.CheckForFlee);
                 }
                 // Else, tank is above the flee threshold. If target is within firing range,
-                else if (Vector3.SqrMagnitude(target.position - tf.position) <= aiSenseRadius)
+                else if (Vector3.SqrMagnitude(target.position - tf.position) <= aiSenseRadius_Squared)
                 {
                     // then change the state to ChaseAndFire.
                     ChangeState(AIState.ChaseAndFire);
@@ -203,7 +255,7 @@ public class AI_Controller : MonoBehaviour {
                     ChangeState(AIState.CheckForFlee);
                 }
                 // Else, tank is above the flee threshold. If target is NOT within firing range,
-                else if (Vector3.SqrMagnitude(target.position - tf.position) > aiSenseRadius)
+                else if (Vector3.SqrMagnitude(target.position - tf.position) > aiSenseRadius_Squared)
                 {
                     // then change the state to Chase.
                     ChangeState(AIState.Chase);
@@ -218,7 +270,7 @@ public class AI_Controller : MonoBehaviour {
 
                 // Test for transition conditions.
                 // If target is within range of the tank's senses,
-                if (Vector3.SqrMagnitude(target.position - tf.position) <= aiSenseRadius)
+                if (Vector3.SqrMagnitude(target.position - tf.position) <= aiSenseRadius_Squared)
                 {
                     // then change the state to Flee.
                     ChangeState(AIState.Flee);
@@ -270,7 +322,7 @@ public class AI_Controller : MonoBehaviour {
                     ChangeState(AIState.Chase);
                 }
                 // Else, if the target gets within sense range while resting,
-                else if (Vector3.SqrMagnitude(target.position - tf.position) <= aiSenseRadius)
+                else if (Vector3.SqrMagnitude(target.position - tf.position) <= aiSenseRadius_Squared)
                 {
                     // then set state back to Flee.
                     ChangeState(AIState.Flee);
@@ -281,6 +333,26 @@ public class AI_Controller : MonoBehaviour {
     #endregion Unity Methods
 
     #region Dev-Defined Methods
+    // Advances the int representing the index of the next alive player to target, according to the GM's list.
+    private void NextPlayerToTarget()
+    {
+        // Get a temp reference to the list for readability and processing speeds.
+        List<TankData> playerList = GameManager.instance.player_tanks;
+
+        // If we're not already at the end of the player list,
+        if (playerToTarget < playerList.Count - 1)
+        {
+            // then add one to the index var.
+            playerToTarget++;
+        }
+        // Else, we are at the end of the player list.
+        else
+        {
+            // Set the var to 0.
+            playerToTarget = 0;
+        }
+    }
+
     // Change the state that the tank AI is in.
     public void ChangeState(AIState newState)
     {
@@ -301,8 +373,12 @@ public class AI_Controller : MonoBehaviour {
         // Pass in "data.moveSpeed_Forward" because that is how far the tank can move in 1 second.
         if (CanMoveForward(data.moveSpeed_Forward))
         {
-            // Move forward.
-            motor.Move(data.moveSpeed_Forward);
+            // If the tank is not already too close to the target,
+            if (Vector3.SqrMagnitude(target.position - tf.position) > chasing_CloseEnough_Squared)
+            {
+                // Move forward.
+                motor.Move(data.moveSpeed_Forward);
+            }
         }
         // Else, there is an obstacle in the way within 1 second's travel.
         else
@@ -432,18 +508,8 @@ public class AI_Controller : MonoBehaviour {
         // Send out a raycast at that angle. If it hits something,
         if (Physics.Raycast(tf.position, rayAngle, out hit, raySpeed))
         {
-            // and if that something is not itself or the original obstacle,
-            if (hit.transform != tf && hit.transform != obstacle)
-            {
-                // Then turning left will be faster.
-                // Return -1.
-                return -1;
-            }
-            // Else, the raycast hit either this tank or the original obbstacle.
-            else
-            {
-                // Do nothing.
-            }
+            // then turning left might not be faster.
+            // Do nothing.
         }
         // Else, the raycast hit nothing.
         else
@@ -460,18 +526,9 @@ public class AI_Controller : MonoBehaviour {
         // Send out a raycast at that angle. If it hits something,
         if (Physics.Raycast(tf.position, rayAngle, out hit, raySpeed))
         {
-            // and if that something is not itself or the original obstacle,
-            if (hit.transform != tf && hit.transform != obstacle)
-            {
-                // Then turning right will be faster.
-                // Return 1.
-                return 1;
-            }
-            // Else, the raycast hit either this tank or the original obbstacle.
-            else
-            {
-                // Do nothing.
-            }
+            print("raycast right HIT something");
+            // then there is an obstacle to the right, as well as the left.
+            // Do nothing.
         }
         // Else, the raycast hit nothing.
         else

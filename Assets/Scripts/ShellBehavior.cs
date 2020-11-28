@@ -49,7 +49,7 @@ public class ShellBehavior : MonoBehaviour {
 
     #region Callback Methods
     // Called when the rigidbody on this shell comes in contact with another rigidbody or collider.
-    void OnCollisionEnter(Collision collision)
+    public void OnCollisionEnter(Collision collision)
     {
         // Attempt to get the TankData from the hit object (will be null if not a tank).
         TankData data = collision.gameObject.GetComponent<TankData>();
@@ -58,7 +58,7 @@ public class ShellBehavior : MonoBehaviour {
         if (data != null)
         {
             // then deal damage to the tank that was hit.
-            data.TakeDamage(-damage, firedBy);
+            data.TakeDamage(damage, firedBy);
         }
 
         // Destroy the shell.

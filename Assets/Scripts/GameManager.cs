@@ -9,17 +9,11 @@ public class GameManager : MonoBehaviour {
     // The single instance of GameManager allowed.
     public static GameManager instance;
 
-    // A list of ALL Players' TankData components (dead or alive).
-    public List<TankData> allPlayers;
-
     // A list of the currently ALIVE players' TankData Components.
-    public List<TankData> alivePlayers;
-
-    // A list of ALL AIs' TankData components (dead or alive).
-    public List<TankData> allAIs;
+    public List<TankData> player_tanks;
 
     // A list of the currently ALIVE AIs' TankData Components.
-    public List<TankData> aliveAIs;
+    public List<TankData> ai_tanks;
 
     // Serialized private fields --v
 

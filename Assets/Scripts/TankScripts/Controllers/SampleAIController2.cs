@@ -97,7 +97,7 @@ public class SampleAIController2 : MonoBehaviour {
         if (tracker_Target == null)
         {
             // Get the transform component from the next player tank in the GM's list.
-            tracker_Target = GameManager.instance.alivePlayers[playerToTarget].gameObject.transform;
+            tracker_Target = GameManager.instance.player_tanks[playerToTarget].gameObject.transform;
 
             // Advance to the next player so that all the tanks don't focus on one player.
             NextPlayerToTarget();
@@ -147,7 +147,7 @@ public class SampleAIController2 : MonoBehaviour {
     private void NextPlayerToTarget()
     {
         // Get a temp reference to the list for readability and processing speeds.
-        List<TankData> playerList = GameManager.instance.alivePlayers;
+        List<TankData> playerList = GameManager.instance.player_tanks;
 
         // If we're not already at the end of the player list,
         if (playerToTarget < playerList.Count - 1)

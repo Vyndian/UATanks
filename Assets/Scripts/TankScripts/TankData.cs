@@ -35,7 +35,7 @@ public class TankData : MonoBehaviour {
     public float maximumCannonElevateDown = 12f;
 
     // The aount of delay necessary between firing each shell.
-    public float shootDelay = 5f;
+    public float shootDelay = 2.3f;
 
     // The time that the tank may fire its next shell. At time of shooting, calculated as Time.time + shootDelay.
     public float time_ShellReady = 0f;
@@ -97,11 +97,8 @@ public class TankData : MonoBehaviour {
             // then set isPlayer to true.
             isPlayer = true;
 
-            // Put this TankData on the GM's list of all players.
-            gm.allPlayers.Add(this);
-
-            // Put this TankData on the GM's list of alive players.
-            gm.alivePlayers.Add(this);
+            // Put this TankData on the GM's list of players.
+            gm.player_tanks.Add(this);
 
             // Set camera.
             AssignCamera();
@@ -109,11 +106,8 @@ public class TankData : MonoBehaviour {
         // Else, this is an AI. Leave isPlayer as false.
         else
         {
-            // Put this TankData on the GM's list of all AIs.
-            gm.allAIs.Add(this);
-
-            // Put this TankData on the GM's list of alive AIs.
-            gm.aliveAIs.Add(this);
+            // Put this TankData on the GM's list of AIs.
+            gm.ai_tanks.Add(this);
         }
     }
 
@@ -130,13 +124,13 @@ public class TankData : MonoBehaviour {
         if (isPlayer)
         {
             // Iterate through the GM's list of alive players.
-            foreach (TankData data in gm.alivePlayers)
+            foreach (TankData data in gm.player_tanks)
             {
                 // If the current iteration matches this player's TankData,
                 if (data == this)
                 {
                     // then remove it from the list.
-                    gm.alivePlayers.Remove(data);
+                    gm.player_tanks.Remove(data);
 
                     // We are done, so return. Otherwise, will get an unumeration error.
                     return;
@@ -147,13 +141,13 @@ public class TankData : MonoBehaviour {
         else
         {
             // Iterate through the GM's list of alive AIs.
-            foreach (TankData data in gm.aliveAIs)
+            foreach (TankData data in gm.ai_tanks)
             {
                 // If the current iteration matches this AI's TankData,
                 if (data == this)
                 {
                     // then remove it from the list.
-                    gm.aliveAIs.Remove(data);
+                    gm.ai_tanks.Remove(data);
 
                     // We are done, so return. Otherwise, will get an unumeration error.
                     return;

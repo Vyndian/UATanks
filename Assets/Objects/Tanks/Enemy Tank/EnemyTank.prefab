@@ -151,6 +151,7 @@ GameObject:
   - component: {fileID: 114978029086437608}
   - component: {fileID: 114214979723759970}
   - component: {fileID: 114699459231198212}
+  - component: {fileID: 114819489699317924}
   m_Layer: 0
   m_Name: EnemyTank
   m_TagString: Untagged
@@ -246,8 +247,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1942622164831344}
-  m_LocalRotation: {x: -0, y: 0.9714977, z: -0, w: 0.23704907}
-  m_LocalPosition: {x: -2.674, y: 0.898, z: 26.392}
+  m_LocalRotation: {x: -0, y: 0.73861194, z: -0, w: 0.67413086}
+  m_LocalPosition: {x: 19.92, y: 0.898, z: 10.26}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4689931383898168}
@@ -470,8 +471,9 @@ MonoBehaviour:
   shootDelay: 5
   time_ShellReady: 0
   shellSpeed: 1500
-  maxHealth: 10
+  maxHealth: 20
   currentHealth: 0
+  fleeThreshold_Percentage: 50
   shellDamage: 10
   cameraPosition: {fileID: 0}
 --- !u!114 &114699459231198212
@@ -489,6 +491,32 @@ MonoBehaviour:
   prefab_ShellProjectile: {fileID: 1557841587920104, guid: 1920cd07ce4cd954a952b34e329185df,
     type: 2}
   projSpawnPnt_tf: {fileID: 4778405914828004}
+--- !u!114 &114819489699317924
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1942622164831344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4574d71055055d44830d1fd1490285a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aiState: 0
+  repairType: 0
+  tickLength: 1
+  restingHealRate: 0.8
+  target: {fileID: 0}
+  raycastLength_Modifier: 1.8
+  avoidanceTime: 2
+  duration_FleeBeforeAvoiding: 3
+  duration_FleeBeforeChecking: 30
+  fleeDistance: 1
+  fleeThreshold_Decimal: 0
+  tf: {fileID: 4863858724939494}
+  motor: {fileID: 114978029086437608}
+  data: {fileID: 114214979723759970}
+  cannon: {fileID: 114699459231198212}
 --- !u!114 &114978029086437608
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -1441,10 +1441,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25bb37adf41649f46aa5c391e9a4619e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allPlayers: []
-  alivePlayers: []
-  allAIs: []
-  aliveAIs: []
+  player_tanks: []
+  ai_tanks: []
 --- !u!1001 &1081810248
 Prefab:
   m_ObjectHideFlags: 0
@@ -1617,7 +1615,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4863858724939494, guid: a4a6ebab6de7bf248b91d3608aceaeff, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 10.26
+      value: 7.1
       objectReference: {fileID: 0}
     - target: {fileID: 4863858724939494, guid: a4a6ebab6de7bf248b91d3608aceaeff, type: 2}
       propertyPath: m_LocalRotation.x
@@ -1639,35 +1637,9 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4863858724939494, guid: a4a6ebab6de7bf248b91d3608aceaeff, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 95.227005
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a4a6ebab6de7bf248b91d3608aceaeff, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &1338983543 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1942622164831344, guid: a4a6ebab6de7bf248b91d3608aceaeff,
-    type: 2}
-  m_PrefabInternal: {fileID: 1338983542}
---- !u!114 &1338983544
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1338983543}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1abeb14cf9496324ca4db77e2988e489, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  avoidanceTime: 2
-  attackMode: 0
-  tracker_Target: {fileID: 891368378}
-  tf: {fileID: 0}
-  motor: {fileID: 0}
-  data: {fileID: 0}
 --- !u!1001 &1358315488
 Prefab:
   m_ObjectHideFlags: 0
@@ -1776,6 +1748,11 @@ Prefab:
     - target: {fileID: 4842463169213088, guid: 65e92f227846e794883569c427a9c4c3, type: 2}
       propertyPath: m_LocalEulerAnglesHint.y
       value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 114754970967145914, guid: 65e92f227846e794883569c427a9c4c3,
+        type: 2}
+      propertyPath: shootDelay
+      value: 2.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 65e92f227846e794883569c427a9c4c3, type: 2}
