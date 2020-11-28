@@ -5,12 +5,18 @@ public class TankData : MonoBehaviour {
     #region Fields
     // Public fields --v
 
+    // Whether or not this is a player tank or AI. Initialized as false as default.
+    [HideInInspector] public bool isPlayer = false;
+
     [Header("Score")]
     // This player's current score.
     public int currentScore = 0;
 
     // The amount of point awarded to the player that kills this tank.
-    public int pointsForKilling = 100;
+    public int pointsValue = 100;
+
+    // The minimum amount of points this tank would be work if killed. Cannot be lowered below this number.
+    [SerializeField] private readonly int minPointsValue = 20;
 
     [Header("Time/Speeds")]
     // The speed at which this tank will move forward.
@@ -67,10 +73,6 @@ public class TankData : MonoBehaviour {
 
     // Reference for the GM.
     private GameManager gm;
-
-    // Whether or not this is a player tank or AI. Initialized as false as default.
-    private bool isPlayer = false;
-
     #endregion Fields
 
     #region Unity Methods
@@ -186,7 +188,7 @@ public class TankData : MonoBehaviour {
     public void Death(TankData killedBy)
     {
         // Add to the score of the player that killed this tank.
-        killedBy.ChangeScore(pointsForKilling);
+        killedBy.ChangeScore(pointsValue);
 
         // Destroy this tank.
         Destroy(gameObject);
@@ -197,6 +199,20 @@ public class TankData : MonoBehaviour {
     {
         // Apply the change.
         currentScore += change;
+    }
+
+    // Change the amount of points a tank would get from killing this tank. +change adds, -change subtracts.
+    public void ChangePointsValue(int change)
+    {
+        // Apply the change.
+        pointsValue += change;
+
+        // If the new amount is less than the minimum,
+        if (pointsValue < minPointsValue)
+        {
+            // then set pointsValue equal to the minimum instead.
+            pointsValue = minPointsValue;
+        }
     }
 
     // Assign a camera to this player.

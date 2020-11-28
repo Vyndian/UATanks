@@ -219,7 +219,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1929475854998258}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: 0.9752372, z: -0, w: 0.22116172}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -227,7 +227,7 @@ Transform:
   - {fileID: 4270175958736466}
   m_Father: {fileID: 4863858724939494}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 154.445, z: 0}
 --- !u!4 &4778405914828004
 Transform:
   m_ObjectHideFlags: 1
@@ -247,8 +247,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1942622164831344}
-  m_LocalRotation: {x: -0, y: 0.73861194, z: -0, w: 0.67413086}
-  m_LocalPosition: {x: 19.92, y: 0.898, z: 10.26}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 2.39, y: 0.898, z: 21.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4689931383898168}
@@ -459,19 +459,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21ec3ff0efaa1eb43b6cd33ad07d82fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayer: 0
   currentScore: 0
-  pointsForKilling: 100
+  pointsValue: 100
   moveSpeed_Forward: 3
   moveSpeed_Reverse: -1
-  turnSpeed: 180
+  turnSpeed: 150
   cannon_turnSpeed: 180
   cannon_elevateSpeed: 180
   maximumCannonElevateUp: -28
   maximumCannonElevateDown: 12
-  shootDelay: 5
+  shootDelay: 2.3
   time_ShellReady: 0
   shellSpeed: 1500
-  maxHealth: 20
+  maxHealth: 100
   currentHealth: 0
   fleeThreshold_Percentage: 50
   shellDamage: 10
@@ -502,7 +503,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4574d71055055d44830d1fd1490285a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aiState: 0
+  personality: 0
+  hunter_AIState: 0
+  guard_AIState: 0
+  assassin_AIState: 0
+  caravan_AIState: 0
+  hearingDistance: 25
+  heardPlayer: {fileID: 0}
+  hearingDistance_Squared: 0
+  fov_sightAngle: 45
+  fov_sightRange: 15
+  lockedOnAngle: 30
   repairType: 0
   tickLength: 1
   restingHealRate: 0.8
@@ -513,6 +524,9 @@ MonoBehaviour:
   duration_FleeBeforeChecking: 30
   fleeDistance: 1
   fleeThreshold_Decimal: 0
+  loopType: 1
+  waypoints: []
+  waypoints_CloseEnough: 1
   tf: {fileID: 4863858724939494}
   motor: {fileID: 114978029086437608}
   data: {fileID: 114214979723759970}

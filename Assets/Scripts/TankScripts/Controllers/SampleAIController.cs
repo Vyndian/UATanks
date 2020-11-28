@@ -8,12 +8,12 @@ public class SampleAIController : MonoBehaviour {
     #region Fields
     // Public fields --v
 
-    // The enum describing all options for handling waypoint navigation once the tank reaches the end.
-    public enum LoopType { Stop, Loop, PingPong };
-
     [Header("Waypoint Info")]
     // The actual enum variable set by designers for how this tank should traverse the waypoints.
     public LoopType loopType;
+
+    // The enum describing all options for handling waypoint navigation once the tank reaches the end.
+    public enum LoopType { Stop, Loop, PingPong };
 
 
     // Serialized private fields --v

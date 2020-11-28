@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 // Require a TankData script on the same object as this script. One will be placed automatically with a TankMotor.
 [RequireComponent(typeof(TankData))]
@@ -26,6 +27,9 @@ public class TankMotor : MonoBehaviour {
 
     // References the TankData on this tank.
     private TankData data;
+
+    // References the ai_Tanks on the GM.
+    private List<TankData> enemies;
     #endregion Fields
 
 
@@ -60,6 +64,17 @@ public class TankMotor : MonoBehaviour {
     // Called before the first frame.
     public void Start()
     {
+        // If the list is null,
+        if (enemies == null)
+        {
+            // then get it from the GM.
+            enemies = GameManager.instance.ai_tanks;
+        }
+    }
+
+    // Called every frame.
+    public void Update()
+    {
         
     }
     #endregion Unity Methods
@@ -74,6 +89,9 @@ public class TankMotor : MonoBehaviour {
 
         // Call SimpleMove(), passing in our speedVector. Meters/Second conversion is automatic within SimpleMove().
         characterController.SimpleMove(speedVector);
+
+        // We made noise.
+        MakeNoise();
     }
 
     // Rotates the tank either left or right.
@@ -85,6 +103,9 @@ public class TankMotor : MonoBehaviour {
 
         // Rotate the tank locally (not in world space) with Space.Self. Pass in the rotateVector.
         tf.Rotate(rotateVector, Space.Self);
+
+        // We made noise.
+        MakeNoise();
     }
 
     // Turn the angle of the tank's cannon in relation to its body.
@@ -127,6 +148,9 @@ public class TankMotor : MonoBehaviour {
             // then now we actually rotate a little each frame.
             tf.rotation = Quaternion.RotateTowards(tf.rotation, targetRotation, (data.turnSpeed * Time.deltaTime));
 
+            // We made noise.
+            MakeNoise();
+
             // Return true, we rotated a bit this frame.
             return true;
         }
@@ -135,6 +159,37 @@ public class TankMotor : MonoBehaviour {
         {
             // Return false.
             return false;
+        }
+    }
+
+    // The tank makes noise. Check if any enemies can hear.
+    private void MakeNoise()
+    {
+        // If this is not the player,
+        if (!data.isPlayer)
+        {
+            // then return, this only for the player.
+            return;
+        }
+
+        // Otherwise, the function will run.
+        // Iterate through the list of enemies.
+        foreach (TankData enemy in enemies)
+        {
+            // Get the tank's position.
+            Vector3 enemyPosition = enemy.transform.position;
+
+            // If this player is within that enemy's hearing radius,
+            if (Vector3.SqrMagnitude(tf.position - enemyPosition) <=
+                enemy.GetComponent<AI_Controller>().hearingDistance_Squared)
+            {
+                print("Distance: " + Vector3.SqrMagnitude(tf.position - enemyPosition));
+                print("hearingDistance_Squared: " + enemy.GetComponent<AI_Controller>().hearingDistance_Squared);
+                print("Base hearing distance: " + enemy.GetComponent<AI_Controller>().hearingDistance);
+
+                // then tell the enemy that it hears this player.
+                enemy.GetComponent<AI_Controller>().heardPlayer = tf;
+            }
         }
     }
     #endregion Dev-Defined Methods
