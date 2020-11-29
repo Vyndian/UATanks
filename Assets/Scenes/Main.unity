@@ -1406,11 +1406,6 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 237416478}
     m_Modifications:
-    - target: {fileID: 114819489699317924, guid: a4a6ebab6de7bf248b91d3608aceaeff,
-        type: 2}
-      propertyPath: waypoints.Array.size
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 4863858724939494, guid: a4a6ebab6de7bf248b91d3608aceaeff, type: 2}
       propertyPath: m_LocalPosition.x
       value: 2.39
@@ -1445,11 +1440,6 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 114819489699317924, guid: a4a6ebab6de7bf248b91d3608aceaeff,
         type: 2}
-      propertyPath: personality
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114819489699317924, guid: a4a6ebab6de7bf248b91d3608aceaeff,
-        type: 2}
       propertyPath: waypoints.Array.data[0]
       value: 
       objectReference: {fileID: 304976378}
@@ -1463,6 +1453,21 @@ Prefab:
       propertyPath: waypoints.Array.data[2]
       value: 
       objectReference: {fileID: 80168507}
+    - target: {fileID: 114819489699317924, guid: a4a6ebab6de7bf248b91d3608aceaeff,
+        type: 2}
+      propertyPath: hearingDistance
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 114819489699317924, guid: a4a6ebab6de7bf248b91d3608aceaeff,
+        type: 2}
+      propertyPath: lockedOnAngle
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 114819489699317924, guid: a4a6ebab6de7bf248b91d3608aceaeff,
+        type: 2}
+      propertyPath: fov_sightRange
+      value: 13
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a4a6ebab6de7bf248b91d3608aceaeff, type: 2}
   m_IsPrefabParent: 0
@@ -1579,6 +1584,10 @@ Prefab:
         type: 2}
       propertyPath: shootDelay
       value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1240554008317346, guid: 65e92f227846e794883569c427a9c4c3, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 65e92f227846e794883569c427a9c4c3, type: 2}
