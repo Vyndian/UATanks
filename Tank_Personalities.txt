@@ -1,0 +1,70 @@
+This file details the different "Personalities" that can be given to any enemy tank in UATanks. This will not cover the particulars of how these personalities are coded,
+but rather the actions that each personality will take and the reasons for their behaviors.
+
+
+Personality 1 - Hunter
+The Hunter tank has one job -- to kill their target, the player. They will chase the player to the ends of the earth, avoiding obstacles as necessary,
+but otherwise heading straight for the player from any distance. Once they close with the player, they shoot to kill. If their target dies,
+they find a new target. They aren't suicidal, though. If they are hurt badly, they will retreat and heal. This is currently the only personality than can heal.
+
+Takeaways:
+-Chases the player from any distance
+   ~Avoids obstacles as necessary
+-Fires at the player with high accuracy
+-Will retreat if badly injured
+-Will heal once retreat has succeeded
+-Will commence the attack once fully healed
+-Will find a new target once the original has been eliminated
+
+
+Personality 2 - Guard
+The Guard tank patrols around the maps using a series of waypoints, avoiding obstacles as necessary. Once the last waypoint is reached,
+the Guard will either stop there, head back to the first waypoint to start over, or start the series over in reverse.
+When the Guard hears a player approaching, it will look for the player, once fire at the player once it has Line of Sight.
+Once there intruder is neutralized or leaves the premises, the Guard returns to its patrolling.
+Also, if the Guard is protecting a Caravan (see Personality 4 below), and that Caravan is killed, the Guard becomes a Hunter.
+
+Takeaways:
+-Patrols through a series of waypoints in the world
+   ~Avoids obstacles as necessary
+-Option of 3 behaviors once the last waypoint is reached:
+   ~Stop there and simply fire at nearby players
+   ~Go back to the first waypoint and start the series over
+   ~Perform the series in reverse
+      --Will reverse again once the original first waypoint is reached
+-Stops patrolling to look for players is hears (by turning, not moving)
+-Fires at the heard player if it sees that player
+-Returns to patrolling once the intruder is either gone or neutralized
+-If this Guard is protecting a Caravan, and that Caravan dies, the Guard will change to the Hunter personality
+   ~Of course, follows Hunter protocalls once the change is made
+
+
+Personality 3 - Assassin
+The Assassin will attempt to hide (by staying where the designer places it in its world block) until it sees a player,
+than firing off a fast, deadly shot before turning itself into a Hunter personality, meaning it will then chase the player,
+attacking at any opportunity and flee is badly damaged. In this way, the Assassin may also heal itself,
+but only in the sense that it becomes a Hunter once the first assassination attempt is made.
+
+Takeaways:
+-Hides in one place until it sees a player
+   ~Does not seek out this hiding spot. Must be placed there by the designer, or spawned in its appropriate spot
+-Once a player is heard, attempts to line up a shot by rotating toward the player
+-Once the shot is lined up, attempts to assassinate the player by firing off a shot that is more deadly and travels faster than a normal round
+-Once the assassination attempt is made, changes Personality to Hunter
+   ~Of course, follows Hunter protocalls once the change is made
+
+
+Personality 4 - Caravan
+The Caravan tank is slow, has a lot of health, and is worth a great deal of points (All three variables decided by designers,
+but are meant to follow this pattern). It attempts to traverse from one waypoint to another and back again (or perhaps a longer series of waypoints),
+a lot like a Guard, but the Caravan does not fight back, or even flee-- at least, not at first. Caravans work alongside a Guard who travels with and
+circles the Caravan, protecting it. Once that Guard is destroyed, the Caravan will flee any player that approaches it.
+Whenever a Caravan completes a full circuit
+
+Takeaways:
+-Meant to be slow, have high health, and be worth a great deal of points
+-Ping-pongs or loops across the map like a Guard
+   ~However, does not fight back like a Guard would
+-Alway has a Guard protecting it, which will travel through waypoints attacked to the Caravan
+-If the Guard is killed, the Caravan will flee any players
+-If the Caravan is killed, the Guard will become a vengeful Hunter

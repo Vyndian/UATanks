@@ -16,7 +16,7 @@ public class AI_Controller : MonoBehaviour {
     public enum Guard_AIState { Patrol, RotateTowardSound, FireAtIntruder };
 
     // The definition for the enum for the state of the tank AI (if in Assassin personality).
-    public enum Assassin_AIState { LayInWait, Strike, VerifyKill };
+    public enum Assassin_AIState { LayInWait, RotateTowardSound, Strike, VerifyKill };
 
     // The definition for the enum for the state of the tank AI (if in Caravan personality).
     public enum Caravan_AIState { Transport, Flee };
@@ -468,6 +468,125 @@ public class AI_Controller : MonoBehaviour {
         }
     }
 
+    // Change the Hunter state that the tank AI is in.
+    private void ChangeState_Hunter(Hunter_AIState newState)
+    {
+        // Change the state of this tank's AI accordingly.
+        hunter_AIState = newState;
+
+        // Save the time that this change was made.
+        timeStateEntered = Time.time;
+    }
+
+    // Perform chase protocalls.
+    private void DoChase()
+    {
+        // Rotate a bit towards the target.
+        motor.RotateTowards(target.position);
+
+        // Check if we can move forward for 1 second without hitting an obstacle.
+        // Pass in "data.moveSpeed_Forward" because that is how far the tank can move in 1 second.
+        if (CanMoveForward(data.moveSpeed_Forward))
+        {
+            // If the tank is not already too close to the target,
+            if (Vector3.SqrMagnitude(target.position - tf.position) > chasing_CloseEnough_Squared)
+            {
+                // Move forward.
+                motor.Move(data.moveSpeed_Forward);
+            }
+        }
+        // Else, there is an obstacle in the way within 1 second's travel.
+        else
+        {
+            // Enter obstacle avoidance mode.
+            avoidanceStage = 1;
+        }
+    }
+
+    // Checks if the tank should flee from the target or rest.
+    private void CheckForFlee()
+    {
+        // TODO: Finish CheckForFlee()
+    }
+
+    // The tank will flee from the target.
+    private void DoFlee()
+    {
+        // If the tank has been fleeing long enough to care about avoiding obstacles,
+        if ((timeStateEntered + duration_FleeBeforeAvoiding) <= Time.time)
+        {
+            // then perform avoidance protocalls while fleeing.
+            // Check if we can move forward for 1 second without hitting an obstacle.
+            // Pass in "data.moveSpeed_Forward" because that is how far the tank can move in 1 second.
+            if (CanMoveForward(data.moveSpeed_Forward))
+            {
+                // Flee the target.
+                Flee();
+            }
+            // Else, there is an obstacle in the way within 1 second's travel.
+            else
+            {
+                // Enter obstacle avoidance mode.
+                avoidanceStage = 1;
+            }
+        }
+        // Else, the tank does not yet care about obstacle avoidance.
+        else
+        {
+            // Flee the target.
+            Flee();
+        }
+    }
+
+    // The tank will flee from the target. Always called by DoFlee(), either after checking for obstacles or not.
+    private void Flee()
+    {
+        // Find the vector away from the target by finding the vector TO the target * -1.
+        Vector3 vectorAwayFromTarget = -1 * (target.position - tf.position);
+
+        // Normalize that vector (gives it a magnitude of 1).
+        vectorAwayFromTarget.Normalize();
+
+        // Multiply the normalized vector * the designer-chosen fleeDistance.
+        vectorAwayFromTarget *= fleeDistance;
+
+        // Add that value to the tank's current position to determine the place we are traveling to.
+        Vector3 fleePosition = tf.position + vectorAwayFromTarget;
+
+        // Now rotate towards that position.
+        motor.RotateTowards(fleePosition);
+
+        // Move forward.
+        motor.Move(data.moveSpeed_Forward);
+    }
+
+    // The tank rests, during which time it will heal its health.
+    private void DoRest()
+    {
+        // If the repair type is set to PerSecond,
+        if (repairType == RepairType.PerSecond)
+        {
+            // then raise the tank's health (repair) by restingHealRate per second.
+            data.Repair(restingHealRate * Time.deltaTime);
+        }
+        // Else, the repair type must be set to PerTick.
+        else
+        {
+            // If enough time has passed since the last tick to tick again,
+            if ((timeLastTick + tickLength) <= Time.time)
+            {
+                // then it is time to tick again.
+                // Heal/repair the tank by exactly restingHealRate.
+                data.Repair(restingHealRate);
+
+                // Set the new time of last tick.
+                timeLastTick = Time.time;
+            }
+        }
+    }
+
+
+
     // Perform the FSM for Guard.
     private void FSM_Guard()
     {
@@ -546,46 +665,10 @@ public class AI_Controller : MonoBehaviour {
         }
     }
 
-    // Perform the FSM for Assassin.
-    private void FSM_Assassin()
-    {
-
-    }
-
     // Perform the FSM for Caravan.
     private void FSM_Caravan()
     {
 
-    }
-
-    // Advances the int representing the index of the next alive player to target, according to the GM's list.
-    private void NextPlayerToTarget()
-    {
-        // Get a temp reference to the list for readability and processing speeds.
-        List<TankData> playerList = GameManager.instance.player_tanks;
-
-        // If we're not already at the end of the player list,
-        if (playerToTarget < playerList.Count - 1)
-        {
-            // then add one to the index var.
-            playerToTarget++;
-        }
-        // Else, we are at the end of the player list.
-        else
-        {
-            // Set the var to 0.
-            playerToTarget = 0;
-        }
-    }
-
-    // Change the Hunter state that the tank AI is in.
-    private void ChangeState_Hunter(Hunter_AIState newState)
-    {
-        // Change the state of this tank's AI accordingly.
-        hunter_AIState = newState;
-
-        // Save the time that this change was made.
-        timeStateEntered = Time.time;
     }
 
     // Change the Guard state that the tank AI is in.
@@ -605,16 +688,6 @@ public class AI_Controller : MonoBehaviour {
         }
     }
 
-    // Change the Assassin state that the tank AI is in.
-    private void ChangeState_Assassin(Assassin_AIState newState)
-    {
-        // Change the state of this tank's AI accordingly.
-        assassin_AIState = newState;
-
-        // Save the time that this change was made.
-        timeStateEntered = Time.time;
-    }
-
     // Change the Caravan state that the tank AI is in.
     private void ChangeState_Caravan(Caravan_AIState newState)
     {
@@ -625,30 +698,234 @@ public class AI_Controller : MonoBehaviour {
         timeStateEntered = Time.time;
     }
 
-    // Perform chase protocalls.
-    private void DoChase()
+    // Sets all of the appropriate waypoints to the current elevation.
+    private void LevelOutWaypoints()
     {
-        // Rotate a bit towards the target.
-        motor.RotateTowards(target.position);
+        // Iterate through the waypoints array.
+        foreach (Transform waypoint in waypoints)
+        {
+            // Set each transform's y equal to this tank's y.
+            // This prevents the tank from attempting to move into the ground or above it.
+            // First, get the position of the waypoint.
+            Vector3 p = waypoint.position;
 
-        // Check if we can move forward for 1 second without hitting an obstacle.
-        // Pass in "data.moveSpeed_Forward" because that is how far the tank can move in 1 second.
-        if (CanMoveForward(data.moveSpeed_Forward))
-        {
-            // If the tank is not already too close to the target,
-            if (Vector3.SqrMagnitude(target.position - tf.position) > chasing_CloseEnough_Squared)
-            {
-                // Move forward.
-                motor.Move(data.moveSpeed_Forward);
-            }
-        }
-        // Else, there is an obstacle in the way within 1 second's travel.
-        else
-        {
-            // Enter obstacle avoidance mode.
-            avoidanceStage = 1;
+            // Change the y to match.
+            p.y = tf.position.y;
+
+            // Set the waypoint's position to the modified value.
+            waypoint.position = p;
         }
     }
+
+    // Performs Patrol protocalls.
+    private void DoPatrol()
+    {
+        // If stopped (meaning Tank is set to Stop behavior and has reached the end of the waypoint system),
+        if (waypoints_IsStopped)
+        {
+            // Do nothing.
+            // This prevents tank from turning constantly while standing on the final waypoint.
+        }
+        // Else, if we can rotate towards the current waypoint (done during the if call),
+        else if (motor.RotateTowards(waypoints[currentWaypoint].position))
+        {
+            // then the tank was able to rotate towards the waypoint this frame.
+            // Do nothing.
+        }
+        // Else, the tank was unable to rotate towards the waypoint this frame because it is already facing it.
+        else
+        {
+            // If the Guard can move forward without hitting and obstacle,
+            if (CanMoveForward(data.moveSpeed_Forward))
+            {
+                // then move forward.
+                motor.Move(data.moveSpeed_Forward);
+            }
+            // Else, there is an obstacle in the way within 1 second's travel.
+            else
+            {
+                // Enter obstacle avoidance mode.
+                avoidanceStage = 1;
+            }
+        }
+
+        // If we are close enough to the waypoint,
+        if (Vector3.SqrMagnitude(waypoints[currentWaypoint].position - tf.position) <= waypoints_CloseEnough_Squared)
+        {
+            // then advance to the next waypoint according to the chosen behavior.
+            NextWaypoint_Dispatch();
+        }
+    }
+
+    // Performs FireAtIntruder protocalls.
+    private void DoFireAtIntruder()
+    {
+        // If the intruder is still non-null,
+        if (intruder != null)
+        {
+            // and if the Guard is locked on to the intruder,
+            if (CanLockOn(intruder))
+            {
+                // then fire at the intruder (fire rate is handled by TankCannon in conjunction with TankData).
+                cannon.Fire(data.shellSpeed);
+            }
+            // Else, if the Guard can still see the intruder,
+            else if (CanSee(intruder))
+            {
+                // then rotate more toward the intruder (attempt to lock on).
+                motor.RotateTowards(intruder.position);
+            }
+            // Else, the intruder is no longer in sight.
+            else
+            {
+                // Set intruder to null.
+                intruder = null;
+
+                // If the heardPlayer is still non-null,
+                if (heardPlayer != null)
+                {
+                    // and if that player has left the Guard's hearing range,
+                    if (Vector3.SqrMagnitude(heardPlayer.position - tf.position) > hearingDistance_Squared)
+                    {
+                        // then set heardPlayer to null.
+                        heardPlayer = null;
+                    }
+                }
+            }
+        }
+    }
+
+    // Chooses the next waypoint to head towards based on the chosen behavior (loopType).
+    private void NextWaypoint_Dispatch()
+    {
+        // Based on the chosen loop type, perform a certain action.
+        switch (loopType)
+        {
+            // If set to Stop,
+            case LoopType.Stop:
+                // then perform the "next waypoint" actions for the LoopType.Stop behavior.
+                NextWaypoint_Stop();
+                break;
+
+            // If set to Loop,
+            case LoopType.Loop:
+                // then perform the "next waypoint" actions for the LoopType.Loop behavior.
+                NextWaypoint_Loop();
+                break;
+
+            // If set to PingPong,
+            case LoopType.PingPong:
+                // then perform the "next waypoint" actions for the LoopType.PingPong behavior.
+                NextWaypoint_PingPong();
+                break;
+        } // currentWaypoint has been set.
+
+        // If the elevation for the next waypoint does not match the tank's elevation,
+        if (waypoints[currentWaypoint].transform.position.y != tf.position.y)
+        {
+            // then level out all of the waypoints' elevations.
+            LevelOutWaypoints();
+        }
+    }
+
+    // Performs the "next waypoint" actions for the LoopType.Stop behavior.
+    private void NextWaypoint_Stop()
+    {
+        // If NOT already at the end,
+        if (currentWaypoint < waypoints.Length - 1)
+        {
+            // then add 1 to go tot he next waypoint in the list.
+            currentWaypoint++;
+        }
+        // Else, already at the end.
+        else
+        {
+            // Tank should not stop.
+            waypoints_IsStopped = true;
+        }
+    }
+
+    // Performs the "next waypoint" actions for the LoopType.Loop behavior.
+    private void NextWaypoint_Loop()
+    {
+        // If NOT already at the end,
+        if (currentWaypoint < waypoints.Length - 1)
+        {
+            // then add 1 to the currentWaypoint.
+            currentWaypoint++;
+        }
+        // Else, already at the end.
+        else
+        {
+            // Reset the current waypoint index to 0.
+            currentWaypoint = 0;
+        }
+    }
+
+    // Performs the "next waypoint" actions for the LoopType.PingPong behavior.
+    private void NextWaypoint_PingPong()
+    {
+        // If going forward,
+        if (waypoints_IsGoingForward)
+        {
+            // and if NOT already at the end,
+            if (currentWaypoint < waypoints.Length - 1)
+            {
+                // then add 1 to the currentWaypoint.
+                currentWaypoint++;
+            }
+            // Else, already at the end (going forward).
+            else
+            {
+                // Subtract 1 from the currentWaypoint.
+                currentWaypoint--;
+
+                // Flip the direction.
+                waypoints_IsGoingForward = false;
+            }
+        }
+        // Else, tank is currently heading backwards through the waypoints.
+        else
+        {
+            // If NOT already at the beginning,
+            if (currentWaypoint > 0)
+            {
+                // then subtract 1 from currenWaypoint.
+                currentWaypoint--;
+            }
+            // Else, already back to the beginning of the array.
+            else
+            {
+                // Add 1 to the index.
+                currentWaypoint++;
+
+                // Flip the direction.
+                waypoints_IsGoingForward = true;
+            }
+        }
+    }
+
+
+
+    // Perform the FSM for Assassin.
+    private void FSM_Assassin()
+    {
+
+    }
+
+    // Change the Assassin state that the tank AI is in.
+    private void ChangeState_Assassin(Assassin_AIState newState)
+    {
+        // Change the state of this tank's AI accordingly.
+        assassin_AIState = newState;
+
+        // Save the time that this change was made.
+        timeStateEntered = Time.time;
+    }
+
+
+
+    
 
     // Checks if the tank can move forward to its current target (or if an obstacle is blocking).
     private bool CanMoveForward(float speed)
@@ -805,217 +1082,6 @@ public class AI_Controller : MonoBehaviour {
         return -1;
     }
 
-    // Checks if the tank should flee from the target or rest.
-    private void CheckForFlee()
-    {
-        // TODO: Finish CheckForFlee()
-    }
-
-    // The tank will flee from the target.
-    private void DoFlee()
-    {
-        // If the tank has been fleeing long enough to care about avoiding obstacles,
-        if ((timeStateEntered + duration_FleeBeforeAvoiding) <= Time.time)
-        {
-            // then perform avoidance protocalls while fleeing.
-            // Check if we can move forward for 1 second without hitting an obstacle.
-            // Pass in "data.moveSpeed_Forward" because that is how far the tank can move in 1 second.
-            if (CanMoveForward(data.moveSpeed_Forward))
-            {
-                // Flee the target.
-                Flee();
-            }
-            // Else, there is an obstacle in the way within 1 second's travel.
-            else
-            {
-                // Enter obstacle avoidance mode.
-                avoidanceStage = 1;
-            }
-        }
-        // Else, the tank does not yet care about obstacle avoidance.
-        else
-        {
-            // Flee the target.
-            Flee();
-        }
-    }
-
-    // The tank will flee from the target. Always called by DoFlee(), either after checking for obstacles or not.
-    private void Flee()
-    {
-        // Find the vector away from the target by finding the vector TO the target * -1.
-        Vector3 vectorAwayFromTarget = -1 * (target.position - tf.position);
-
-        // Normalize that vector (gives it a magnitude of 1).
-        vectorAwayFromTarget.Normalize();
-
-        // Multiply the normalized vector * the designer-chosen fleeDistance.
-        vectorAwayFromTarget *= fleeDistance;
-
-        // Add that value to the tank's current position to determine the place we are traveling to.
-        Vector3 fleePosition = tf.position + vectorAwayFromTarget;
-
-        // Now rotate towards that position.
-        motor.RotateTowards(fleePosition);
-
-        // Move forward.
-        motor.Move(data.moveSpeed_Forward);
-    }
-
-    // The tank rests, during which time it will heal its health.
-    private void DoRest()
-    {
-        // If the repair type is set to PerSecond,
-        if (repairType == RepairType.PerSecond)
-        {
-            // then raise the tank's health (repair) by restingHealRate per second.
-            data.Repair(restingHealRate * Time.deltaTime);
-        }
-        // Else, the repair type must be set to PerTick.
-        else
-        {
-            // If enough time has passed since the last tick to tick again,
-            if ((timeLastTick + tickLength) <= Time.time)
-            {
-                // then it is time to tick again.
-                // Heal/repair the tank by exactly restingHealRate.
-                data.Repair(restingHealRate);
-
-                // Set the new time of last tick.
-                timeLastTick = Time.time;
-            }
-        }
-    }
-
-    // Sets all of the appropriate waypoints to the current elevation.
-    private void LevelOutWaypoints()
-    {
-        // Iterate through the waypoints array.
-        foreach (Transform waypoint in waypoints)
-        {
-            // Set each transform's y equal to this tank's y.
-            // This prevents the tank from attempting to move into the ground or above it.
-            // First, get the position of the waypoint.
-            Vector3 p = waypoint.position;
-
-            // Change the y to match.
-            p.y = tf.position.y;
-
-            // Set the waypoint's position to the modified value.
-            waypoint.position = p;
-        }
-    }
-
-    // Chooses the next waypoint to head towards based on the chosen behavior (loopType).
-    private void NextWaypoint_Dispatch()
-    {
-        // Based on the chosen loop type, perform a certain action.
-        switch (loopType)
-        {
-            // If set to Stop,
-            case LoopType.Stop:
-                // then perform the "next waypoint" actions for the LoopType.Stop behavior.
-                NextWaypoint_Stop();
-                break;
-
-            // If set to Loop,
-            case LoopType.Loop:
-                // then perform the "next waypoint" actions for the LoopType.Loop behavior.
-                NextWaypoint_Loop();
-                break;
-
-            // If set to PingPong,
-            case LoopType.PingPong:
-                // then perform the "next waypoint" actions for the LoopType.PingPong behavior.
-                NextWaypoint_PingPong();
-                break;
-        } // currentWaypoint has been set.
-
-        // If the elevation for the next waypoint does not match the tank's elevation,
-        if (waypoints[currentWaypoint].transform.position.y != tf.position.y)
-        {
-            // then level out all of the waypoints' elevations.
-            LevelOutWaypoints();
-        }
-    }
-
-    // Performs the "next waypoint" actions for the LoopType.Stop behavior.
-    private void NextWaypoint_Stop()
-    {
-        // If NOT already at the end,
-        if (currentWaypoint < waypoints.Length - 1)
-        {
-            // then add 1 to go tot he next waypoint in the list.
-            currentWaypoint++;
-        }
-        // Else, already at the end.
-        else
-        {
-            // Tank should not stop.
-            waypoints_IsStopped = true;
-        }
-    }
-
-    // Performs the "next waypoint" actions for the LoopType.Loop behavior.
-    private void NextWaypoint_Loop()
-    {
-        // If NOT already at the end,
-        if (currentWaypoint < waypoints.Length - 1)
-        {
-            // then add 1 to the currentWaypoint.
-            currentWaypoint++;
-        }
-        // Else, already at the end.
-        else
-        {
-            // Reset the current waypoint index to 0.
-            currentWaypoint = 0;
-        }
-    }
-
-    // Performs the "next waypoint" actions for the LoopType.PingPong behavior.
-    private void NextWaypoint_PingPong()
-    {
-        // If going forward,
-        if (waypoints_IsGoingForward)
-        {
-            // and if NOT already at the end,
-            if (currentWaypoint < waypoints.Length - 1)
-            {
-                // then add 1 to the currentWaypoint.
-                currentWaypoint++;
-            }
-            // Else, already at the end (going forward).
-            else
-            {
-                // Subtract 1 from the currentWaypoint.
-                currentWaypoint--;
-
-                // Flip the direction.
-                waypoints_IsGoingForward = false;
-            }
-        }
-        // Else, tank is currently heading backwards through the waypoints.
-        else
-        {
-            // If NOT already at the beginning,
-            if (currentWaypoint > 0)
-            {
-                // then subtract 1 from currenWaypoint.
-                currentWaypoint--;
-            }
-            // Else, already back to the beginning of the array.
-            else
-            {
-                // Add 1 to the index.
-                currentWaypoint++;
-
-                // Flip the direction.
-                waypoints_IsGoingForward = true;
-            }
-        }
-    }
-
     // Checks if the tank can see the passed-in player.
     private bool CanSee(Transform player)
     {
@@ -1078,46 +1144,6 @@ public class AI_Controller : MonoBehaviour {
         return false;
     }
 
-    // Performs Patrol protocalls.
-    private void DoPatrol()
-    {
-        // If stopped (meaning Tank is set to Stop behavior and has reached the end of the waypoint system),
-        if (waypoints_IsStopped)
-        {
-            // Do nothing.
-            // This prevents tank from turning constantly while standing on the final waypoint.
-        }
-        // Else, if we can rotate towards the current waypoint (done during the if call),
-        else if (motor.RotateTowards(waypoints[currentWaypoint].position))
-        {
-            // then the tank was able to rotate towards the waypoint this frame.
-            // Do nothing.
-        }
-        // Else, the tank was unable to rotate towards the waypoint this frame because it is already facing it.
-        else
-        {
-            // If the Guard can move forward without hitting and obstacle,
-            if (CanMoveForward(data.moveSpeed_Forward))
-            {
-                // then move forward.
-                motor.Move(data.moveSpeed_Forward);
-            }
-            // Else, there is an obstacle in the way within 1 second's travel.
-            else
-            {
-                // Enter obstacle avoidance mode.
-                avoidanceStage = 1;
-            }
-        }
-
-        // If we are close enough to the waypoint,
-        if (Vector3.SqrMagnitude(waypoints[currentWaypoint].position - tf.position) <= waypoints_CloseEnough_Squared)
-        {
-            // then advance to the next waypoint according to the chosen behavior.
-            NextWaypoint_Dispatch();
-        }
-    }
-
     // Performs RotateTowardSound protocalls.
     private void DoRotateTowardSound()
     {
@@ -1139,41 +1165,23 @@ public class AI_Controller : MonoBehaviour {
         }
     }
 
-    // Performs FireAtIntruder protocalls.
-    private void DoFireAtIntruder()
+    // Advances the int representing the index of the next alive player to target, according to the GM's list.
+    private void NextPlayerToTarget()
     {
-        // If the intruder is still non-null,
-        if (intruder != null)
-        {
-            // and if the Guard is locked on to the intruder,
-            if (CanLockOn(intruder))
-            {
-                // then fire at the intruder (fire rate is handled by TankCannon in conjunction with TankData).
-                cannon.Fire(data.shellSpeed);
-            }
-            // Else, if the Guard can still see the intruder,
-            else if (CanSee(intruder))
-            {
-                // then rotate more toward the intruder (attempt to lock on).
-                motor.RotateTowards(intruder.position);
-            }
-            // Else, the intruder is no longer in sight.
-            else
-            {
-                // Set intruder to null.
-                intruder = null;
+        // Get a temp reference to the list for readability and processing speeds.
+        List<TankData> playerList = GameManager.instance.player_tanks;
 
-                // If the heardPlayer is still non-null,
-                if (heardPlayer != null)
-                {
-                    // and if that player has left the Guard's hearing range,
-                    if (Vector3.SqrMagnitude(heardPlayer.position - tf.position) > hearingDistance_Squared)
-                    {
-                        // then set heardPlayer to null.
-                        heardPlayer = null;
-                    }
-                }
-            }
+        // If we're not already at the end of the player list,
+        if (playerToTarget < playerList.Count - 1)
+        {
+            // then add one to the index var.
+            playerToTarget++;
+        }
+        // Else, we are at the end of the player list.
+        else
+        {
+            // Set the var to 0.
+            playerToTarget = 0;
         }
     }
     #endregion Dev-Defined Methods
