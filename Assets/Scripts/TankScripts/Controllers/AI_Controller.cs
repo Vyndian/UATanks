@@ -19,7 +19,7 @@ public class AI_Controller : MonoBehaviour {
     public enum Assassin_AIState { LayInWait, RotateTowardSound, Strike, VerifyKill };
 
     // The definition for the enum for the state of the tank AI (if in Caravan personality).
-    public enum Caravan_AIState { Transport, Flee };
+    public enum Caravan_AIState { Transport, CheckForFlee, Flee, Hide };
 
     // The definition for the enum for the three methods a Guard or Caravan might traverse their waypoints.
     public enum LoopType { Stop, Loop, PingPong };
@@ -53,6 +53,32 @@ public class AI_Controller : MonoBehaviour {
     // A STATIC int representing the index of the next player to be targeted.
     // The index is for the GM's list of alive players.
     static private int playerToTarget = 0;
+
+
+    [Header("Material References")]
+    // A reference to the material used for the tank's body when it's personality is set to Hunter,
+    [SerializeField] private Material mat_HunterBody;
+
+    // A reference to the material used for the tank's cannon when it's personality is set to Hunter,
+    [SerializeField] private Material mat_HunterCannon;
+
+    // A reference to the material used for the tank's body when it's personality is set to Guard,
+    [SerializeField] private Material mat_GuardBody;
+
+    // A reference to the material used for the tank's cannon when it's personality is set to Guard,
+    [SerializeField] private Material mat_GuardCannon;
+
+    // A reference to the material used for the tank's body when it's personality is set to Assassin,
+    [SerializeField] private Material mat_AssassinBody;
+
+    // A reference to the material used for the tank's cannon when it's personality is set to Assassin,
+    [SerializeField] private Material mat_AssassinCannon;
+
+    // A reference to the material used for the tank's body when it's personality is set to Caravan,
+    [SerializeField] private Material mat_CaravanBody;
+
+    // A reference to the material used for the tank's cannon when it's personality is set to Caravan,
+    [SerializeField] private Material mat_CaravanCannon;
 
 
     [Header("Hearing & FOV variables")]
@@ -94,7 +120,7 @@ public class AI_Controller : MonoBehaviour {
     private float timeLastTick = 0.0f;
 
 
-    [Header("Chase variables")]
+    [Header("Hunter variables")]
     // The Transform of the target this tank will Chase.
     [SerializeField] private Transform target;
 
@@ -124,7 +150,7 @@ public class AI_Controller : MonoBehaviour {
     private float avoidanceStage2_ExitTime;
 
 
-    [Header("Flee variables")]
+    [Header("Flee variables, used for both Hunter & Caravan")]
     // The amount of time the tank should flee before it starts attempting obstacle avoidance (still while fleeing).
     // This allows the tank to get partially turned around before trying to avoid obstacles it doesn't need to.
     [SerializeField] private float duration_FleeBeforeAvoiding = 3.0f;
@@ -143,6 +169,12 @@ public class AI_Controller : MonoBehaviour {
     [Header("Guard & Caravan Info")]
     // The actual enum variable set by designers for how this tank should traverse the waypoints.
     public LoopType loopType = LoopType.Loop;
+
+    // The Guard that is protecting this Caravan, if this is a Caravan.
+    public GameObject escortingGuard;
+
+    // The Caravan gameObject that the Guard is protecting, if it is doing so.
+    [SerializeField] private GameObject protectedCaravan;
 
     // Array of Transforms of the GameObjects being used as waypoints for this AI.
     [SerializeField] private Transform[] waypoints;
@@ -164,8 +196,11 @@ public class AI_Controller : MonoBehaviour {
     // Used only for the Stop behavior.
     private bool waypoints_IsStopped = false;
 
-    // The current target of the Guard or Caravan that is intruder in their area.
+    // The current target of the Guard that is intruder in their area.
     private Transform intruder;
+
+    // Whether or not this is a Guard that is also protecting a Caravan.
+    private bool isGuardProtectingCaravan = false;
 
 
     [Header("Component & Object References")]
@@ -180,6 +215,15 @@ public class AI_Controller : MonoBehaviour {
 
     // The TankCannon on this gameObject.
     [SerializeField] private TankCannon cannon;
+
+    // Reference to the MeshRenderer on the tank's Shell visual (body).
+    [SerializeField] private MeshRenderer shell_Visual;
+
+    // Reference to the MeshRenderer on the tank's cannon's base visual.
+    [SerializeField] private MeshRenderer cannonBase_Visual;
+
+    // Reference to the MeshRenderer on the tank's cannon's barrel visual.
+    [SerializeField] private MeshRenderer cannonBarrel_Visual;
 
     // Reference to the GameManager.
     private GameManager gm;
@@ -246,24 +290,8 @@ public class AI_Controller : MonoBehaviour {
         // Must be in Start so that data has had time to initialize its values.
         fleeThreshold_Decimal = temp / 100;
 
-        // If set to Guard or Caravan, && waypoints has been left empty,
-        if ((personality == PersonalityType.Guard || personality == PersonalityType.Caravan) && waypoints.Length == 0)
-        {
-            // then log an error.
-            Debug.LogError(gameObject.name + "'s waypoints array is empty! Shutting down the AI.");
-            // Turn off this script to prevent errors.
-            this.enabled = false;
-        }
-        // Else, the wapoints array is not empty.
-        else
-        {
-            // If the elevation for the next waypoint does not match the tank's elevation,
-            if (waypoints[currentWaypoint].transform.position.y != tf.position.y)
-            {
-                // then level out all of the waypoints' elevations.
-                LevelOutWaypoints();
-            }
-        }
+        // "Change" the personality type to itself. This allows for the proper setup.
+        ChangePersonality(personality);
     }
 
     // Called every frame.
@@ -289,11 +317,19 @@ public class AI_Controller : MonoBehaviour {
         // If target is null,
         if (target == null)
         {
-            // Get the transform component from the next player tank in the GM's list.
-            target = playerList[playerToTarget].gameObject.transform;
+            // then find a new target.
+            FindNewTarget();
+        }
 
-            // Advance to the next player so that all the tanks don't focus on one player.
-            NextPlayerToTarget();
+        // If heardPlayer is non-null,
+        if (heardPlayer != null)
+        {
+            // and if that player is now too far away to hear,
+            if (!CanHear(heardPlayer))
+            {
+                // then set heardPlayer to null. This tank can't hear that player.
+                heardPlayer = null;
+            }
         }
 
         // Act depending on the current personalityType.
@@ -330,6 +366,87 @@ public class AI_Controller : MonoBehaviour {
     #endregion Unity Methods
 
     #region Dev-Defined Methods
+    // Changes the Personality of the tank and makes any necessary adjustments.
+    private void ChangePersonality(PersonalityType type)
+    {
+        // Make the change.
+        personality = type;
+
+        // Act according to the new type.
+        switch (personality)
+        {
+            // In the case that the new personality is the Hunter,
+            case PersonalityType.Hunter:
+                // then perform setup for Hunter.
+                // Set up the materials so it looks like a Hunter.
+                ApplyMaterials(mat_HunterBody, mat_HunterCannon);
+
+                // Revert the tank's speed to its original speed.
+                RevertToOriginalSpeed();
+                break;
+
+
+            // In the case that the new personality is the Guard,
+            case PersonalityType.Guard:
+                // then perform setup for Guard.
+                // Set up the materials so it looks like a Guard.
+                ApplyMaterials(mat_GuardBody, mat_GuardCannon);
+
+                // Check the waypoints, and set up the Caravan/Guard relationship.
+                CheckWaypoints();
+                break;
+
+
+            // In the case that the new personality is the Assassin,
+            case PersonalityType.Assassin:
+                // then
+                // Set up the materials so it looks like a Assassin.
+                ApplyMaterials(mat_AssassinBody, mat_AssassinCannon);
+
+                // Revert the tank's speed to its original speed.
+                RevertToOriginalSpeed();
+
+                break;
+
+
+            // In the case that the new personality is the Caravan,
+            case PersonalityType.Caravan:
+                // then
+                // Set up the materials so it looks like a Caravan.
+                ApplyMaterials(mat_CaravanBody, mat_CaravanCannon);
+
+                // Check the waypoints, and set up the Caravan/Guard relationship.
+                CheckWaypoints();
+
+                // Revert the tank's speed to its original speed.
+                RevertToOriginalSpeed();
+                break;
+        }
+    }
+
+    // Applies the provided materials to the tank's visuals to help distinguish between Personalities.
+    // The body is applied to the shell, and the cannon is applied to the cannon's base and barrel.
+    private void ApplyMaterials(Material body, Material cannon)
+    {
+        // If any of the necessary variables are null,
+        if (shell_Visual == null || cannonBase_Visual == null || cannonBarrel_Visual == null ||
+            body == null || cannon == null)
+        {
+            // then log an error and return.
+            Debug.LogError("ERROR: Cannot apply materials due to null reference.");
+            return;
+        }
+
+        // Apply the body material to the tank's shell visual.
+        shell_Visual.material = body;
+
+        // Apply the cannon material to the tank's cannon visuals for the base and the barrel.
+        cannonBase_Visual.material = cannon;
+        cannonBarrel_Visual.material = cannon;
+    }
+
+
+    #region Hunter Methods
     // Perform the FSM for Hunter.
     private void FSM_Hunter()
     {
@@ -503,63 +620,6 @@ public class AI_Controller : MonoBehaviour {
         }
     }
 
-    // Checks if the tank should flee from the target or rest.
-    private void CheckForFlee()
-    {
-        // TODO: Finish CheckForFlee()
-    }
-
-    // The tank will flee from the target.
-    private void DoFlee()
-    {
-        // If the tank has been fleeing long enough to care about avoiding obstacles,
-        if ((timeStateEntered + duration_FleeBeforeAvoiding) <= Time.time)
-        {
-            // then perform avoidance protocalls while fleeing.
-            // Check if we can move forward for 1 second without hitting an obstacle.
-            // Pass in "data.moveSpeed_Forward" because that is how far the tank can move in 1 second.
-            if (CanMoveForward(data.moveSpeed_Forward))
-            {
-                // Flee the target.
-                Flee();
-            }
-            // Else, there is an obstacle in the way within 1 second's travel.
-            else
-            {
-                // Enter obstacle avoidance mode.
-                avoidanceStage = 1;
-            }
-        }
-        // Else, the tank does not yet care about obstacle avoidance.
-        else
-        {
-            // Flee the target.
-            Flee();
-        }
-    }
-
-    // The tank will flee from the target. Always called by DoFlee(), either after checking for obstacles or not.
-    private void Flee()
-    {
-        // Find the vector away from the target by finding the vector TO the target * -1.
-        Vector3 vectorAwayFromTarget = -1 * (target.position - tf.position);
-
-        // Normalize that vector (gives it a magnitude of 1).
-        vectorAwayFromTarget.Normalize();
-
-        // Multiply the normalized vector * the designer-chosen fleeDistance.
-        vectorAwayFromTarget *= fleeDistance;
-
-        // Add that value to the tank's current position to determine the place we are traveling to.
-        Vector3 fleePosition = tf.position + vectorAwayFromTarget;
-
-        // Now rotate towards that position.
-        motor.RotateTowards(fleePosition);
-
-        // Move forward.
-        motor.Move(data.moveSpeed_Forward);
-    }
-
     // The tank rests, during which time it will heal its health.
     private void DoRest()
     {
@@ -584,9 +644,10 @@ public class AI_Controller : MonoBehaviour {
             }
         }
     }
+    #endregion Hunter Methods
 
 
-
+    #region Guard & Caravan Methods
     // Perform the FSM for Guard.
     private void FSM_Guard()
     {
@@ -609,6 +670,20 @@ public class AI_Controller : MonoBehaviour {
                 }
 
                 // Test for transition conditions.
+                // If this is a Guard protecting a Caravan,
+                if (isGuardProtectingCaravan)
+                {
+                    // and if that Caravan has died,
+                    if (protectedCaravan == null)
+                    {
+                        // then change personalities to Hunter.
+                        ChangePersonality(PersonalityType.Hunter);
+
+                        // Return out of this function.
+                        return;
+                    }
+                }
+
                 // If the Guard can hear a player,
                 if (heardPlayer != null)
                 {
@@ -624,6 +699,20 @@ public class AI_Controller : MonoBehaviour {
                 DoRotateTowardSound();
 
                 // Test for transition conditions.
+                // If this is a Guard protecting a Caravan,
+                if (isGuardProtectingCaravan)
+                {
+                    // and if that Caravan has died,
+                    if (protectedCaravan == null)
+                    {
+                        // then change personalities to Hunter.
+                        ChangePersonality(PersonalityType.Hunter);
+
+                        // Return out of this function.
+                        return;
+                    }
+                }
+
                 // If the Guard no longer hears any players,
                 if (heardPlayer == null)
                 {
@@ -645,6 +734,20 @@ public class AI_Controller : MonoBehaviour {
                 DoFireAtIntruder();
 
                 // Test for transition conditions.
+                // If this is a Guard protecting a Caravan,
+                if (isGuardProtectingCaravan)
+                {
+                    // and if that Caravan has died,
+                    if (protectedCaravan == null)
+                    {
+                        // then change personalities to Hunter.
+                        ChangePersonality(PersonalityType.Hunter);
+
+                        // Return out of this function.
+                        return;
+                    }
+                }
+
                 // If there is no more intruder (either dead or has left the premises),
                 if (intruder == null)
                 {
@@ -668,7 +771,94 @@ public class AI_Controller : MonoBehaviour {
     // Perform the FSM for Caravan.
     private void FSM_Caravan()
     {
+        // Act according to the current caravan_AIState.
+        switch (caravan_AIState)
+        {
+            // In the case that the state is Transport,
+            case Caravan_AIState.Transport:
+                // and if currently performing obstacle avoidance,
+                if (avoidanceStage != 0)
+                {
+                    // then perform avoidance protocalls.
+                    DoAvoidance();
+                }
+                // Else, not avoiding obstacles.
+                else
+                {
+                    // Perform Transport protocalls. This is the same as a Guard's Patrol protocalls.
+                    DoPatrol();
+                }
 
+                // Test for transition conditions.
+                // If the Caravan's ecortingGuard has been killed,
+                if (escortingGuard == null)
+                {
+                    // then change to the CheckForFlee state.
+                    ChangeState_Caravan(Caravan_AIState.CheckForFlee);
+                }
+                break;
+
+
+            // In the case that the state is Flee,
+            case Caravan_AIState.CheckForFlee:
+                // Perform CheckForFlee protocalls.
+                CheckForFlee();
+
+                // Test for transition conditions.
+                // If the Caravan can currently hear a player,
+                if (heardPlayer != null)
+                {
+                    // then change state to Flee.
+                    ChangeState_Caravan(Caravan_AIState.Flee);
+                }
+                // Else, the Caravan cannot hear any players.
+                else
+                {
+                    // Switch to Hide state.
+                    ChangeState_Caravan(Caravan_AIState.Hide);
+                }
+                break;
+
+
+            // In the case that the state is Flee,
+            case Caravan_AIState.Flee:
+                // and if currently performing obstacle avoidance,
+                if (avoidanceStage != 0)
+                {
+                    // then perform avoidance protocalls.
+                    DoAvoidance();
+                }
+                // Else, not avoiding obstacles.
+                else
+                {
+                    // Perform Transport protocalls. This is the same as a Guard's Patrol protocalls.
+                    DoPatrol();
+                }
+
+                // Test for transition conditions.
+                // If the Caravan has been fleeing long enough,
+                if ((timeStateEntered + duration_FleeBeforeChecking) <= Time.time)
+                {
+                    // then change state to CheckForFlee.
+                    ChangeState_Caravan(Caravan_AIState.CheckForFlee);
+                }
+                break;
+
+
+            // In the case that the state is Hide,
+            case Caravan_AIState.Hide:
+                // Perform Hide protocalls.
+                DoHide();
+
+                // Test for transition conditions.
+                // If the Caravan can currently hear a player,
+                if (heardPlayer != null)
+                {
+                    // then change state to Flee.
+                    ChangeState_Caravan(Caravan_AIState.Flee);
+                }
+                break;
+        }
     }
 
     // Change the Guard state that the tank AI is in.
@@ -698,6 +888,59 @@ public class AI_Controller : MonoBehaviour {
         timeStateEntered = Time.time;
     }
 
+    // Checks the waypoints on this Guard or Caravan, calling to level them out if necessary
+    // and setting up variables for the Caravan/Guard relationship.
+    private void CheckWaypoints()
+    {
+        // If  waypoints has been left empty,
+        if (waypoints.Length == 0)
+        {
+            // then log an error.
+            Debug.LogError(gameObject.name + "'s waypoints array is empty! Shutting down the AI.");
+            // Turn off this script to prevent errors.
+            this.enabled = false;
+        }
+        // Else, the wapoints array is not empty.
+        else
+        {
+            // If the elevation for the next waypoint does not match the tank's elevation,
+            if (waypoints[currentWaypoint].transform.position.y != tf.position.y)
+            {
+                // then level out all of the waypoints' elevations.
+                LevelOutWaypoints();
+            }
+
+            // If neither of these variables have been set up yet,
+            if (protectedCaravan == null && escortingGuard == null)
+            {
+                // then attempt to get an AI_Controller off of the parent of the next waypoint.
+                AI_Controller ai = waypoints[currentWaypoint].gameObject.GetComponentInParent<AI_Controller>();
+
+                // If an AI_Controller was successfully found,
+                if (ai != null)
+                {
+                    // and if that ai is a Caravan,
+                    if (ai.personality == PersonalityType.Caravan)
+                    {
+                        // then this Guard is protecting that Caravan.
+                        // Save a reference to the Caravan for this Guard.
+                        protectedCaravan = ai.gameObject;
+
+                        // Save a reference to this Guard for the Caravan.
+                        ai.escortingGuard = gameObject;
+
+                        // This is a Guard protecting a Caravan. Remember that info.
+                        isGuardProtectingCaravan = true;
+
+                        // Change the Guard's speed to 110% of the caravan's speed.
+                        data.moveSpeed_Forward =
+                            (float)(protectedCaravan.gameObject.GetComponent<TankData>().moveSpeed_Forward * 1.10);
+                    }
+                }
+            }
+        }
+    }
+
     // Sets all of the appropriate waypoints to the current elevation.
     private void LevelOutWaypoints()
     {
@@ -717,7 +960,7 @@ public class AI_Controller : MonoBehaviour {
         }
     }
 
-    // Performs Patrol protocalls.
+    // Performs Patrol protocalls (Guard or Caravan).
     private void DoPatrol()
     {
         // If stopped (meaning Tank is set to Stop behavior and has reached the end of the waypoint system),
@@ -735,7 +978,7 @@ public class AI_Controller : MonoBehaviour {
         // Else, the tank was unable to rotate towards the waypoint this frame because it is already facing it.
         else
         {
-            // If the Guard can move forward without hitting and obstacle,
+            // If the Guard or Caravan can move forward without hitting and obstacle,
             if (CanMoveForward(data.moveSpeed_Forward))
             {
                 // then move forward.
@@ -905,8 +1148,15 @@ public class AI_Controller : MonoBehaviour {
         }
     }
 
+    // Performs Hide protocalls for the Caravan.
+    private void DoHide()
+    {
+        // Do nothing.
+    }
+    #endregion Guard & Caravan Methods
 
 
+    #region Assassin Methods
     // Perform the FSM for Assassin.
     private void FSM_Assassin()
     {
@@ -922,10 +1172,8 @@ public class AI_Controller : MonoBehaviour {
         // Save the time that this change was made.
         timeStateEntered = Time.time;
     }
+    #endregion Assassin Methods
 
-
-
-    
 
     // Checks if the tank can move forward to its current target (or if an obstacle is blocking).
     private bool CanMoveForward(float speed)
@@ -962,6 +1210,70 @@ public class AI_Controller : MonoBehaviour {
             // Return true (we CAN move forward for 1 second without hitting an obstacle).
             return true;
         }
+    }
+
+    // Checks if the tank should flee from the target or rest.
+    private void CheckForFlee()
+    {
+        // Do nothing.
+    }
+
+    // The tank will flee from the target.
+    private void DoFlee()
+    {
+        // If the tank has been fleeing long enough to care about avoiding obstacles,
+        if ((timeStateEntered + duration_FleeBeforeAvoiding) <= Time.time)
+        {
+            // then perform avoidance protocalls while fleeing.
+            // Check if we can move forward for 1 second without hitting an obstacle.
+            // Pass in "data.moveSpeed_Forward" because that is how far the tank can move in 1 second.
+            if (CanMoveForward(data.moveSpeed_Forward))
+            {
+                // Flee the current target.
+                Flee();
+            }
+            // Else, there is an obstacle in the way within 1 second's travel.
+            else
+            {
+                // Enter obstacle avoidance mode.
+                avoidanceStage = 1;
+            }
+        }
+        // Else, the tank does not yet care about obstacle avoidance.
+        else
+        {
+            // Flee the target.
+            Flee();
+        }
+    }
+
+    // The tank will flee from the target. Always called by DoFlee(), either after checking for obstacles or not.
+    private void Flee()
+    {
+        // If target is null, or if the target is not the same as the most recently heard player,
+        if (target == null || target != heardPlayer)
+        {
+            // then assign a new target. The heard player is the default target.
+            FindNewTarget();
+        }
+
+        // Find the vector away from the target by finding the vector TO the target * -1.
+        Vector3 vectorAwayFromTarget = -1 * (target.position - tf.position);
+
+        // Normalize that vector (gives it a magnitude of 1).
+        vectorAwayFromTarget.Normalize();
+
+        // Multiply the normalized vector * the designer-chosen fleeDistance.
+        vectorAwayFromTarget *= fleeDistance;
+
+        // Add that value to the tank's current position to determine the place we are traveling to.
+        Vector3 fleePosition = tf.position + vectorAwayFromTarget;
+
+        // Now rotate towards that position.
+        motor.RotateTowards(fleePosition);
+
+        // Move forward.
+        motor.Move(data.moveSpeed_Forward);
     }
 
     // Perform obstacle avoidance based on which stage the tank is in.
@@ -1113,6 +1425,23 @@ public class AI_Controller : MonoBehaviour {
         return false;
     }
 
+    // Checks if the tank can hear the passed-in player.
+    private bool CanHear(Transform player)
+    {
+        // If the player is close enough to hear,
+        if (Vector3.SqrMagnitude(player.position - tf.position) < hearingDistance_Squared)
+        {
+            // then return true.
+            return true;
+        }
+        // Else, the player is too far away to hear.
+        else
+        {
+            // Return false.
+            return false;
+        }
+    }
+
     // Checks if the passed-in player is within the lockedOn max angle.
     private bool CanLockOn(Transform player)
     {
@@ -1165,12 +1494,29 @@ public class AI_Controller : MonoBehaviour {
         }
     }
 
+    // Find a new target, either from the most recently heard player, or from the playerList.
+    private void FindNewTarget()
+    {
+        // If this tank can currently hear another tank,
+        if (heardPlayer != null)
+        {
+            // then that tank is the new target.
+            target = heardPlayer;
+        }
+        // Else, if the playerList is not empty,
+        else if (playerList.Count > 0)
+        {
+            // then advance to the next player so that all the tanks don't focus on one player.
+            NextPlayerToTarget();
+
+            // Get the transform component from the next player tank in the GM's list.
+            target = playerList[playerToTarget].gameObject.transform;
+        }
+    }
+
     // Advances the int representing the index of the next alive player to target, according to the GM's list.
     private void NextPlayerToTarget()
     {
-        // Get a temp reference to the list for readability and processing speeds.
-        List<TankData> playerList = GameManager.instance.player_tanks;
-
         // If we're not already at the end of the player list,
         if (playerToTarget < playerList.Count - 1)
         {
@@ -1183,6 +1529,13 @@ public class AI_Controller : MonoBehaviour {
             // Set the var to 0.
             playerToTarget = 0;
         }
+    }
+
+    // Reverts the tank to its original forward move speed.
+    private void RevertToOriginalSpeed()
+    {
+        // Set the tank's speed equal to the speed it had at the beginning of the game.
+        data.moveSpeed_Forward = data.originalSpeed_Forward;
     }
     #endregion Dev-Defined Methods
 }

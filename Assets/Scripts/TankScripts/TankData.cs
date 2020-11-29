@@ -63,6 +63,9 @@ public class TankData : MonoBehaviour {
     // The amount of damage dealt by shells fired from this tank.
     [Tooltip("The amount of damage dealt by shells fired from this tank.")] public float shellDamage = 10f;
 
+    // The forward speed this tank had at the start of the game.
+    [HideInInspector] public float originalSpeed_Forward = 3.0f;
+
     // Serialized private fields --v
 
     [Header("Object References")]
@@ -79,7 +82,8 @@ public class TankData : MonoBehaviour {
     // Performed before Start.
     public void Awake()
     {
-        
+        // Set the original forward speed to the speed when the game starts.
+        originalSpeed_Forward = moveSpeed_Forward;
     }
 
     // Called before the first frame.

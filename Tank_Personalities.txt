@@ -55,16 +55,18 @@ Takeaways:
 
 
 Personality 4 - Caravan
-The Caravan tank is slow, has a lot of health, and is worth a great deal of points (All three variables decided by designers,
+The Caravan tank is big, slow, has a lot of health, and is worth a great deal of points (All three variables decided by designers,
 but are meant to follow this pattern). It attempts to traverse from one waypoint to another and back again (or perhaps a longer series of waypoints),
-a lot like a Guard, but the Caravan does not fight back, or even flee-- at least, not at first. Caravans work alongside a Guard who travels with and
-circles the Caravan, protecting it. Once that Guard is destroyed, the Caravan will flee any player that approaches it.
-Whenever a Caravan completes a full circuit
+a lot like a Guard, but the Caravan does not fight back, or even flee-- at least, not at first. Caravans work alongside a Guard who travels with
+the Caravan, protecting it from behind and to the right. Once that Guard is destroyed, the Caravan will flee any player that approaches it.
+Whenever a Caravan completes a full circuit, the points that killing it is worth drops.
 
 Takeaways:
 -Meant to be slow, have high health, and be worth a great deal of points
 -Ping-pongs or loops across the map like a Guard
    ~However, does not fight back like a Guard would
--Alway has a Guard protecting it, which will travel through waypoints attacked to the Caravan
+-The points it is worth drops every time the Caravan completes a curcuit
+-Alway has a Guard protecting it, which will travel behind and to the right of the Caravan
 -If the Guard is killed, the Caravan will flee any players
+   ~Will hide after a while if it doesn't hear any players
 -If the Caravan is killed, the Guard will become a vengeful Hunter
