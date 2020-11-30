@@ -182,6 +182,9 @@ public class AI_Controller : MonoBehaviour {
     // The amount of "wiggle room" the tank has for being close enough to the waypoint (allowed variance).
     [SerializeField] private float waypoints_CloseEnough = 1.0f;
 
+    // The amount of points that a Caravan's pointValue decreases by whenever it finishes a circuit.
+    [SerializeField] private int pointDropPerCircuit = 20;
+
     // The square of waypoints_CloseEnough, calculated in Awake.
     private float waypoints_CloseEnough_Squared;
 
@@ -625,6 +628,13 @@ public class AI_Controller : MonoBehaviour {
     // Perform chase protocalls.
     private void DoChase()
     {
+        // If target is null,
+        if (target == null)
+        {
+            // then find a new target.
+            FindNewTarget();
+        }
+
         // Rotate a bit towards the target.
         motor.RotateTowards(target.position);
 
@@ -930,39 +940,45 @@ public class AI_Controller : MonoBehaviour {
         // Else, the wapoints array is not empty.
         else
         {
-            // If the elevation for the next waypoint does not match the tank's elevation,
-            if (waypoints[currentWaypoint].transform.position.y != tf.position.y)
+            // If the waypoint gameObjects have not been set up yet (this function called too early),
+            if (waypoints[0] == null)
+            {
+                // then return out to prevent errors.
+                return;
+            }
+            // Else, if the elevation for the next waypoint does not match the tank's elevation,
+            else if (waypoints[currentWaypoint].transform.position.y != tf.position.y)
             {
                 // then level out all of the waypoints' elevations.
                 LevelOutWaypoints();
             }
+        }
+        
+        // If neither of these variables have been set up yet,
+        if (protectedCaravan == null && escortingGuard == null)
+        {
+            // then attempt to get an AI_Controller off of the parent of the next waypoint.
+            AI_Controller ai = waypoints[currentWaypoint].gameObject.GetComponentInParent<AI_Controller>();
 
-            // If neither of these variables have been set up yet,
-            if (protectedCaravan == null && escortingGuard == null)
+            // If an AI_Controller was successfully found,
+            if (ai != null)
             {
-                // then attempt to get an AI_Controller off of the parent of the next waypoint.
-                AI_Controller ai = waypoints[currentWaypoint].gameObject.GetComponentInParent<AI_Controller>();
-
-                // If an AI_Controller was successfully found,
-                if (ai != null)
+                // and if that ai is a Caravan,
+                if (ai.personality == PersonalityType.Caravan)
                 {
-                    // and if that ai is a Caravan,
-                    if (ai.personality == PersonalityType.Caravan)
-                    {
-                        // then this Guard is protecting that Caravan.
-                        // Save a reference to the Caravan for this Guard.
-                        protectedCaravan = ai.gameObject;
+                    // then this Guard is protecting that Caravan.
+                    // Save a reference to the Caravan for this Guard.
+                    protectedCaravan = ai.gameObject;
 
-                        // Save a reference to this Guard for the Caravan.
-                        ai.escortingGuard = gameObject;
+                    // Save a reference to this Guard for the Caravan.
+                    ai.escortingGuard = gameObject;
 
-                        // This is a Guard protecting a Caravan. Remember that info.
-                        isGuardProtectingCaravan = true;
+                    // This is a Guard protecting a Caravan. Remember that info.
+                    isGuardProtectingCaravan = true;
 
-                        // Change the Guard's speed to 110% of the caravan's speed.
-                        data.moveSpeed_Forward =
-                            (float)(protectedCaravan.gameObject.GetComponent<TankData>().moveSpeed_Forward * 1.10);
-                    }
+                    // Change the Guard's speed to 110% of the caravan's speed.
+                    data.moveSpeed_Forward =
+                        (float)(protectedCaravan.gameObject.GetComponent<TankData>().moveSpeed_Forward * 1.10);
                 }
             }
         }
@@ -995,6 +1011,12 @@ public class AI_Controller : MonoBehaviour {
         {
             // Do nothing.
             // This prevents tank from turning constantly while standing on the final waypoint.
+        }
+        // else, if the waypoint objects have not been set up yet (this function called too early),
+        else if (waypoints[0] == null)
+        {
+            // then return out to avoid errors.
+            return;
         }
         // Else, if we can rotate towards the current waypoint (done during the if call),
         else if (motor.RotateTowards(waypoints[currentWaypoint].position))
@@ -1112,6 +1134,13 @@ public class AI_Controller : MonoBehaviour {
         {
             // Tank should not stop.
             waypoints_IsStopped = true;
+
+            // If this is a Caravan,
+            if (personality == PersonalityType.Caravan)
+            {
+                // then lower its pointValue appropriately.
+                data.ChangePointsValue(pointDropPerCircuit);
+            }
         }
     }
 
@@ -1129,6 +1158,13 @@ public class AI_Controller : MonoBehaviour {
         {
             // Reset the current waypoint index to 0.
             currentWaypoint = 0;
+
+            // If this is a Caravan,
+            if (personality == PersonalityType.Caravan)
+            {
+                // then lower its pointValue appropriately.
+                data.ChangePointsValue(pointDropPerCircuit);
+            }
         }
     }
 
@@ -1171,6 +1207,13 @@ public class AI_Controller : MonoBehaviour {
 
                 // Flip the direction.
                 waypoints_IsGoingForward = true;
+
+                // If this is a Caravan,
+                if (personality == PersonalityType.Caravan)
+                {
+                    // then lower its pointValue appropriately.
+                    data.ChangePointsValue(pointDropPerCircuit);
+                }
             }
         }
     }
@@ -1619,6 +1662,15 @@ public class AI_Controller : MonoBehaviour {
     // Checks if the tank can hear the passed-in player.
     private bool CanHear(Transform player)
     {
+        if (player == null)
+        {
+            print("player is null");
+        }
+        if (tf == null)
+        {
+            print("tf is null");
+        }
+
         // If the player is close enough to hear,
         if (Vector3.SqrMagnitude(player.position - tf.position) < hearingDistance_Squared)
         {
