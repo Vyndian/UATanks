@@ -1260,7 +1260,7 @@ public class AI_Controller : MonoBehaviour {
                 DoTakeAim();
 
                 // Test for transition conditions.
-                // If the victim is now outside of earshot,
+                // If victim is null, or if the victim is now outside of earshot,
                 if (!CanHear(victim))
                 {
                     // then return to the LayInWait state.
@@ -1662,13 +1662,11 @@ public class AI_Controller : MonoBehaviour {
     // Checks if the tank can hear the passed-in player.
     private bool CanHear(Transform player)
     {
+        // If the passed in player is null,
         if (player == null)
         {
-            print("player is null");
-        }
-        if (tf == null)
-        {
-            print("tf is null");
+            // then return false. Can't hear it if it does not exist.
+            return false;
         }
 
         // If the player is close enough to hear,
