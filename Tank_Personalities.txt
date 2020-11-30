@@ -44,14 +44,18 @@ The Assassin will attempt to hide (by staying where the designer places it in it
 than firing off a fast, deadly shot before turning itself into a Hunter personality, meaning it will then chase the player,
 attacking at any opportunity and flee is badly damaged. In this way, the Assassin may also heal itself,
 but only in the sense that it becomes a Hunter once the first assassination attempt is made.
+If the Assassin succeeds in killing the target in one blow, however, it will remain an Assassin.
+If the Assassin takes damage while waiting for a victim, it will change to Hunter.
 
 Takeaways:
 -Hides in one place until it sees a player
    ~Does not seek out this hiding spot. Must be placed there by the designer, or spawned in its appropriate spot
 -Once a player is heard, attempts to line up a shot by rotating toward the player
 -Once the shot is lined up, attempts to assassinate the player by firing off a shot that is more deadly and travels faster than a normal round
--Once the assassination attempt is made, changes Personality to Hunter
+-Once the assassination attempt is made, if the target survives, changes Personality to Hunter
    ~Of course, follows Hunter protocalls once the change is made
+-If target is eliminated by the assassination attempt, waits for another victim.
+-If damaged while waiting for a victim, will change to Hunter.
 
 
 Personality 4 - Caravan

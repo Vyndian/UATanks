@@ -51,7 +51,8 @@ public class TankCannon : MonoBehaviour {
 
     #region Dev-Defined Methods
     // Fires a shell from the cannon in the direction the cannon is facing.
-    public void Fire(float speed)
+    // If a damage multiplier is provided (by the assassin), damage will be adjusted accordingly.
+    public void Fire(float speed, float damageMultiplier = 1.0f)
     {
         // Check if the tank can shoot again yet.
         // If we have reached the time necessary to shoot again,
@@ -72,7 +73,7 @@ public class TankCannon : MonoBehaviour {
             ShellBehavior shellBehavior = shell.GetComponent<ShellBehavior>();
 
             // Set the shell's damage.
-            shellBehavior.damage = data.shellDamage;
+            shellBehavior.damage = data.shellDamage * damageMultiplier;
 
             // Set the shell's firedBy to this tank's TankData.
             shellBehavior.firedBy = data;

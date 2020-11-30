@@ -16,7 +16,7 @@ public class AI_Controller : MonoBehaviour {
     public enum Guard_AIState { Patrol, RotateTowardSound, FireAtIntruder };
 
     // The definition for the enum for the state of the tank AI (if in Assassin personality).
-    public enum Assassin_AIState { LayInWait, RotateTowardSound, Strike, VerifyKill };
+    public enum Assassin_AIState { LayInWait, TakeAim, Assassinate, VerifyKill };
 
     // The definition for the enum for the state of the tank AI (if in Caravan personality).
     public enum Caravan_AIState { Transport, CheckForFlee, Flee, Hide };
@@ -120,17 +120,6 @@ public class AI_Controller : MonoBehaviour {
     private float timeLastTick = 0.0f;
 
 
-    [Header("Hunter variables")]
-    // The Transform of the target this tank will Chase.
-    [SerializeField] private Transform target;
-
-    // The distance at which the tank is close enough to the player (when chasing) to stop moving closer.
-    [SerializeField] private readonly float chasing_CloseEnough = 7.0f;
-
-    // The square of chasing_CloseEnough. Determined by maths at Awake.
-    private float chasing_CloseEnough_Squared;
-
-
     [Header("Obstacle Avoidance variables")]
     // The multiplier for the original raycast's length when
     // firing raycasts at 45 deg angles to determine which direction to turn. 1 for the same, 2 for double, etc.
@@ -164,6 +153,17 @@ public class AI_Controller : MonoBehaviour {
     // A decimal representing the threshold of percentage of health that the tank will flee.
     // Determined at Start based on value held in data.
     [SerializeField] private float fleeThreshold_Decimal;
+
+
+    [Header("Hunter variables")]
+    // The Transform of the target this tank will Chase.
+    [SerializeField] private Transform target;
+
+    // The distance at which the tank is close enough to the player (when chasing) to stop moving closer.
+    [SerializeField] private readonly float chasing_CloseEnough = 7.0f;
+
+    // The square of chasing_CloseEnough. Determined by maths at Awake.
+    private float chasing_CloseEnough_Squared;
 
 
     [Header("Guard & Caravan Info")]
@@ -201,6 +201,27 @@ public class AI_Controller : MonoBehaviour {
 
     // Whether or not this is a Guard that is also protecting a Caravan.
     private bool isGuardProtectingCaravan = false;
+
+
+    [Header("Assassin variables")]
+    // The damage multiplier for the one, strong attack the Assassin makes.
+    [SerializeField, Tooltip("Assassin's one powerful shot's damage will be multiplied by this number.")]
+    private float sneakAttack_DamageMultiplier = 2.5f;
+
+    // The speed multiplier for the one, strong attacj the Assassin makes.
+    [SerializeField, Tooltip("Assassin's one powerful shot's shell speed will be multiplied by this number.")]
+    private float sneakAttack_SpeedMultiplier = 2.5f;
+
+    // The amount of time after attemptiong to assassinate the target that the Assassin waits before
+    // assuming that the target lived.
+    [SerializeField] private float duration_VerifyKill = 1.0f;
+
+    // The victim that the Assassin is trying to kill.
+    // Set when a player is heard, nulled out when that player leaves earshot.
+    private Transform victim;
+
+    // Whether or not the Assassin has fired its one shot.
+    private bool shotFired = false;
 
 
     [Header("Component & Object References")]
@@ -405,6 +426,9 @@ public class AI_Controller : MonoBehaviour {
 
                 // Revert the tank's speed to its original speed.
                 RevertToOriginalSpeed();
+
+                // Ensure the Assassin is in the LayInWait state.
+                ChangeState_Assassin(Assassin_AIState.LayInWait);
 
                 break;
 
@@ -1160,7 +1184,97 @@ public class AI_Controller : MonoBehaviour {
     // Perform the FSM for Assassin.
     private void FSM_Assassin()
     {
+        // Act according to the current assassin_AIState.
+        switch (assassin_AIState)
+        {
+            // In the case that the state is LayInWait,
+            case Assassin_AIState.LayInWait:
+                // then perform LayInWait protocalls.
+                DoLayInWait();
 
+                // Test for transition conditions.
+                // If a player is heard,
+                if (heardPlayer != null)
+                {
+                    // then change state to RotateTowardSound.
+                    ChangeState_Assassin(Assassin_AIState.TakeAim);
+                }
+                break;
+
+
+            // In the case that the state is TakeAim,
+            case Assassin_AIState.TakeAim:
+                // then perform TakeAim protocalls.
+                DoTakeAim();
+
+                // Test for transition conditions.
+                // If the victim is now outside of earshot,
+                if (!CanHear(victim))
+                {
+                    // then return to the LayInWait state.
+                    ChangeState_Assassin(Assassin_AIState.LayInWait);
+                }
+                // Else, can still hear the player.
+                else
+                {
+                    // Test if yet aimed directly at player.
+                    // This way, motor.RotateTowards() is called twice as often as a normal tank,
+                    // so that the Assassin is very effective for its one shot.
+                    // If the Assassin is already facing exactly towards the heardPlayer,
+                    if (!motor.RotateTowards(victim.position))
+                    {
+                        // and if the Assassin can clearly see its target,
+                        if (CanSee(victim))
+                        {
+                            // then the Assassin is ready to take its shot. Change to Assassinate state.
+                            ChangeState_Assassin(Assassin_AIState.Assassinate);
+                        }
+                        // Else, the shot is lined up, but the Assassin has no Line of Sight.
+                    }
+                    // Else, the Assassin still needed to take better aim before firing.
+                }
+                break;
+
+
+            // In the case that the state is Assassinate,
+            case Assassin_AIState.Assassinate:
+                // then perform Assassinate protocalls.
+                DoAssassinate();
+
+                // Test for transition conditions.
+                // If the shot has been fired,
+                if (shotFired)
+                {
+                    // then change state to VerifyKill.
+                    ChangeState_Assassin(Assassin_AIState.VerifyKill);
+                }
+                break;
+
+
+            // In the case that the state is VerifyKill,
+            case Assassin_AIState.VerifyKill:
+                // then perform VerifyKill protocalls.
+                DoVerifyKill();
+
+                // Test for transition protocalls.
+                // If the target is dead (target should match the intended victim of the attack),
+                if (victim == null)
+                {
+                    // then the attack succeeded. No need to change to Hunter Personality.
+                    // Change back to LayInWait state.
+                    ChangeState_Assassin(Assassin_AIState.LayInWait);
+                }
+                // Else, the victim lives. If we have waited long enough to be sure the shot did not kill them,
+                else if ((timeStateEntered + duration_VerifyKill) < Time.time)
+                {
+                    // then null out victim,
+                    victim = null;
+
+                    // and change Personality to Hunter.
+                    ChangePersonality(PersonalityType.Hunter);
+                }
+                break;
+        }
     }
 
     // Change the Assassin state that the tank AI is in.
@@ -1171,6 +1285,65 @@ public class AI_Controller : MonoBehaviour {
 
         // Save the time that this change was made.
         timeStateEntered = Time.time;
+
+        // If the state was changed to LayInWait,
+        if (assassin_AIState == Assassin_AIState.LayInWait)
+        {
+            // then null out victim.
+            victim = null;
+        }
+    }
+
+    // Perform the LayInWait protocalls.
+    private void DoLayInWait()
+    {
+        // If heardPlayer is still non-null,
+        if (heardPlayer != null)
+        {
+            // then set that player as the Assassin's victim.
+            victim = heardPlayer;
+        }
+    }
+
+    // Perform the TakeAim protocalls.
+    private void DoTakeAim()
+    {
+        // If the victim is still non-null,
+        if (victim != null)
+        {
+            // and if the victim has left the tank's hearing radius,
+            if (Vector3.SqrMagnitude(victim.position - tf.position) > hearingDistance_Squared)
+            {
+                // then set victim back to null.
+                victim = null;
+            }
+            // Else, the victim is still within earshot.
+            else
+            {
+                // Rotate toward that player.
+                motor.RotateTowards(victim.position);
+            }
+        }
+    }
+
+    // Perform the Assassinate protocalls.
+    private void DoAssassinate()
+    {
+        // Verify that no round has yet been fired.
+        if (!shotFired)
+        {
+            // Fire a very fast, damaging attack at the target.
+            cannon.Fire((data.shellSpeed * sneakAttack_SpeedMultiplier), sneakAttack_DamageMultiplier);
+
+            // The shot has been fired.
+            shotFired = true;
+        }
+    }
+
+    // Perform the VerifyKill protocalls.
+    private void DoVerifyKill()
+    {
+
     }
     #endregion Assassin Methods
 
@@ -1377,7 +1550,6 @@ public class AI_Controller : MonoBehaviour {
         // Send out a raycast at that angle. If it hits something,
         if (Physics.Raycast(tf.position, rayAngle, out hit, raySpeed))
         {
-            print("raycast right HIT something");
             // then there is an obstacle to the right, as well as the left.
             // Do nothing.
         }
@@ -1479,7 +1651,7 @@ public class AI_Controller : MonoBehaviour {
         // If the heard player is still non-null,
         if (heardPlayer != null)
         {
-            // and if the heard player has left the Guard's hearing radius,
+            // and if the heardPlayer has left the tank's hearing radius,
             if (Vector3.SqrMagnitude(heardPlayer.position - tf.position) > hearingDistance_Squared)
             {
                 // then set heardPlayer back to null.
@@ -1488,7 +1660,7 @@ public class AI_Controller : MonoBehaviour {
             // Else, the heard player is still within earshot.
             else
             {
-                // Rotate toward that player (Done during the if call).
+                // Rotate toward that player.
                 motor.RotateTowards(heardPlayer.position);
             }
         }
