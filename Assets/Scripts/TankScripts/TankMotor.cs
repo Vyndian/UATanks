@@ -183,10 +183,6 @@ public class TankMotor : MonoBehaviour {
             if (Vector3.SqrMagnitude(tf.position - enemyPosition) <=
                 enemy.GetComponent<AI_Controller>().hearingDistance_Squared)
             {
-                print("Distance: " + Vector3.SqrMagnitude(tf.position - enemyPosition));
-                print("hearingDistance_Squared: " + enemy.GetComponent<AI_Controller>().hearingDistance_Squared);
-                print("Base hearing distance: " + enemy.GetComponent<AI_Controller>().hearingDistance);
-
                 // then tell the enemy that it hears this player.
                 enemy.GetComponent<AI_Controller>().heardPlayer = tf;
             }

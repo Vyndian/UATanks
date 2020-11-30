@@ -223,6 +223,9 @@ public class AI_Controller : MonoBehaviour {
     // Whether or not the Assassin has fired its one shot.
     private bool shotFired = false;
 
+    // The health the Assassin had when last transitioning to the LayInWait state.
+    public float hiding_UndamagedHealth;
+
 
     [Header("Component & Object References")]
     // The transform on this gameObject.
@@ -1193,8 +1196,14 @@ public class AI_Controller : MonoBehaviour {
                 DoLayInWait();
 
                 // Test for transition conditions.
-                // If a player is heard,
-                if (heardPlayer != null)
+                // If the Assassin takes damage while in LayInWait state,
+                if (data.currentHealth < hiding_UndamagedHealth)
+                {
+                    // then switch to Hunter personality.
+                    ChangePersonality(PersonalityType.Hunter);
+                }
+                // Else, if a player is heard,
+                else if (heardPlayer != null)
                 {
                     // then change state to RotateTowardSound.
                     ChangeState_Assassin(Assassin_AIState.TakeAim);
@@ -1291,6 +1300,9 @@ public class AI_Controller : MonoBehaviour {
         {
             // then null out victim.
             victim = null;
+
+            // Save the current health (so it knows when it's been damaged).
+            hiding_UndamagedHealth = data.currentHealth;
         }
     }
 
@@ -1302,6 +1314,13 @@ public class AI_Controller : MonoBehaviour {
         {
             // then set that player as the Assassin's victim.
             victim = heardPlayer;
+        }
+
+        // If hiding_UndamagedHealth is 0 for some reason,
+        if (hiding_UndamagedHealth == 0)
+        {
+            // then set it equal to current health.
+            hiding_UndamagedHealth = data.currentHealth;
         }
     }
 
