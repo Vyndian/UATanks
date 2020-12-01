@@ -71,6 +71,7 @@ GameObject:
   - component: {fileID: 114754970967145914}
   - component: {fileID: 114652438279012664}
   - component: {fileID: 114475180083626266}
+  - component: {fileID: 114033936484220230}
   m_Layer: 0
   m_Name: PlayerTank
   m_TagString: Untagged
@@ -292,7 +293,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1240554008317346}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: 0.901, z: -7.47}
+  m_LocalPosition: {x: 5.95, y: 0.898, z: 12.65}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4485045072401274}
@@ -477,6 +478,19 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1219021887871520}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114033936484220230
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1240554008317346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7808cb42a74c4194bbaa0f93f2b67f78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  powerups: []
+  data: {fileID: 0}
 --- !u!114 &114460372126154680
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -530,8 +544,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21ec3ff0efaa1eb43b6cd33ad07d82fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlayer: 0
   currentScore: 0
-  pointsForKilling: 100
+  pointsValue: 100
   moveSpeed_Forward: 3
   moveSpeed_Reverse: -1
   turnSpeed: 180
@@ -539,12 +554,14 @@ MonoBehaviour:
   cannon_elevateSpeed: 180
   maximumCannonElevateUp: -28
   maximumCannonElevateDown: 12
-  shootDelay: 5
+  fireRate: 2.3
   time_ShellReady: 0
   shellSpeed: 700
   maxHealth: 100
   currentHealth: 0
+  fleeThreshold_Percentage: 50
   shellDamage: 10
+  originalSpeed_Forward: 3
   cameraPosition: {fileID: 1199916466699970}
 --- !u!143 &143020499059977256
 CharacterController:

@@ -59,7 +59,7 @@ public class TankCannon : MonoBehaviour {
         if (Time.time >= data.time_ShellReady)
         {
             // then we can fire. First, determine the next time the shell can fire again.
-            data.time_ShellReady = Time.time + data.shootDelay;
+            data.time_ShellReady = Time.time + data.fireRate;
 
             // Instantiate a shell.
             GameObject shell = GameObject.Instantiate

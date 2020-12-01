@@ -41,7 +41,7 @@ public class TankData : MonoBehaviour {
     public float maximumCannonElevateDown = 12f;
 
     // The aount of delay necessary between firing each shell.
-    public float shootDelay = 2.3f;
+    public float fireRate = 2.3f;
 
     // The time that the tank may fire its next shell. At time of shooting, calculated as Time.time + shootDelay.
     public float time_ShellReady = 0f;
