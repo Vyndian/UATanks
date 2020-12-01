@@ -16,6 +16,9 @@ public class Powerup {
 	// Can modify the tank's fire rate.
 	public float fireRateModifier;
 
+	// Can modify the tank's damage dealt.
+	public float damageModifier;
+
 	// How long this duration is meant to last.
 	public float powerupDuration;
 
@@ -39,6 +42,9 @@ public class Powerup {
 
 		// Apply the fire rate modifier.
 		target.fireRate += fireRateModifier;
+
+		// Apply the damage modifier.
+		target.shellDamage += damageModifier;
 	}
 
 	// We call this when this object is deactivated.
@@ -55,6 +61,9 @@ public class Powerup {
 
 		// Undo the changes made to the tank's speed.
 		target.fireRate -= fireRateModifier;
+
+		// Undo the changes made to the tank's damage.
+		target.shellDamage -= damageModifier;
 	}
 	#endregion Dev-Defined Methods
 }
