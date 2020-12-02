@@ -290,6 +290,8 @@ MonoBehaviour:
   - {fileID: 1301826968428674, guid: 4d925007f02076a4ebb19b31f9314896, type: 2}
   numRows: 2
   numColumns: 3
+  mapSeed: 2147483647
+  useSeed: 1
   tf: {fileID: 373631930}
 --- !u!1 &484236152
 GameObject:

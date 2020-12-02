@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class MapGenerator : MonoBehaviour {
 
@@ -18,6 +19,12 @@ public class MapGenerator : MonoBehaviour {
     // The number of columns of rooms that should be generated.
     [SerializeField] private int numColumns;
 
+    // The seed that will be used for RNGs if useSeed is true.
+    [SerializeField] private int mapSeed_Manual = 123;
+
+    // Enum for which method should be used for seeding Random.
+    [SerializeField] private RandomSeedMethod randomSeedMethod = RandomSeedMethod.DateTime;
+
 
     [Header("Component variables")]
     // The Transform on this gameObject.
@@ -25,6 +32,9 @@ public class MapGenerator : MonoBehaviour {
 
 
     // Private fields --v
+
+    // Enum definition for the different methods available for seeding Random for map generation.
+    private enum RandomSeedMethod { DateTime, Manual, MapOfTheDay };
 
     // A reference to the GameManager.
     private GameManager gm;
@@ -43,6 +53,9 @@ public class MapGenerator : MonoBehaviour {
 
     // The current index of the randomized grid prefab that is to be used.
     private int currentIndex = 0;
+
+    // The map seed to use for the "MapOfTheDay".
+    private int mapSeed_MapOfTheDay;
     #endregion Fields
 
 
@@ -61,6 +74,9 @@ public class MapGenerator : MonoBehaviour {
             // then set it.
             tf = transform;
         }
+
+        // Initialize the mapSeed_MapOfTheDay.
+        mapSeed_MapOfTheDay = DateToInt(DateTime.Now.Date);
     }
 
     // Called before the first frame.
@@ -71,6 +87,25 @@ public class MapGenerator : MonoBehaviour {
         {
             // then set it up.
             gm = GameManager.instance;
+        }
+
+        // If the randomSeedMethod is set to DateTime,
+        if (randomSeedMethod == RandomSeedMethod.DateTime)
+        {
+            // then set the random seed using the current DateTime.
+            UnityEngine.Random.InitState(DateToInt(DateTime.Now));
+        }
+        // Else, if the randomSeedMethod is set to Manual,
+        else if (randomSeedMethod == RandomSeedMethod.Manual)
+        {
+            // then set the random seed using the manually-entered mapSeed.
+            UnityEngine.Random.InitState(mapSeed_Manual);
+        }
+        // Else, the randomSeedMethod is set to MapOfTheDay.
+        else if (randomSeedMethod == RandomSeedMethod.MapOfTheDay)
+        {
+            // Set the random seed using the manually-entered mapSeed.
+            UnityEngine.Random.InitState(mapSeed_MapOfTheDay);
         }
 
         // Initialize the list of randomized grid prefabs.
@@ -109,7 +144,7 @@ public class MapGenerator : MonoBehaviour {
         for (int i = 0; i < randomizedGridPrefabs.Count; i++)
         {
             // Get a random int representing an index between the current iteration and the end of the list.
-            int j = Random.Range(i, randomizedGridPrefabs.Count);
+            int j = UnityEngine.Random.Range(i, randomizedGridPrefabs.Count);
 
             // Create a temp GameObject holding the value of the current element in the iteration through the list.
             GameObject t = randomizedGridPrefabs[i];
@@ -184,6 +219,9 @@ public class MapGenerator : MonoBehaviour {
                 InstantiateRoom(position, j, i);
             }
         }
+
+        // Re-seed Random to use the current DateTime.
+        UnityEngine.Random.InitState(DateToInt(DateTime.Now));
     }
 
     // Instantiate a room at the given coordinates.
@@ -251,6 +289,13 @@ public class MapGenerator : MonoBehaviour {
             room.doorEast.SetActive(false);
             room.doorWest.SetActive(false);
         }
+    }
+
+    // Return an integer based on the information within the provided DateTime.
+    private int DateToInt(DateTime date)
+    {
+        // Return the sum of all of these values.
+        return date.Year + date.Month + date.Day + date.Hour + date.Minute + date.Second + date.Millisecond;
     }
     #endregion Dev-Defined Methods
 }
