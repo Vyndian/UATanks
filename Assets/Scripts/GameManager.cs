@@ -9,6 +9,10 @@ public class GameManager : MonoBehaviour {
     // The single instance of GameManager allowed.
     public static GameManager instance;
 
+    // A two-dimensional array holding all the Room scripts, each associated with a room tile in the grid.
+    // The "x, y" coordinates of each element represent their position in the rows, columns of the room grid.
+    public Room[,] grid;
+
     // A list of the currently ALIVE players' TankData Components.
     public List<TankData> player_tanks;
 
