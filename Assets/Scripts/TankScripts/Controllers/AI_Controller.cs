@@ -176,8 +176,9 @@ public class AI_Controller : MonoBehaviour {
     // The Caravan gameObject that the Guard is protecting, if it is doing so.
     [SerializeField] private GameObject protectedCaravan;
 
-    // Array of Transforms of the GameObjects being used as waypoints for this AI.
-    [SerializeField] private Transform[] waypoints;
+    // List of Transforms of the gameObjects being used as waypoints for this AI.
+    // Most likely, will be set from the array of waypoints on the AI_Spawner that is spawning this tank.
+    List<Transform> waypoints;
 
     // The amount of "wiggle room" the tank has for being close enough to the waypoint (allowed variance).
     [SerializeField] private float waypoints_CloseEnough = 1.0f;
@@ -293,6 +294,9 @@ public class AI_Controller : MonoBehaviour {
             // Get the TankCannon on this gameObject.
             cannon = gameObject.GetComponent<TankCannon>();
         }
+
+        // Initialize the list of waypoints.
+        waypoints = new List<Transform>();
 
         // Get the square of aiSenseRadius and save it.
         aiSenseRadius_Squared = aiSenseRadius * aiSenseRadius;
@@ -930,12 +934,26 @@ public class AI_Controller : MonoBehaviour {
     private void CheckWaypoints()
     {
         // If  waypoints has been left empty,
-        if (waypoints.Length == 0)
+        if (waypoints.Count == 0)
         {
-            // then log an error.
-            Debug.LogError(gameObject.name + "'s waypoints array is empty! Shutting down the AI.");
-            // Turn off this script to prevent errors.
-            this.enabled = false;
+            // then this is probably being instantiated via a spawner.
+            // Attempt to a AI_Spawner from the parent(s).
+            AI_Spawner spawner = GetComponentInParent<AI_Spawner>();
+
+            // If one was found,
+            if (spawner != null)
+            {
+                // and if that spawner's waypoints are set,
+                if (spawner.waypoints.Length > 0)
+                {
+                    // then iterate through those waypoints,
+                    foreach (Transform waypoint in spawner.waypoints)
+                    {
+                        // and add each of them to this list of waypoints.
+                        waypoints.Add(waypoint);
+                    }
+                }
+            }
         }
         // Else, the wapoints array is not empty.
         else
@@ -1124,7 +1142,7 @@ public class AI_Controller : MonoBehaviour {
     private void NextWaypoint_Stop()
     {
         // If NOT already at the end,
-        if (currentWaypoint < waypoints.Length - 1)
+        if (currentWaypoint < waypoints.Count - 1)
         {
             // then add 1 to go tot he next waypoint in the list.
             currentWaypoint++;
@@ -1148,7 +1166,7 @@ public class AI_Controller : MonoBehaviour {
     private void NextWaypoint_Loop()
     {
         // If NOT already at the end,
-        if (currentWaypoint < waypoints.Length - 1)
+        if (currentWaypoint < waypoints.Count - 1)
         {
             // then add 1 to the currentWaypoint.
             currentWaypoint++;
@@ -1175,7 +1193,7 @@ public class AI_Controller : MonoBehaviour {
         if (waypoints_IsGoingForward)
         {
             // and if NOT already at the end,
-            if (currentWaypoint < waypoints.Length - 1)
+            if (currentWaypoint < waypoints.Count - 1)
             {
                 // then add 1 to the currentWaypoint.
                 currentWaypoint++;
