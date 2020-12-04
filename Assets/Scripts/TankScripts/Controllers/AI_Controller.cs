@@ -173,12 +173,15 @@ public class AI_Controller : MonoBehaviour {
     // The Guard that is protecting this Caravan, if this is a Caravan.
     public GameObject escortingGuard;
 
+    // The Caravan's escort point waypoint for its Guard escort.
+    public Transform waypoint_EscortPoint;
+
     // The Caravan gameObject that the Guard is protecting, if it is doing so.
     [SerializeField] private GameObject protectedCaravan;
 
     // List of Transforms of the gameObjects being used as waypoints for this AI.
     // Most likely, will be set from the array of waypoints on the AI_Spawner that is spawning this tank.
-    List<Transform> waypoints;
+    [SerializeField] private List<Transform> waypoints;
 
     // The amount of "wiggle room" the tank has for being close enough to the waypoint (allowed variance).
     [SerializeField] private float waypoints_CloseEnough = 1.0f;
@@ -363,6 +366,20 @@ public class AI_Controller : MonoBehaviour {
             }
         }
 
+        // If target is null,
+        if (target == null)
+        {
+            // then try to find a new target.
+            FindNewTarget();
+
+            // If target is still null,
+            if (target == null)
+            {
+                // then do nothing this frame to prevent errors.
+                return;
+            }
+        }
+
         // Act depending on the current personalityType.
         switch (personality)
         {
@@ -445,8 +462,7 @@ public class AI_Controller : MonoBehaviour {
 
             // In the case that the new personality is the Caravan,
             case PersonalityType.Caravan:
-                // then
-                // Set up the materials so it looks like a Caravan.
+                // then set up the materials so it looks like a Caravan.
                 ApplyMaterials(mat_CaravanBody, mat_CaravanCannon);
 
                 // Check the waypoints, and set up the Caravan/Guard relationship.
@@ -937,22 +953,39 @@ public class AI_Controller : MonoBehaviour {
         if (waypoints.Count == 0)
         {
             // then this is probably being instantiated via a spawner.
-            // Attempt to a AI_Spawner from the parent(s).
-            AI_Spawner spawner = GetComponentInParent<AI_Spawner>();
-
-            // If one was found,
-            if (spawner != null)
+            // If this is a Caravan,
+            if (personality == PersonalityType.Caravan)
             {
-                // and if that spawner's waypoints are set,
-                if (spawner.waypoints.Length > 0)
+                // Attempt to a AI_Spawner from the parent(s).
+                AI_Spawner spawner = GetComponentInParent<AI_Spawner>();
+
+                // If one was found,
+                if (spawner != null)
                 {
-                    // then iterate through those waypoints,
-                    foreach (Transform waypoint in spawner.waypoints)
+                    // and if that spawner's waypoints are set,
+                    if (spawner.waypoints.Length > 0)
                     {
-                        // and add each of them to this list of waypoints.
-                        waypoints.Add(waypoint);
+                        // then iterate through those waypoints,
+                        foreach (Transform waypoint in spawner.waypoints)
+                        {
+                            // and add each of them to this list of waypoints.
+                            waypoints.Add(waypoint);
+                        }
+
+                        // If the first waypoint is not at the correct elevation,
+                        if (waypoints[currentWaypoint].transform.position.y != tf.position.y)
+                        {
+                            // then level out all of the waypoints' elevations.
+                            LevelOutWaypoints();
+                        }
                     }
                 }
+            }
+            // Else, this must be a Guard.
+            else
+            {
+                // Give the guard the Caravan's escort point as the Guard's waypoint to follow.
+                waypoints.Add(protectedCaravan.GetComponent<AI_Controller>().waypoint_EscortPoint);
             }
         }
         // Else, the wapoints array is not empty.

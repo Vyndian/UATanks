@@ -89,6 +89,9 @@ public class MapGenerator : MonoBehaviour {
             gm = GameManager.instance;
         }
 
+        // Tell the GM how many rooms in total are expected to be created.
+        gm.numRooms_Expected = numColumns * numRows;
+
         // If the randomSeedMethod is set to DateTime,
         if (randomSeedMethod == RandomSeedMethod.DateTime)
         {
@@ -118,7 +121,13 @@ public class MapGenerator : MonoBehaviour {
     // Called every frame.
     public void Update()
     {
-
+        // As soon as the GM's list of enemy tanks is not empty,
+        // (this serves as a marker that the world is mostly built and objects can be safely referenced).
+        if (gm.ai_tanks != null && gm.ai_tanks.Count != 0)
+        {
+            // then tell the gm to spawn the player in a random player spawn point.
+            gm.Player_RandomSpawn();
+        }
     }
     #endregion Unity Methods
 

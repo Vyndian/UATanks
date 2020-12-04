@@ -321,7 +321,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1343105350547562}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 16.69464, y: 0.898, z: -16.609364}
+  m_LocalPosition: {x: -0.009120941, y: 0.5, z: -17.628687}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4815141253272416}
@@ -552,7 +552,7 @@ MonoBehaviour:
   waypoints:
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
+  waypoint_EscortPoint: {fileID: 4548318711791784}
   waypoints_CloseEnough: 1
   pointDropPerCircuit: 20
   sneakAttack_DamageMultiplier: 2.5
@@ -607,6 +607,7 @@ MonoBehaviour:
   isPlayer: 0
   currentScore: 0
   pointsValue: 180
+  pointsLostPerDeath: 30
   moveSpeed_Forward: 1
   moveSpeed_Reverse: -1
   turnSpeed: 150
@@ -623,6 +624,7 @@ MonoBehaviour:
   shellDamage: 10
   originalSpeed_Forward: 3
   cameraPosition: {fileID: 0}
+  tf: {fileID: 0}
 --- !u!143 &143026417553087208
 CharacterController:
   m_ObjectHideFlags: 1

@@ -113,59 +113,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &437459158
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 1165964665}
-    m_Modifications:
-    - target: {fileID: 4804905809304368, guid: 996ed90819ac552449ad7cea8133287a, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 20.83
-      objectReference: {fileID: 0}
-    - target: {fileID: 4804905809304368, guid: 996ed90819ac552449ad7cea8133287a, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0.898
-      objectReference: {fileID: 0}
-    - target: {fileID: 4804905809304368, guid: 996ed90819ac552449ad7cea8133287a, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -21.58
-      objectReference: {fileID: 0}
-    - target: {fileID: 4804905809304368, guid: 996ed90819ac552449ad7cea8133287a, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4804905809304368, guid: 996ed90819ac552449ad7cea8133287a, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4804905809304368, guid: 996ed90819ac552449ad7cea8133287a, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4804905809304368, guid: 996ed90819ac552449ad7cea8133287a, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4804905809304368, guid: 996ed90819ac552449ad7cea8133287a, type: 2}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114206687091763954, guid: 996ed90819ac552449ad7cea8133287a,
-        type: 2}
-      propertyPath: enemyTank_Prefab
-      value: 
-      objectReference: {fileID: 1715767413558684, guid: 684db7aa533b18c43a130b7ae8abd35e,
-        type: 2}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 996ed90819ac552449ad7cea8133287a, type: 2}
-  m_IsPrefabParent: 0
---- !u!4 &437459159 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 4804905809304368, guid: 996ed90819ac552449ad7cea8133287a,
-    type: 2}
-  m_PrefabInternal: {fileID: 437459158}
 --- !u!1 &591427623
 GameObject:
   m_ObjectHideFlags: 0
@@ -294,35 +241,6 @@ Transform:
   m_PrefabParentObject: {fileID: 4989762888330054, guid: 1383915e4b9afc748940cc11ba4b6b10,
     type: 2}
   m_PrefabInternal: {fileID: 865228536}
---- !u!1 &1165964664
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1165964665}
-  m_Layer: 0
-  m_Name: AI Spawners
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1165964665
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1165964664}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 437459159}
-  m_Father: {fileID: 1352729293}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1202209011
 GameObject:
   m_ObjectHideFlags: 0
@@ -456,6 +374,10 @@ Prefab:
     - target: {fileID: 4063085970205952, guid: 4d925007f02076a4ebb19b31f9314896, type: 2}
       propertyPath: m_RootOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4904169228784152, guid: 4d925007f02076a4ebb19b31f9314896, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4d925007f02076a4ebb19b31f9314896, type: 2}

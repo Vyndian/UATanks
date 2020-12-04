@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class GameManager : MonoBehaviour {
 
@@ -18,6 +19,15 @@ public class GameManager : MonoBehaviour {
 
     // A list of the currently ALIVE AIs' TankData Components.
     public List<TankData> ai_tanks;
+
+    // A list of all Player_SpawnPoints.
+    public List<Player_SpawnPoint> player_SpawnPoints;
+
+    // The number of rooms expected to be created.
+    public int numRooms_Expected;
+
+    // The number of rooms that have been created so far.
+    public int numRooms_Created;
 
     // Serialized private fields --v
 
@@ -43,6 +53,11 @@ public class GameManager : MonoBehaviour {
             // Destroy this gameObject.
             Destroy(gameObject);
         }
+
+        // Initialize these lists.
+        player_tanks = new List<TankData>();
+        ai_tanks = new List<TankData>();
+        player_SpawnPoints = new List<Player_SpawnPoint>();
     }
 
     // Called before the first frame.
@@ -71,6 +86,64 @@ public class GameManager : MonoBehaviour {
         mainCamTf.rotation = newParent.rotation;
 
 
+    }
+
+    // Spawns the player is a random Player_SpawnPoint.
+    public void Player_RandomSpawn()
+    {
+        // If player_SpawnPoints is not empty or null,
+        if (player_SpawnPoints != null && player_SpawnPoints.Count != 0)
+        {
+            // then determine a random number representing an index in that list.
+            int randIndex = UnityEngine.Random.Range(0, player_SpawnPoints.Count);
+
+            // Tell that spawn point to spawn its player.
+            player_SpawnPoints[randIndex].SpawnPlayer();
+        }
+        // Else, it was either empty or null.
+        else
+        {
+            print("empty or null");
+        }
+    }
+
+    // Respawn the player in a random player_SpawnPoint, or at the one provided (if provided).
+    public void Player_Respawn(Transform player, Player_SpawnPoint spawnPoint = null)
+    {
+        // If spawnPoint is null (no specific spawnPoint was provided),
+        if (spawnPoint == null)
+        {
+            // then determine which spawnPoint to use by determing a random index for the list of player_SpawnPoints.
+            int randIndex = UnityEngine.Random.Range(0, player_SpawnPoints.Count);
+
+            // Set spawnPoint accordingly.
+            spawnPoint = player_SpawnPoints[randIndex];
+        }
+
+        // Get and save the spawnPoint's Transform.
+        Transform spawnPoint_tf = spawnPoint.transform;
+
+        // Move the player to the spawn point's location.
+        player.position = spawnPoint_tf.position;
+
+        // Assign the spawnPoint as the tank's new parent.
+        player.parent = spawnPoint_tf;
+    }
+
+    // Called when a room finishes being created.
+    public void RoomCreated()
+    {
+        // Increment the number of rooms created.
+        numRooms_Created++;
+
+        // If the number created has reached the number expected,
+        if (numRooms_Created >= numRooms_Expected)
+        {
+            // then spawn the player.
+            Player_RandomSpawn();
+
+            // Spawn AIs
+        }
     }
     #endregion Dev-Defined Methods
 }

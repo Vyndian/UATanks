@@ -3,10 +3,12 @@
 public class TankData : MonoBehaviour {
 
     #region Fields
-    // Public fields --v
+    // Reference for the GM.
+    private GameManager gm;
 
     // Whether or not this is a player tank or AI. Initialized as false as default.
     [HideInInspector] public bool isPlayer = false;
+
 
     [Header("Score")]
     // This player's current score.
@@ -15,8 +17,13 @@ public class TankData : MonoBehaviour {
     // The amount of point awarded to the player that kills this tank.
     public int pointsValue = 100;
 
-    // The minimum amount of points this tank would be work if killed. Cannot be lowered below this number.
+    // The minimum amount of points this tank would be work if killed.
+    // pointsValue cannot be lowered below this number.
     [SerializeField] private readonly int minPointsValue = 20;
+
+    // The amount of score that the player loses every time they die.
+    [SerializeField] private int pointsLostPerDeath = 30;
+
 
     [Header("Time/Speeds")]
     // The speed at which this tank will move forward.
@@ -49,6 +56,7 @@ public class TankData : MonoBehaviour {
     // The speed at which shell projectiles are fired from the tank cannons.
     public float shellSpeed = 1500f;
 
+
     [Header("Health & Damage")]
     // The maxHealth of the tank.
     public float maxHealth = 100f;
@@ -66,37 +74,43 @@ public class TankData : MonoBehaviour {
     // The forward speed this tank had at the start of the game.
     [HideInInspector] public float originalSpeed_Forward = 3.0f;
 
-    // Serialized private fields --v
 
     [Header("Object References")]
     // The CameraPosition object, childed to the cannon, where this player's camera should go.
     [SerializeField] private GameObject cameraPosition;
 
-    // Private fields --v
 
-    // Reference for the GM.
-    private GameManager gm;
+    [Header("Component variables")]
+    // The Transform on this gameObject.
+    [SerializeField] private Transform tf;
     #endregion Fields
 
     #region Unity Methods
     // Performed before Start.
     public void Awake()
     {
-        // Set the original forward speed to the speed when the game starts.
-        originalSpeed_Forward = moveSpeed_Forward;
-    }
-
-    // Called before the first frame.
-    public void Start()
-    {
         // Set variables --v
 
         // Set currentHealth to maxHealth.
         currentHealth = maxHealth;
 
+        // Set the original forward speed to the speed when the game starts.
+        originalSpeed_Forward = moveSpeed_Forward;
+        
+        // If tf is null,
+        if (tf == null)
+        {
+            // then set it.
+            tf = transform;
+        }
+    }
+
+    // Called before the first frame.
+    public void Start()
+    {
         // Set the GameManager reference.
         gm = GameManager.instance;
-
+        
         // If this is a player tank and not an AI,
         if (GetComponent<InputController>())
         {
@@ -191,11 +205,27 @@ public class TankData : MonoBehaviour {
     // Kill the tank.
     public void Death(TankData killedBy)
     {
-        // Add to the score of the player that killed this tank.
-        killedBy.ChangeScore(pointsValue);
+        // If this in an enemy tank,
+        if (!isPlayer)
+        {
+            // Add to the score of the player that killed this tank.
+            killedBy.ChangeScore(pointsValue);
 
-        // Destroy this tank.
-        Destroy(gameObject);
+            // Destroy this tank.
+            Destroy(gameObject);
+        }
+        // Else, this is a player tank.
+        else
+        {
+            // Lower this player's score.
+            ChangeScore(-pointsLostPerDeath);
+
+            // Fully heal the player.
+            Repair(maxHealth);
+
+            // Respawn the player in a random spawn point.
+            gm.Player_Respawn(tf);
+        }
     }
 
     // Change the score for this player by the amount provided.
@@ -203,6 +233,13 @@ public class TankData : MonoBehaviour {
     {
         // Apply the change.
         currentScore += change;
+
+        // If the new score is less than 0,
+        if (currentScore < 0)
+        {
+            // then set it to 0.
+            currentScore = 0;
+        }
     }
 
     // Change the amount of points a tank would get from killing this tank. +change adds, -change subtracts.
