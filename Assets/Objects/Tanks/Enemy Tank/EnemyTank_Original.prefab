@@ -257,6 +257,7 @@ GameObject:
   - component: {fileID: 114214979723759970}
   - component: {fileID: 114699459231198212}
   - component: {fileID: 114819489699317924}
+  - component: {fileID: 114919192089155868}
   m_Layer: 0
   m_Name: EnemyTank_Original
   m_TagString: Untagged
@@ -665,6 +666,7 @@ MonoBehaviour:
   isPlayer: 0
   currentScore: 0
   pointsValue: 100
+  pointsLostPerDeath: 30
   moveSpeed_Forward: 3
   moveSpeed_Reverse: -1
   turnSpeed: 150
@@ -681,6 +683,7 @@ MonoBehaviour:
   shellDamage: 10
   originalSpeed_Forward: 3
   cameraPosition: {fileID: 0}
+  tf: {fileID: 0}
 --- !u!114 &114699459231198212
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -738,6 +741,7 @@ MonoBehaviour:
   target: {fileID: 0}
   loopType: 1
   escortingGuard: {fileID: 0}
+  waypoint_EscortPoint: {fileID: 0}
   protectedCaravan: {fileID: 0}
   waypoints:
   - {fileID: 0}
@@ -756,6 +760,19 @@ MonoBehaviour:
   shell_Visual: {fileID: 23130590419886736}
   cannonBase_Visual: {fileID: 23696347057300304}
   cannonBarrel_Visual: {fileID: 23145591624555314}
+--- !u!114 &114919192089155868
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1942622164831344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7808cb42a74c4194bbaa0f93f2b67f78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  powerups: []
+  data: {fileID: 0}
 --- !u!114 &114978029086437608
 MonoBehaviour:
   m_ObjectHideFlags: 1

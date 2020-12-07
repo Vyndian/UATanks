@@ -137,6 +137,7 @@ GameObject:
   - component: {fileID: 114504709105525854}
   - component: {fileID: 114071972200081840}
   - component: {fileID: 114515001071128842}
+  - component: {fileID: 114307145978548098}
   m_Layer: 0
   m_Name: Assassin
   m_TagString: Untagged
@@ -475,6 +476,19 @@ MonoBehaviour:
   prefab_ShellProjectile: {fileID: 1557841587920104, guid: 1920cd07ce4cd954a952b34e329185df,
     type: 2}
   projSpawnPnt_tf: {fileID: 4695549364203778}
+--- !u!114 &114307145978548098
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1869436626737610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7808cb42a74c4194bbaa0f93f2b67f78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  powerups: []
+  data: {fileID: 0}
 --- !u!114 &114504709105525854
 MonoBehaviour:
   m_ObjectHideFlags: 1

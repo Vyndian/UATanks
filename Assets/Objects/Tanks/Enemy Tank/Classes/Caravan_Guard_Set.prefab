@@ -293,6 +293,7 @@ GameObject:
   - component: {fileID: 114756623967966092}
   - component: {fileID: 114811120439379562}
   - component: {fileID: 114442237282459542}
+  - component: {fileID: 114164124211543556}
   m_Layer: 0
   m_Name: Caravan
   m_TagString: Untagged
@@ -330,6 +331,7 @@ GameObject:
   - component: {fileID: 114161177505360044}
   - component: {fileID: 114304098271945256}
   - component: {fileID: 114432435362030316}
+  - component: {fileID: 114253823599801234}
   m_Layer: 0
   m_Name: Guard
   m_TagString: Untagged
@@ -1005,6 +1007,32 @@ MonoBehaviour:
   originalSpeed_Forward: 3
   cameraPosition: {fileID: 0}
   tf: {fileID: 0}
+--- !u!114 &114164124211543556
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1783969127856778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7808cb42a74c4194bbaa0f93f2b67f78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  powerups: []
+  data: {fileID: 0}
+--- !u!114 &114253823599801234
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1819902187105264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7808cb42a74c4194bbaa0f93f2b67f78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  powerups: []
+  data: {fileID: 0}
 --- !u!114 &114304098271945256
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -24,6 +24,9 @@ public class Pickup : MonoBehaviour {
 
 
     // Private fields --v
+
+    // Reference to the GM.
+    private GameManager gm;
     #endregion Fields
 
 
@@ -39,12 +42,16 @@ public class Pickup : MonoBehaviour {
             // then set it up.
             tf = transform;
         }
+
+        // Get a reference to the gm.
+        gm = GameManager.instance;
     }
 
     // Called before the first frame.
     public void Start()
     {
-
+        // Add the powerup on this pickup to the GM's list of spawnedPowerups.
+        gm.spawnedPowerups.Add(powerup);
     }
 
     // Called every frame.
@@ -81,6 +88,13 @@ public class Pickup : MonoBehaviour {
             // Destroy this pickup gameObject.
             Destroy(gameObject);
         }
+    }
+
+    // Called when this Monobehavior is being destroyed.
+    public void OnDestroy()
+    {
+        // Remove the powerup attached to this pickup from the GM's list.
+        gm.spawnedPowerups.Remove(powerup);
     }
     #endregion Unity Methods
 

@@ -56,6 +56,7 @@ GameObject:
   - component: {fileID: 114739908076814114}
   - component: {fileID: 114546619917147894}
   - component: {fileID: 114784188746237148}
+  - component: {fileID: 114805751353282436}
   m_Layer: 0
   m_Name: Guard
   m_TagString: Untagged
@@ -568,6 +569,19 @@ MonoBehaviour:
   shell_Visual: {fileID: 23026433973596194}
   cannonBase_Visual: {fileID: 23466234541195092}
   cannonBarrel_Visual: {fileID: 23728314717645036}
+--- !u!114 &114805751353282436
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1123604617975772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7808cb42a74c4194bbaa0f93f2b67f78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  powerups: []
+  data: {fileID: 0}
 --- !u!143 &143878511234422612
 CharacterController:
   m_ObjectHideFlags: 1

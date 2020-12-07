@@ -103,6 +103,7 @@ GameObject:
   - component: {fileID: 114529070238570764}
   - component: {fileID: 114677271816964988}
   - component: {fileID: 114548749660171376}
+  - component: {fileID: 114504816189830288}
   m_Layer: 0
   m_Name: Hunter
   m_TagString: Untagged
@@ -460,6 +461,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cannon_tf: {fileID: 4457836521968454}
+--- !u!114 &114504816189830288
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1715767413558684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7808cb42a74c4194bbaa0f93f2b67f78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  powerups: []
+  data: {fileID: 0}
 --- !u!114 &114529070238570764
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -26,6 +26,9 @@ public class GameManager : MonoBehaviour {
     // A list of all AI_SpawnPoints.
     public List<AI_SpawnPoint> ai_SpawnPoints;
 
+    // A list of all powerups current in the level waiting to be picked up.
+    public List<Powerup> spawnedPowerups;
+
     // The number of rooms expected to be created.
     public int numRooms_Expected;
 
@@ -69,6 +72,7 @@ public class GameManager : MonoBehaviour {
         ai_tanks = new List<TankData>();
         player_SpawnPoints = new List<Player_SpawnPoint>();
         ai_SpawnPoints = new List<AI_SpawnPoint>();
+        spawnedPowerups = new List<Powerup>();
     }
 
     // Called before the first frame.
