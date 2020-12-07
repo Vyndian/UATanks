@@ -50,7 +50,6 @@ public class Player_SpawnPoint : MonoBehaviour {
 
         // Add this spawn point to the GM's list.
         gm.player_SpawnPoints.Add(this);
-        print("spawn point added");
     }
 
     // Called every frame.

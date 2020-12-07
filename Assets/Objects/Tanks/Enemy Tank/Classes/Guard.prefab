@@ -263,7 +263,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1123604617975772}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.332184, y: 0.898, z: -12.291266}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4392876114902202}
@@ -489,6 +489,7 @@ MonoBehaviour:
   isPlayer: 0
   currentScore: 0
   pointsValue: 80
+  pointsLostPerDeath: 30
   moveSpeed_Forward: 2.5
   moveSpeed_Reverse: -1
   turnSpeed: 150
@@ -505,6 +506,7 @@ MonoBehaviour:
   shellDamage: 11
   originalSpeed_Forward: 3
   cameraPosition: {fileID: 0}
+  tf: {fileID: 0}
 --- !u!114 &114784188746237148
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -547,6 +549,7 @@ MonoBehaviour:
   target: {fileID: 0}
   loopType: 1
   escortingGuard: {fileID: 0}
+  waypoint_EscortPoint: {fileID: 0}
   protectedCaravan: {fileID: 0}
   waypoints:
   - {fileID: 0}

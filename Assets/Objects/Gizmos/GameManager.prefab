@@ -53,3 +53,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player_tanks: []
   ai_tanks: []
+  player_SpawnPoints: []
+  ai_SpawnPoints: []
+  numRooms_Expected: 0
+  numRooms_Created: 0
+  numEnemiesToSpawn: 4
+  aiTank_Prefabs:
+  - {fileID: 1715767413558684, guid: 684db7aa533b18c43a130b7ae8abd35e, type: 2}
+  - {fileID: 1123604617975772, guid: 33adb7694b542884baa955d6eddc9695, type: 2}
+  - {fileID: 1869436626737610, guid: fa6a9de6de058ca41a5293e4fb7d2f48, type: 2}
+  - {fileID: 1077102013151410, guid: 7002ae96c75c7a443bc00a39a3ddcae7, type: 2}

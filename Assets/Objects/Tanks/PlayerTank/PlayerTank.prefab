@@ -293,7 +293,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1240554008317346}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10.620204, y: 5.007473, z: -2.835435}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4485045072401274}
@@ -547,6 +547,7 @@ MonoBehaviour:
   isPlayer: 0
   currentScore: 0
   pointsValue: 100
+  pointsLostPerDeath: 30
   moveSpeed_Forward: 3
   moveSpeed_Reverse: -1
   turnSpeed: 180
@@ -563,6 +564,7 @@ MonoBehaviour:
   shellDamage: 10
   originalSpeed_Forward: 3
   cameraPosition: {fileID: 1199916466699970}
+  tf: {fileID: 0}
 --- !u!143 &143020499059977256
 CharacterController:
   m_ObjectHideFlags: 1

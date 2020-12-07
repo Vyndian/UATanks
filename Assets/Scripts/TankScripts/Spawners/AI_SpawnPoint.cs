@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class AI_Spawner : MonoBehaviour {
+public class AI_SpawnPoint : MonoBehaviour {
 
     #region Fields
     // Public fields --v
@@ -12,13 +12,6 @@ public class AI_Spawner : MonoBehaviour {
 
     // Serialized private fields --v
 
-    // The EnemyTank prefab that will be used to instantiate the enemy tank.
-    // So that the tank spawns with all of its TankData and AI_Controller variables correctly set,
-    // the imported prefab must be set up ahead of time and saves separately from the original EnemyTank.
-    [SerializeField, Tooltip("Create a Prefab based on EnemyTank prefab with all variables pre-set " +
-        "for TankData, AI_Controller, etc.")]
-        private GameObject enemyTank_Prefab;
-
 
     [Header("Component variables")]
     // The Tranform on this gameObject.
@@ -26,6 +19,9 @@ public class AI_Spawner : MonoBehaviour {
 
 
     // Private fields --v
+
+    // References the GM.
+    private GameManager gm;
     #endregion Fields
 
 
@@ -41,14 +37,18 @@ public class AI_Spawner : MonoBehaviour {
             // then get it off the gameobject.
             tf = transform;
         }
+
+        // Set the gm variable.
+        gm = GameManager.instance;
+
+        // Add this spawn point to the GM's list of ai spawn point.
+        gm.ai_SpawnPoints.Add(this);
     }
 
     // Called before the first frame.
     public void Start()
     {
-        // Instantiate an EnemyTank on this spawn point with this spawn point as its parent.
-        AI_Controller enemyTank =
-            Instantiate(enemyTank_Prefab, tf.position, Quaternion.identity, tf).GetComponent<AI_Controller>();
+
     }
 
     // Called every frame.
@@ -60,6 +60,17 @@ public class AI_Spawner : MonoBehaviour {
 
 
     #region Dev-Defined Methods
-    
+    // Spawns the provided AI tank.
+    public void SpawnAITank(GameObject tank)
+    {
+        // Instantiate the tank.
+        Transform newTank = Instantiate(tank, tf.position, Quaternion.identity, tf).transform;
+
+        // Ensure the tank is facing the right way (Quaternion.identity should do this, but isn't for some reason).
+        newTank.rotation = tf.rotation;
+
+        // Put this spawn point as its parent.
+        newTank.parent = tf;
+    }
     #endregion Dev-Defined Methods
 }

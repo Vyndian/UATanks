@@ -149,6 +149,9 @@ public class PowerupSpawner : MonoBehaviour {
         // Spawn a Pickup from the array using the appropriate index.
         spawnedPickup = Instantiate(pickupPrefabs[index], tf.position, Quaternion.identity);
 
+        // Set its parent.
+        spawnedPickup.transform.parent = tf;
+
         // Set the next time a Pickup is allowed to spawn.
         nextSpawnTime = Time.time + spawnDelay;
     }

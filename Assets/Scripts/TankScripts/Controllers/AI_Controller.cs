@@ -180,7 +180,7 @@ public class AI_Controller : MonoBehaviour {
     [SerializeField] private GameObject protectedCaravan;
 
     // List of Transforms of the gameObjects being used as waypoints for this AI.
-    // Most likely, will be set from the array of waypoints on the AI_Spawner that is spawning this tank.
+    // Most likely, will be set from the array of waypoints on the AI_SpawnPoint that is spawning this tank.
     [SerializeField] private List<Transform> waypoints;
 
     // The amount of "wiggle room" the tank has for being close enough to the waypoint (allowed variance).
@@ -956,36 +956,24 @@ public class AI_Controller : MonoBehaviour {
             // If this is a Caravan,
             if (personality == PersonalityType.Caravan)
             {
-                // Attempt to a AI_Spawner from the parent(s).
-                AI_Spawner spawner = GetComponentInParent<AI_Spawner>();
-
-                // If one was found,
-                if (spawner != null)
-                {
-                    // and if that spawner's waypoints are set,
-                    if (spawner.waypoints.Length > 0)
-                    {
-                        // then iterate through those waypoints,
-                        foreach (Transform waypoint in spawner.waypoints)
-                        {
-                            // and add each of them to this list of waypoints.
-                            waypoints.Add(waypoint);
-                        }
-
-                        // If the first waypoint is not at the correct elevation,
-                        if (waypoints[currentWaypoint].transform.position.y != tf.position.y)
-                        {
-                            // then level out all of the waypoints' elevations.
-                            LevelOutWaypoints();
-                        }
-                    }
-                }
+                // Set the waypoints via the ai Spawn Point.
+                SetWaypointsViaSpawner();
             }
             // Else, this must be a Guard.
-            else
+            else 
             {
-                // Give the guard the Caravan's escort point as the Guard's waypoint to follow.
-                waypoints.Add(protectedCaravan.GetComponent<AI_Controller>().waypoint_EscortPoint);
+                // If this guard is protecting a caravan,
+                if (protectedCaravan != null)
+                {
+                    // then give the guard the Caravan's escort point as the Guard's waypoint to follow.
+                    waypoints.Add(protectedCaravan.GetComponent<AI_Controller>().waypoint_EscortPoint);
+                }
+                // Else, this Guard is not protecting a caravan.
+                else
+                {
+                    // Set the waypoints via the ai Spawn Point.
+                    SetWaypointsViaSpawner();
+                }
             }
         }
         // Else, the wapoints array is not empty.
@@ -1035,19 +1023,48 @@ public class AI_Controller : MonoBehaviour {
         }
     }
 
+    // Add to list of waypoints from the waypoints on the ai Spawn Point.
+    private void SetWaypointsViaSpawner()
+    {
+        // Attempt to find a AI_SpawnPoint from the parent(s).
+        AI_SpawnPoint spawner = GetComponentInParent<AI_SpawnPoint>();
+
+        // If one was found,
+        if (spawner != null)
+        {
+            // and if that spawner's waypoints are set,
+            if (spawner.waypoints.Length > 0)
+            {
+                // then iterate through those waypoints,
+                foreach (Transform waypoint in spawner.waypoints)
+                {
+                    // and add each of them to this list of waypoints.
+                    waypoints.Add(waypoint);
+                }
+
+                // If the first waypoint is not at the correct elevation,
+                if (waypoints[currentWaypoint].transform.position.y != tf.position.y)
+                {
+                    // then level out all of the waypoints' elevations.
+                    LevelOutWaypoints();
+                }
+            }
+        }
+    }
+
     // Sets all of the appropriate waypoints to the current elevation.
     private void LevelOutWaypoints()
     {
         // Iterate through the waypoints array.
         foreach (Transform waypoint in waypoints)
         {
-            // Set each transform's y equal to this tank's y.
+            // Set each transform's y equal to 0.898 (This seems to be the best height for the tanks).
             // This prevents the tank from attempting to move into the ground or above it.
             // First, get the position of the waypoint.
             Vector3 p = waypoint.position;
 
-            // Change the y to match.
-            p.y = tf.position.y;
+            // Change the y.
+            p.y = 0.898f;
 
             // Set the waypoint's position to the modified value.
             waypoint.position = p;
@@ -1064,7 +1081,7 @@ public class AI_Controller : MonoBehaviour {
             // This prevents tank from turning constantly while standing on the final waypoint.
         }
         // else, if the waypoint objects have not been set up yet (this function called too early),
-        else if (waypoints[0] == null)
+        else if (waypoints.Count == 0)
         {
             // then return out to avoid errors.
             return;
@@ -1588,6 +1605,9 @@ public class AI_Controller : MonoBehaviour {
     // Perform obstacle avoidance for stage 1, turning until there is no obstacle blocking.
     private void ObstacleAvoidance_Stage1()
     {
+        // Determine which direction to turn.
+        DetermineTurnDirection(data.moveSpeed_Forward);
+
         // Turn according to avoidance_TurnDirection. 1 for right, -1 for left.
         motor.Turn(avoidance_TurnDirection * data.turnSpeed);
 

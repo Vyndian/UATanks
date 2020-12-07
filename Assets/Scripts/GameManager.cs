@@ -23,6 +23,9 @@ public class GameManager : MonoBehaviour {
     // A list of all Player_SpawnPoints.
     public List<Player_SpawnPoint> player_SpawnPoints;
 
+    // A list of all AI_SpawnPoints.
+    public List<AI_SpawnPoint> ai_SpawnPoints;
+
     // The number of rooms expected to be created.
     public int numRooms_Expected;
 
@@ -30,6 +33,13 @@ public class GameManager : MonoBehaviour {
     public int numRooms_Created;
 
     // Serialized private fields --v
+
+    // The number of AI tanks that the game will attempt to spawn (as long as there are enough spawn points).
+    [SerializeField] private int numEnemiesToSpawn = 4;
+
+    // The prefabs from which to randomly choose which kind of enemy tank to spawn next.
+    // NOTE: For Caravan/Guard duo, the prefab must include both! Find the prefab with both.
+    [SerializeField] private GameObject[] aiTank_Prefabs;
 
     // Private fields --v
 
@@ -58,6 +68,7 @@ public class GameManager : MonoBehaviour {
         player_tanks = new List<TankData>();
         ai_tanks = new List<TankData>();
         player_SpawnPoints = new List<Player_SpawnPoint>();
+        ai_SpawnPoints = new List<AI_SpawnPoint>();
     }
 
     // Called before the first frame.
@@ -142,7 +153,77 @@ public class GameManager : MonoBehaviour {
             // then spawn the player.
             Player_RandomSpawn();
 
-            // Spawn AIs
+            // Spawn the AI tanks.
+            AITank_RandomSpawns();
+        }
+    }
+
+    // Randomize the elements in the ai_SpawnPoints list.
+    // This is known as the Fisher-Yates shuffle.
+    // Retrieved from https://answers.unity.com/questions/773285/pick-a-memeber-form-the-list-only-once.html
+    private void ShuffleList<T>(List<T> list)
+    {
+        // Iterate through the list.
+        for (int i = 0; i < list.Count; i++)
+        {
+            // Get a random int representing an index between the current iteration and the end of the list.
+            int j = UnityEngine.Random.Range(i, list.Count);
+
+            // Create a temp obj holding the value of the current element in the iteration through the list.
+            T t = list[i];
+
+            // Set the current element of the list equal to the element at the randomly determined index.
+            list[i] = list[j];
+
+            // Set the element at the randomly determined index to what used to be in the current iteration.
+            list[j] = t;
+        }
+    }
+
+    // Use the same method to shuffle an array.
+    private void ShuffleArray<T>(T[] array)
+    {
+        // Iterate through the array.
+        for (int i = 0; i < array.Length; i++)
+        {
+            // Get a random int representing an index between the current iteration and the end of the array.
+            int j = UnityEngine.Random.Range(i, array.Length);
+
+            // Create a temp obj holding the value of the current element in the iteration through the array.
+            T t = array[i];
+
+            // Set the current element of the array equal to the element at the randomly determined index.
+            array[i] = array[j];
+
+            // Set the element at the randomly determined index to what used to be in the current iteration.
+            array[j] = t;
+        }
+    }
+
+    // Spawn the AI tanks in random ai spawn points.
+    private void AITank_RandomSpawns()
+    {
+        // Spawn AIs. First, randomize the list of AI spawn points.
+        ShuffleList(ai_SpawnPoints);
+
+        // Then randomize the array of AI tank prefabs.
+        ShuffleArray(aiTank_Prefabs);
+
+        // Track how many tanks have been spawned.
+        int numTanksSpawned = 0;
+
+        // Iterate through the ai Spawn Points list.
+        foreach (AI_SpawnPoint spawnPoint in ai_SpawnPoints)
+        {
+            // If we still need to spawn more tanks, and if the next AI Tank Prefab is not null,
+            if (numTanksSpawned < numEnemiesToSpawn && aiTank_Prefabs[numTanksSpawned] != null)
+            {
+                // then tell the spawn point to instantiate the next AI tank prefab.
+                spawnPoint.SpawnAITank(aiTank_Prefabs[numTanksSpawned]);
+
+                // Increment the number of tanks spawned so far.
+                numTanksSpawned++;
+            }
         }
     }
     #endregion Dev-Defined Methods
