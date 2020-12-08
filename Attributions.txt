@@ -3,3 +3,7 @@
 Powerup sound effects obtained from https://www.zapsplat.com
 
 Pyramid model created by firecat, obstained from https://clara.io/view/a1831e2b-10d9-4ba2-b62b-8e0d0345663a
+
+Start Menu background art by Skadovsk, obtained from: https://dusan-pavkovic-warlord.itch.io/skadovsk?download
+
+Start Menu button art by Fenfekx, obtained from: https://fenfekx.itch.io/button

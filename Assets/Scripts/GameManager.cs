@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System;
 
 public class GameManager : MonoBehaviour {
 
@@ -9,6 +8,15 @@ public class GameManager : MonoBehaviour {
 
     // The single instance of GameManager allowed.
     public static GameManager instance;
+
+    // References the Game gameObject where all the game-related objects are.
+    public GameObject game;
+
+    // References the StartMenu gameObject.
+    public GameObject startMenu;
+
+    //References the OptionsMenu gameObject.
+    public GameObject optionsMenu;
 
     // A two-dimensional array holding all the Room scripts, each associated with a room tile in the grid.
     // The "x, y" coordinates of each element represent their position in the rows, columns of the room grid.
@@ -229,6 +237,17 @@ public class GameManager : MonoBehaviour {
                 numTanksSpawned++;
             }
         }
+    }
+
+    // Activates the Game gameObject and disables the rest.
+    public void ShowGame()
+    {
+        // Disable all gameObjects not necessary for the game.
+        startMenu.SetActive(false);
+        optionsMenu.SetActive(false);
+
+        // Activate the Game gameObject.
+        game.SetActive(true);
     }
     #endregion Dev-Defined Methods
 }
