@@ -22,9 +22,22 @@ public class ShellBehavior : MonoBehaviour {
     // The time at which the shell will self-destruct if it does not hit anything. Determined at Start().
     private float timeToSelfDestruct;
 
+    // References the GM.
+    private GameManager gm;
+
+    // Reference to this gameObject's Tranform.
+    private Transform tf;
+
     #endregion Fields
 
     #region Unity Methods
+    // Called before Start() runs.
+    public void Awake()
+    {
+        // Get and save a reference to this gameObject's Transform.
+        tf = transform;
+    }
+
     // Called before the first frame.
     void Start()
     {
@@ -32,6 +45,9 @@ public class ShellBehavior : MonoBehaviour {
 
         // Determine the time at which the shell will self-destruct if no other objects are hit.
         timeToSelfDestruct = Time.time + maxLifetime;
+
+        // Get reference to the GM.
+        gm = GameManager.instance;
     }
 
     // Called every frame.
@@ -40,6 +56,9 @@ public class ShellBehavior : MonoBehaviour {
         // If the shell has run out of lifetime,
         if (Time.time >= timeToSelfDestruct)
         {
+            // Play the explosion audio clip.
+            PlayExplosionClip();
+
             // then destroy this shell.
             Destroy(gameObject);
         }
@@ -61,6 +80,9 @@ public class ShellBehavior : MonoBehaviour {
             data.TakeDamage(damage, firedBy);
         }
 
+        // Play audio of the shell exploding.
+        PlayExplosionClip();
+
         // Destroy the shell.
         Destroy(gameObject);
     }
@@ -68,6 +90,11 @@ public class ShellBehavior : MonoBehaviour {
 
 
     #region Dev-Defined Methods
-
+    // Plays an explosion audio clip.
+    private void PlayExplosionClip()
+    {
+        // Create a clip of an explosion at the point where the shell was when it expired/hit something.
+        AudioSource.PlayClipAtPoint(gm.feedback_ShellExplosionOnImpact, tf.position, gm.volume_SFX);
+    }
     #endregion Dev-Defined Methods
 }

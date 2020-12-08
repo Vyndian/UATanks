@@ -30,9 +30,9 @@ public class OptionsMenu_UIManager : MonoBehaviour {
     [SerializeField] private Text sfxVolume_Text;
 
 
-    [Header("Map of the Day")]
-    // Reference to the Dropdown for the MotD.
-    [SerializeField] private Dropdown dropdown_MotD;
+    [Header("Random Seed Method")]
+    // Reference to the Dropdown for the RandomSeedMethod.
+    [SerializeField] private Dropdown randomSeedMethod_Dropdown;
 
     // Reference to the InputField where the player can manually enter the seed for Random.
     [SerializeField] private InputField manualSeed_InputField;
@@ -53,6 +53,35 @@ public class OptionsMenu_UIManager : MonoBehaviour {
 
         // Get a reference to the GM.
         gm = GameManager.instance;
+
+        // Apply the player preferences to the menu icons.
+        // If the PlayerPreferences has a key for music volume,
+        if (PlayerPrefs.HasKey(gm.key_MusicVolume))
+        {
+            // then set the slider value to match.
+            musicSlider.value = PlayerPrefs.GetInt(gm.key_MusicVolume);
+        }
+
+        // If the PlayerPreferences has a key for SFX volume,
+        if (PlayerPrefs.HasKey(gm.key_SFXVolume))
+        {
+            // then set the slider value to match.
+            sfxSlider.value = PlayerPrefs.GetInt(gm.key_SFXVolume);
+        }
+
+        // If the PlayerPreferences has a key for number of players,
+        if (PlayerPrefs.HasKey(gm.key_NumPlayers))
+        {
+            // then set the dropdown value to match.
+            numPlayers_Dropdown.value = PlayerPrefs.GetInt(gm.key_NumPlayers);
+        }
+
+        // If the PlayerPreferences has a key for random seed method,
+        if (PlayerPrefs.HasKey(gm.key_RandomSeedMethod))
+        {
+            // then set the dropdown value to match.
+            randomSeedMethod_Dropdown.value = PlayerPrefs.GetInt(gm.key_RandomSeedMethod);
+        }
     }
 
     // Called every frame.
@@ -74,7 +103,8 @@ public class OptionsMenu_UIManager : MonoBehaviour {
         musicVolume_Text.text = val.ToString();
 
         // Update the value on the GM.
-        gm.volume_Music = val;
+        // val is divided by 100 to change from a percent to the 0 - 1.0 range that audio sources need.
+        gm.volume_Music = val / 100;
     }
 
     // Called when the slider value for SFX volume changes.
@@ -87,26 +117,27 @@ public class OptionsMenu_UIManager : MonoBehaviour {
         sfxVolume_Text.text = val.ToString();
 
         // Update the value on the GM.
-        gm.volume_SFX = val;
+        // val is divided by 100 to change from a percent to the 0 - 1.0 range that audio sources need.
+        gm.volume_SFX = val / 100;
     }
 
     // Called when the value for the dropdown menu for Number of Players is changed.
     public void OnDropdownValueChanged_NumPlayers()
     {
         // Update the value.
-        gm.numPlayers_Value = numPlayers_Dropdown.value + 1;
+        gm.numPlayers = numPlayers_Dropdown.value + 1;
     }
 
     // Called when the value for the dropdown menu for MotD is changed.
     public void OnDropdownValueChanged_MotD()
     {
         // Act according to the dropdown menu's value.
-        switch (dropdown_MotD.value)
+        switch (randomSeedMethod_Dropdown.value)
         {
             // In the case of the value being 0 (Random, meaning DateTime),
             case 0:
                 // Update the value.
-                gm.randomSeedMethod_Value = MapGenerator.RandomSeedMethod.DateTime;
+                gm.randomSeedMethod = MapGenerator.RandomSeedMethod.DateTime;
 
                 // Set the manual seed entry input field to disabled.
                 manualSeed_InputField.gameObject.SetActive(false);
@@ -116,7 +147,7 @@ public class OptionsMenu_UIManager : MonoBehaviour {
             // In the case of the value being 1 (Map of the Day),
             case 1:
                 // Update the value.
-                gm.randomSeedMethod_Value = MapGenerator.RandomSeedMethod.MapOfTheDay;
+                gm.randomSeedMethod = MapGenerator.RandomSeedMethod.MapOfTheDay;
 
                 // Set the manual seed entry input field to disabled.
                 manualSeed_InputField.gameObject.SetActive(false);
@@ -126,7 +157,7 @@ public class OptionsMenu_UIManager : MonoBehaviour {
             // In the case of the value being 2 (Manual),
             case 2:
                 // Update the value.
-                gm.randomSeedMethod_Value = MapGenerator.RandomSeedMethod.Manual;
+                gm.randomSeedMethod = MapGenerator.RandomSeedMethod.Manual;
 
                 // Set the manual seed entry input field to enabled.
                 manualSeed_InputField.gameObject.SetActive(true);

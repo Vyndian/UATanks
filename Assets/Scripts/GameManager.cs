@@ -40,10 +40,10 @@ public class GameManager : MonoBehaviour {
     public float volume_SFX = 80.0f;
 
     // Holds the currently selected number of players.
-    public int numPlayers_Value = 1;
+    public int numPlayers = 1;
 
     // The current value for which method should be used to determine the seed for Random.
-    public MapGenerator.RandomSeedMethod randomSeedMethod_Value = MapGenerator.RandomSeedMethod.DateTime;
+    public MapGenerator.RandomSeedMethod randomSeedMethod = MapGenerator.RandomSeedMethod.DateTime;
 
     // The current value for the random seed that was manually entered by the player.
     public int manualSeed_Value;
@@ -75,6 +75,31 @@ public class GameManager : MonoBehaviour {
     [Header("Powerups")]
     // A list of all powerups current in the level waiting to be picked up.
     public List<Powerup> spawnedPowerups;
+
+
+    [Header("Audio")]
+    // The audio clip that will play when shells fired from this tank explode (where the shell hits).
+    public AudioClip feedback_ShellExplosionOnImpact;
+
+    // The audio clip that will play when tanks explode (when they die).
+    public AudioClip feedback_TankExplosion;
+
+    // References the Main camera's audio source.
+    [SerializeField] private AudioSource main_AudioSource;
+
+
+    [Header("Player Preference Keys")]
+    // The key used to access the PlayerPreferences for music volume.
+    public string key_MusicVolume = "MUSIC_VOLUME";
+
+    // The key used to access the PlayerPreferences for SFX volume.
+    public string key_SFXVolume = "SFX_VOLUME";
+
+    // The key used to access the PlayerPreferences for the number of players.
+    public string key_NumPlayers = "NUM_PLAYERS";
+
+    // The key used to access the PlayerPreferences for the random seed method.
+    public string key_RandomSeedMethod = "RANDOM_SEED_METHOD";
     #endregion Fields
 
     #region Unity Methods
@@ -109,13 +134,54 @@ public class GameManager : MonoBehaviour {
     {
         // Set variables --v
 
+        // If this var is null,
+        if (main_AudioSource == null)
+        {
+            // then set it up.
+            main_AudioSource = Camera.main.GetComponent<AudioSource>();
+        }
 
+        // Apply the player's preferences.
+        // If there is currently a key for music volume,
+        if (PlayerPrefs.HasKey(key_MusicVolume))
+        {
+            // then set apply that preference.
+            volume_Music = PlayerPrefs.GetInt(key_MusicVolume) / 100;
+        }
+
+        // If there is currently a key for SFX volume,
+        if (PlayerPrefs.HasKey(key_SFXVolume))
+        {
+            // then set apply that preference.
+            volume_SFX = PlayerPrefs.GetInt(key_SFXVolume) / 100;
+        }
+
+        // If there is currently a key for number of players,
+        if (PlayerPrefs.HasKey(key_NumPlayers))
+        {
+            // then set apply that preference.
+            numPlayers = PlayerPrefs.GetInt(key_NumPlayers);
+        }
+
+        // If there is currently a key for RandomSeed method,
+        if (PlayerPrefs.HasKey("RANDOM_SEED_METHOD"))
+        {
+            // then set apply that preference.
+            randomSeedMethod = (MapGenerator.RandomSeedMethod)PlayerPrefs.GetInt("RANDOM_SEED_METHOD");
+        }
     }
 
     // Called every frame.
     public void Update()
     {
 
+    }
+
+    // Called when this Monobehavior is being destroyed.
+    public void OnDestroy()
+    {
+        // Save the current settings to player preferences.
+        SavePreferences();
     }
     #endregion Unity Methods
 
@@ -128,8 +194,6 @@ public class GameManager : MonoBehaviour {
         mainCamTf.parent = newParent;
         mainCamTf.position = newParent.position;
         mainCamTf.rotation = newParent.rotation;
-
-
     }
 
     // Spawns the player is a random Player_SpawnPoint.
@@ -291,6 +355,22 @@ public class GameManager : MonoBehaviour {
 
         // Activate the Start menu.
         optionsMenu.SetActive(true);
+    }
+
+    // Saves the current settings into player preferences.
+    public void SavePreferences()
+    {
+        // Save the preference for the music volume.
+        PlayerPrefs.SetInt(key_MusicVolume, (int)(volume_Music * 100));
+
+        // Save the preference for the SFX volume.
+        PlayerPrefs.SetInt(key_SFXVolume, (int)(volume_SFX * 100));
+
+        // Save the preference for the number of players.
+        PlayerPrefs.SetInt(key_NumPlayers, numPlayers);
+
+        // Save the preference for the Random seed method.
+        PlayerPrefs.SetInt(key_RandomSeedMethod, (int)randomSeedMethod);
     }
     #endregion Dev-Defined Methods
 }

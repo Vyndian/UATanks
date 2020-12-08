@@ -56,6 +56,9 @@ public class TankData : MonoBehaviour {
     // The speed at which shell projectiles are fired from the tank cannons.
     public float shellSpeed = 1500f;
 
+    // The forward speed this tank had at the start of the game.
+    [HideInInspector] public float originalSpeed_Forward = 3.0f;
+
 
     [Header("Health & Damage")]
     // The maxHealth of the tank.
@@ -69,10 +72,8 @@ public class TankData : MonoBehaviour {
     public int fleeThreshold_Percentage = 50;
 
     // The amount of damage dealt by shells fired from this tank.
-    [Tooltip("The amount of damage dealt by shells fired from this tank.")] public float shellDamage = 10f;
-
-    // The forward speed this tank had at the start of the game.
-    [HideInInspector] public float originalSpeed_Forward = 3.0f;
+    [Tooltip("The amount of damage dealt by shells fired from this tank.")]
+        public float shellDamage = 10f;
 
 
     [Header("Object References")]
@@ -210,6 +211,9 @@ public class TankData : MonoBehaviour {
         {
             // Add to the score of the player that killed this tank.
             killedBy.ChangeScore(pointsValue);
+
+            // Play audio clip of the tank exploding.
+            AudioSource.PlayClipAtPoint(gm.feedback_TankExplosion, tf.position, gm.volume_SFX);
 
             // Destroy this tank.
             Destroy(gameObject);
