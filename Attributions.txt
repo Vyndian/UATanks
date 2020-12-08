@@ -6,4 +6,8 @@ Pyramid model created by firecat, obstained from https://clara.io/view/a1831e2b-
 
 Start Menu background art by Skadovsk, obtained from: https://dusan-pavkovic-warlord.itch.io/skadovsk?download
 
-Start Menu button art by Fenfekx, obtained from: https://fenfekx.itch.io/button
+Start menu button art by Fenfekx, obtained from: https://fenfekx.itch.io/button
+
+Options Menu background art by Luis Zuno, obstained from: https://ansimuz.itch.io/bulkhead-walls-environment
+
+Options menu slider art by BrightRetro, obtained from: https://opengameart.org/content/various-gui-elements-part-2

@@ -582,6 +582,8 @@ MonoBehaviour:
   prefab_ShellProjectile: {fileID: 1557841587920104, guid: 1920cd07ce4cd954a952b34e329185df,
     type: 2}
   projSpawnPnt_tf: {fileID: 4889085609441018}
+  feedback_ShellFiring: {fileID: 8300000, guid: 2fdd6a8dddfba38448cc3b0af6b799bb,
+    type: 3}
 --- !u!143 &143900159157555984
 CharacterController:
   m_ObjectHideFlags: 1

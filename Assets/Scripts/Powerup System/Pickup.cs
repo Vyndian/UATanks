@@ -19,9 +19,6 @@ public class Pickup : MonoBehaviour {
     // The Transform on this gameObject.
     [SerializeField] private Transform tf;
 
-    // The volume to play the feedback clip at.
-    [SerializeField, Range(0.0f, 1.0f)] private float feedbackVolume = 1.0f;
-
 
     // Private fields --v
 
@@ -76,7 +73,7 @@ public class Pickup : MonoBehaviour {
             if (feedback != null)
             {
                 // then play that feedback sound as the gameObject's point.
-                AudioSource.PlayClipAtPoint(feedback, tf.position, feedbackVolume);
+                AudioSource.PlayClipAtPoint(feedback, tf.position, gm.volume_SFX);
             }
             // Else, the feedback was not set up.
             else

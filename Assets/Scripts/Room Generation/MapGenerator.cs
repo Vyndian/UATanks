@@ -23,7 +23,7 @@ public class MapGenerator : MonoBehaviour {
     [SerializeField] private int mapSeed_Manual = 123;
 
     // Enum for which method should be used for seeding Random.
-    [SerializeField] private RandomSeedMethod randomSeedMethod = RandomSeedMethod.DateTime;
+    public RandomSeedMethod randomSeedMethod = RandomSeedMethod.DateTime;
 
 
     [Header("Component variables")]
@@ -34,7 +34,7 @@ public class MapGenerator : MonoBehaviour {
     // Private fields --v
 
     // Enum definition for the different methods available for seeding Random for map generation.
-    private enum RandomSeedMethod { DateTime, Manual, MapOfTheDay };
+    public enum RandomSeedMethod { DateTime, Manual, MapOfTheDay };
 
     // A reference to the GameManager.
     private GameManager gm;

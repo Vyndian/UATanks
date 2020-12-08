@@ -20,16 +20,16 @@ public class StartMenu_UIManager : MonoBehaviour {
     // Awake is performed before Start().
     public void Awake()
     {
-        // Set variables --v
-
-        // Get a reference to the GM.
-        gm = GameManager.instance;
+        
     }
 
     // Called before the first frame.
     public void Start()
     {
+        // Set variables --v
 
+        // Get a reference to the GM.
+        gm = GameManager.instance;
     }
 
     // Called every frame.
@@ -45,14 +45,14 @@ public class StartMenu_UIManager : MonoBehaviour {
     public void OnClick_PlayButton()
     {
         // Tells the GM to start the game.
-
+        gm.ShowGame();
     }
 
     // Called when player clicks on the Options button on the start menu.
     public void OnClick_OptionsButton()
     {
         // Tells the GM to open the options menu.
-
+        gm.ShowOptionsMenu();
     }
     #endregion Dev-Defined Methods
 }

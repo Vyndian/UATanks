@@ -5,7 +5,12 @@ licenseType: Free
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - data: {instanceID: 0}
+  - prefab_ShellProjectile: {instanceID: 0}
+  - projSpawnPnt_tf: {instanceID: 0}
+  - feedback_ShellFiring: {fileID: 8300000, guid: 2fdd6a8dddfba38448cc3b0af6b799bb,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

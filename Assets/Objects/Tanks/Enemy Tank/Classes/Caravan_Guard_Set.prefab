@@ -1048,6 +1048,8 @@ MonoBehaviour:
   prefab_ShellProjectile: {fileID: 1557841587920104, guid: 1920cd07ce4cd954a952b34e329185df,
     type: 2}
   projSpawnPnt_tf: {fileID: 4297324615204832}
+  feedback_ShellFiring: {fileID: 8300000, guid: 2fdd6a8dddfba38448cc3b0af6b799bb,
+    type: 3}
 --- !u!114 &114432435362030316
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1237,6 +1239,8 @@ MonoBehaviour:
   prefab_ShellProjectile: {fileID: 1557841587920104, guid: 1920cd07ce4cd954a952b34e329185df,
     type: 2}
   projSpawnPnt_tf: {fileID: 4405923882954102}
+  feedback_ShellFiring: {fileID: 8300000, guid: 2fdd6a8dddfba38448cc3b0af6b799bb,
+    type: 3}
 --- !u!143 &143531149826750160
 CharacterController:
   m_ObjectHideFlags: 1

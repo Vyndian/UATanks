@@ -17,8 +17,14 @@ public class TankCannon : MonoBehaviour {
     // References the transform on the projectile spawn point beloning to the cannon's barrel.
     [SerializeField] private Transform projSpawnPnt_tf;
 
+    // The AudioClip file to be played when the cannon fires a shell.
+    [SerializeField] private AudioClip feedback_ShellFiring;
+
 
     // Private fields --v
+
+    // Reference to the GM.
+    private GameManager gm;
     #endregion Fields
 
 
@@ -38,7 +44,8 @@ public class TankCannon : MonoBehaviour {
     // Called before the first frame.
     public void Start()
     {
-
+        // Set up the gm reference.
+        gm = GameManager.instance;
     }
 
     // Called every frame.
@@ -80,6 +87,9 @@ public class TankCannon : MonoBehaviour {
 
             // Add force to the shell, firing it away from the cannon at speed.
             shell.GetComponent<Rigidbody>().AddForce(transform.forward * speed);
+
+            // Play sound clip of the cannon firing.
+            AudioSource.PlayClipAtPoint(feedback_ShellFiring, projSpawnPnt_tf.position, gm.volume_SFX);
         }
     }
     #endregion Dev-Defined Methods

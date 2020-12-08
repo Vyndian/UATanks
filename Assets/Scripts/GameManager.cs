@@ -4,11 +4,12 @@ using System.Collections.Generic;
 public class GameManager : MonoBehaviour {
 
     #region Fields
-    // Public fields --v
-
+    [Header("Singleton")]
     // The single instance of GameManager allowed.
     public static GameManager instance;
 
+
+    [Header("Psuedo_Scene GameObjects")]
     // References the Game gameObject where all the game-related objects are.
     public GameObject game;
 
@@ -18,15 +19,51 @@ public class GameManager : MonoBehaviour {
     //References the OptionsMenu gameObject.
     public GameObject optionsMenu;
 
+
+    [Header("Procedural Generation")]
     // A two-dimensional array holding all the Room scripts, each associated with a room tile in the grid.
     // The "x, y" coordinates of each element represent their position in the rows, columns of the room grid.
     public Room[,] grid;
 
+    // The number of rooms expected to be created.
+    [HideInInspector] public int numRooms_Expected;
+
+    // The number of rooms that have been created so far.
+    [HideInInspector] public int numRooms_Created;
+
+
+    [Header("Options")]
+    // The player's chosen volume level for music.
+    public float volume_Music = 80.0f;
+
+    // The player's chosen volume level for sound effects.
+    public float volume_SFX = 80.0f;
+
+    // Holds the currently selected number of players.
+    public int numPlayers_Value = 1;
+
+    // The current value for which method should be used to determine the seed for Random.
+    public MapGenerator.RandomSeedMethod randomSeedMethod_Value = MapGenerator.RandomSeedMethod.DateTime;
+
+    // The current value for the random seed that was manually entered by the player.
+    public int manualSeed_Value;
+
+
+    [Header("Tank Lists")]
     // A list of the currently ALIVE players' TankData Components.
     public List<TankData> player_tanks;
 
     // A list of the currently ALIVE AIs' TankData Components.
     public List<TankData> ai_tanks;
+
+
+    [Header("Tank Spawning")]
+    // The prefabs from which to randomly choose which kind of enemy tank to spawn next.
+    // NOTE: For Caravan/Guard duo, the prefab must include both! Find the prefab with both.
+    [SerializeField] private GameObject[] aiTank_Prefabs;
+
+    // The number of AI tanks that the game will attempt to spawn (as long as there are enough spawn points).
+    [SerializeField] private int numEnemiesToSpawn = 4;
 
     // A list of all Player_SpawnPoints.
     public List<Player_SpawnPoint> player_SpawnPoints;
@@ -34,26 +71,10 @@ public class GameManager : MonoBehaviour {
     // A list of all AI_SpawnPoints.
     public List<AI_SpawnPoint> ai_SpawnPoints;
 
+
+    [Header("Powerups")]
     // A list of all powerups current in the level waiting to be picked up.
     public List<Powerup> spawnedPowerups;
-
-    // The number of rooms expected to be created.
-    public int numRooms_Expected;
-
-    // The number of rooms that have been created so far.
-    public int numRooms_Created;
-
-    // Serialized private fields --v
-
-    // The number of AI tanks that the game will attempt to spawn (as long as there are enough spawn points).
-    [SerializeField] private int numEnemiesToSpawn = 4;
-
-    // The prefabs from which to randomly choose which kind of enemy tank to spawn next.
-    // NOTE: For Caravan/Guard duo, the prefab must include both! Find the prefab with both.
-    [SerializeField] private GameObject[] aiTank_Prefabs;
-
-    // Private fields --v
-
     #endregion Fields
 
     #region Unity Methods
@@ -248,6 +269,28 @@ public class GameManager : MonoBehaviour {
 
         // Activate the Game gameObject.
         game.SetActive(true);
+    }
+
+    // Activates the StartMenu gameObject and disables the rest.
+    public void ShowStartMenu()
+    {
+        // Disable all gameObjects not necessary for the Start menu.
+        game.SetActive(false);
+        optionsMenu.SetActive(false);
+
+        // Activate the Start menu.
+        startMenu.SetActive(true);
+    }
+
+    // Activates the OptionsMenu gameObject and disables the rest.
+    public void ShowOptionsMenu()
+    {
+        // Disable all gameObjects not necessary for the Options menu.
+        game.SetActive(false);
+        startMenu.SetActive(false);
+
+        // Activate the Start menu.
+        optionsMenu.SetActive(true);
     }
     #endregion Dev-Defined Methods
 }
