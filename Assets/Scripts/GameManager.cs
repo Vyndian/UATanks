@@ -84,8 +84,14 @@ public class GameManager : MonoBehaviour {
     // The audio clip that will play when tanks explode (when they die).
     public AudioClip feedback_TankExplosion;
 
+    // The audio clip that plays the Start menu music.
+    public AudioClip musicClip_StartMenu;
+
+    // The audio clip that plays in the background during the game.
+    public AudioClip musicClip_GameBGM;
+
     // References the Main camera's audio source.
-    [SerializeField] private AudioSource main_AudioSource;
+    public AudioSource main_AudioSource;
 
 
     [Header("Player Preference Keys")]
@@ -146,14 +152,14 @@ public class GameManager : MonoBehaviour {
         if (PlayerPrefs.HasKey(key_MusicVolume))
         {
             // then set apply that preference.
-            volume_Music = PlayerPrefs.GetInt(key_MusicVolume) / 100;
+            volume_Music = PlayerPrefs.GetFloat(key_MusicVolume);
         }
 
         // If there is currently a key for SFX volume,
         if (PlayerPrefs.HasKey(key_SFXVolume))
         {
             // then set apply that preference.
-            volume_SFX = PlayerPrefs.GetInt(key_SFXVolume) / 100;
+            volume_SFX = PlayerPrefs.GetFloat(key_SFXVolume);
         }
 
         // If there is currently a key for number of players,
@@ -169,6 +175,8 @@ public class GameManager : MonoBehaviour {
             // then set apply that preference.
             randomSeedMethod = (MapGenerator.RandomSeedMethod)PlayerPrefs.GetInt("RANDOM_SEED_METHOD");
         }
+        // Start playing the StartMenu music.
+        ChangeMainAudio(musicClip_StartMenu, volume_Music);
     }
 
     // Called every frame.
@@ -333,6 +341,10 @@ public class GameManager : MonoBehaviour {
 
         // Activate the Game gameObject.
         game.SetActive(true);
+
+        // Change the BGM to the game BGM clip.
+        // Also adjust the volume. This track is very loud, and players will not want to be blasted.
+        ChangeMainAudio(musicClip_GameBGM, (float)(volume_Music * 0.75));
     }
 
     // Activates the StartMenu gameObject and disables the rest.
@@ -344,6 +356,9 @@ public class GameManager : MonoBehaviour {
 
         // Activate the Start menu.
         startMenu.SetActive(true);
+
+        // Change the BGM to the Start menu clip.
+        ChangeMainAudio(musicClip_StartMenu, volume_Music);
     }
 
     // Activates the OptionsMenu gameObject and disables the rest.
@@ -355,22 +370,42 @@ public class GameManager : MonoBehaviour {
 
         // Activate the Start menu.
         optionsMenu.SetActive(true);
+
+        // Change the BGM to the Start menu clip (The Options menu is just an extension of the Start menu).
+        ChangeMainAudio(musicClip_StartMenu, volume_Music);
     }
 
     // Saves the current settings into player preferences.
     public void SavePreferences()
     {
         // Save the preference for the music volume.
-        PlayerPrefs.SetInt(key_MusicVolume, (int)(volume_Music * 100));
+        PlayerPrefs.SetFloat(key_MusicVolume, volume_Music);
 
         // Save the preference for the SFX volume.
-        PlayerPrefs.SetInt(key_SFXVolume, (int)(volume_SFX * 100));
+        PlayerPrefs.SetFloat(key_SFXVolume, volume_SFX);
 
         // Save the preference for the number of players.
         PlayerPrefs.SetInt(key_NumPlayers, numPlayers);
 
         // Save the preference for the Random seed method.
         PlayerPrefs.SetInt(key_RandomSeedMethod, (int)randomSeedMethod);
+    }
+
+    // Changes the main camera's audio source's clip and volume.
+    public void ChangeMainAudio(AudioClip clip, float volume)
+    {
+        // Change the volume first.
+        main_AudioSource.volume = volume;
+
+        // Change the clip.
+        main_AudioSource.clip = clip;
+
+        // If the audio source is not playing at the moment,
+        if (!main_AudioSource.isPlaying)
+        {
+            // then play the clip.
+            main_AudioSource.Play();
+        }
     }
     #endregion Dev-Defined Methods
 }

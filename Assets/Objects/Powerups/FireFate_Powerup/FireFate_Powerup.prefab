@@ -101,12 +101,11 @@ MonoBehaviour:
     speedModifier: 0
     healthModifier: 0
     maxHealthModifier: 0
-    fireRateModifier: 2
+    fireRateModifier: -1.4
     damageModifier: 0
     powerupDuration: 20
     isPermanent: 0
   tf: {fileID: 4713234947225272}
-  feedbackVolume: 1
 --- !u!114 &114872447004210724
 MonoBehaviour:
   m_ObjectHideFlags: 1

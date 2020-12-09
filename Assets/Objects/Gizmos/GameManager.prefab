@@ -58,8 +58,8 @@ MonoBehaviour:
   numRooms_Created: 0
   volume_Music: 80
   volume_SFX: 80
-  numPlayers_Value: 1
-  randomSeedMethod_Value: 0
+  numPlayers: 1
+  randomSeedMethod: 0
   manualSeed_Value: 0
   player_tanks: []
   ai_tanks: []
@@ -74,3 +74,12 @@ MonoBehaviour:
   spawnedPowerups: []
   feedback_ShellExplosionOnImpact: {fileID: 8300000, guid: dd3ca293415e0d04d98f20ce9c2d8db1,
     type: 3}
+  feedback_TankExplosion: {fileID: 8300000, guid: 76307980bfe042344bb299e891c915e3,
+    type: 3}
+  musicClip_StartMenu: {fileID: 8300000, guid: e79617a9a9fc86d45b46f42440cb187f, type: 3}
+  musicClip_GameBGM: {fileID: 8300000, guid: 915a44c4a8469464dade758121f1473e, type: 3}
+  main_AudioSource: {fileID: 0}
+  key_MusicVolume: MUSIC_VOLUME
+  key_SFXVolume: SFX_VOLUME
+  key_NumPlayers: NUM_PLAYERS
+  key_RandomSeedMethod: RANDOM_SEED_METHOD

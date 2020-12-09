@@ -59,14 +59,14 @@ public class OptionsMenu_UIManager : MonoBehaviour {
         if (PlayerPrefs.HasKey(gm.key_MusicVolume))
         {
             // then set the slider value to match.
-            musicSlider.value = PlayerPrefs.GetInt(gm.key_MusicVolume);
+            musicSlider.value = PlayerPrefs.GetFloat(gm.key_MusicVolume);
         }
 
         // If the PlayerPreferences has a key for SFX volume,
         if (PlayerPrefs.HasKey(gm.key_SFXVolume))
         {
             // then set the slider value to match.
-            sfxSlider.value = PlayerPrefs.GetInt(gm.key_SFXVolume);
+            sfxSlider.value = PlayerPrefs.GetFloat(gm.key_SFXVolume);
         }
 
         // If the PlayerPreferences has a key for number of players,
@@ -96,29 +96,30 @@ public class OptionsMenu_UIManager : MonoBehaviour {
     // Called when the slider value for Music volume changes.
     public void OnSilderChanged_Music()
     {
-        // Get the slider's value as an int.
-        int val = (int)musicSlider.value;
+        // Multiply by 100 to get an int that represents the volume percentage.
+        int val = (int)(musicSlider.value * 100);
 
         // Change the music volume Text to show the new value.
         musicVolume_Text.text = val.ToString();
 
         // Update the value on the GM.
-        // val is divided by 100 to change from a percent to the 0 - 1.0 range that audio sources need.
-        gm.volume_Music = val / 100;
+        gm.volume_Music = musicSlider.value;
+
+        // Adjust the volume of the current track to match.
+        gm.main_AudioSource.volume = gm.volume_Music;
     }
 
     // Called when the slider value for SFX volume changes.
     public void OnSilderChanged_SFX()
     {
-        // Get the slider's value as an int.
-        int val = (int)sfxSlider.value;
+        // Multiply by 100 to get an int that represents the volume percentage.
+        int val = (int)(sfxSlider.value * 100);
 
         // Change the SFX volume Text to show the new value.
         sfxVolume_Text.text = val.ToString();
 
         // Update the value on the GM.
-        // val is divided by 100 to change from a percent to the 0 - 1.0 range that audio sources need.
-        gm.volume_SFX = val / 100;
+        gm.volume_SFX = sfxSlider.value;
     }
 
     // Called when the value for the dropdown menu for Number of Players is changed.
