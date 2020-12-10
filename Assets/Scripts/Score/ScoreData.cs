@@ -50,7 +50,7 @@ public class ScoreData : IComparable<ScoreData> {
     public int CompareTo(ScoreData other)
     {
         // If other is a null reference,
-        (if other == null)
+        if (other == null)
         {
             // then return 1.
             return 1;

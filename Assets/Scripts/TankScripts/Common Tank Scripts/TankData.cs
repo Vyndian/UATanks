@@ -22,7 +22,10 @@ public class TankData : MonoBehaviour {
     [SerializeField] private readonly int minPointsValue = 20;
 
     // The amount of score that the player loses every time they die.
-    [SerializeField] private int pointsLostPerDeath = 30;
+    [SerializeField] private readonly int pointsLostPerDeath = 30;
+
+    // The ScoreData that will serve as an element on the High Scores list.
+    private ScoreData scoreData;
 
 
     [Header("Time/Speeds")]
@@ -67,6 +70,12 @@ public class TankData : MonoBehaviour {
     // The currentHealth of the tank.
     public float currentHealth;
 
+    // The amount of lives that this tank starts the game with (not including the first life).
+    [SerializeField] private int maxLives = 2;
+
+    // The amount of lives that this tank has left (not including the life they are currently using).
+    private int remainingLives;
+
     // The percentage of this tank's health that, if it falls below the threshold, the tank will flee.
     [Range(1, 100)]
     public int fleeThreshold_Percentage = 50;
@@ -94,6 +103,9 @@ public class TankData : MonoBehaviour {
 
         // Set currentHealth to maxHealth.
         currentHealth = maxHealth;
+
+        // Set remainingLives to maxLives.
+        remainingLives = maxLives;
 
         // Set the original forward speed to the speed when the game starts.
         originalSpeed_Forward = moveSpeed_Forward;
@@ -224,11 +236,34 @@ public class TankData : MonoBehaviour {
             // Lower this player's score.
             ChangeScore(-pointsLostPerDeath);
 
-            // Fully heal the player.
-            Repair(maxHealth);
+            // If the player has lives/respawns remaining,
+            if (remainingLives > 0)
+            {
+                // then consume a life/respawn.
+                remainingLives--;
 
-            // Respawn the player in a random spawn point.
-            gm.Player_Respawn(tf);
+                // Fully heal the player.
+                Repair(maxHealth);
+
+                // Respawn the player in a random spawn point.
+                gm.Player_Respawn(tf);
+            }
+            // Else, the player just lost their last life. Game Over for them.
+            else
+            {
+                // If this player is the last one alive,
+                if (gm.player_tanks.Count == 1)
+                {
+                    // then transition to the GameOver screen.
+                    // TODO: GameOver.
+                }
+                // Else, there is at least one other player.
+                else
+                {
+                    // Remove this player from the game.
+                    Destroy(this);
+                }
+            }
         }
     }
 

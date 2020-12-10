@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour {
     public static GameManager instance;
 
 
-    [Header("Psuedo_Scene GameObjects")]
+    [Header("Psuedo-Scene GameObjects")]
     // References the Game gameObject where all the game-related objects are.
     public GameObject game;
 
@@ -106,6 +106,10 @@ public class GameManager : MonoBehaviour {
 
     // The key used to access the PlayerPreferences for the random seed method.
     public string key_RandomSeedMethod = "RANDOM_SEED_METHOD";
+
+
+    [Header("Score")]
+    public List<ScoreData> scores;
     #endregion Fields
 
     #region Unity Methods
@@ -133,6 +137,7 @@ public class GameManager : MonoBehaviour {
         player_SpawnPoints = new List<Player_SpawnPoint>();
         ai_SpawnPoints = new List<AI_SpawnPoint>();
         spawnedPowerups = new List<Powerup>();
+        scores = new List<ScoreData>();
     }
 
     // Called before the first frame.

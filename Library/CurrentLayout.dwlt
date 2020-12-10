@@ -20,7 +20,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 6}
-  m_MinSize: {x: 950, y: 300}
+  m_MinSize: {x: 950, y: 542}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &2
 MonoBehaviour:
@@ -45,7 +45,7 @@ MonoBehaviour:
   m_MinSize: {x: 683, y: 492}
   m_MaxSize: {x: 14004, y: 14042}
   vertical: 0
-  controlID: 107
+  controlID: 9
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -327,19 +327,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Scripts/Score
+    - Assets/Objects/Tanks/PlayerTank
   m_ViewMode: 1
   m_StartGridSize: 96
   m_LastFolders:
-  - Assets/Scripts/Score
+  - Assets/Objects/Tanks/PlayerTank
   m_LastFoldersGridSize: 96
   m_LastProjectPath: C:\Users\Vyndi\Documents\Doc-repos\JThornton_UATanks (GPE104)
   m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 415}
-    m_SelectedIDs: f85b0000
-    m_LastClickedID: 23544
-    m_ExpandedIDs: 00000000a2270000a6270000b4270000c8270000ee270000f6270000042800000e280000102800004c28000098280000b428000004290000382900005629000060290000622900007a29000094290000ee360000f0360000f2360000f436000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 287}
+    m_SelectedIDs: 9c280000
+    m_LastClickedID: 10396
+    m_ExpandedIDs: 00000000a4270000a8270000b6270000ca270000f0270000f8270000062800001028000012280000502800009c280000ba2800000a2900003e2900005c2900006629000068290000802900009a290000f4360000f6360000f8360000fa36000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -367,7 +367,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000a2270000a6270000b4270000c8270000ee270000f6270000042800000e2800004c28000098280000b428000004290000382900005629000060290000622900007a29000094290000ee360000f0360000f2360000f4360000
+    m_ExpandedIDs: 00000000a4270000a8270000b6270000ca270000f0270000f8270000062800001028000012280000502800009c280000ba2800000a2900003e2900005c2900006629000068290000802900009a290000f4360000f6360000f8360000fa360000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -485,9 +485,9 @@ MonoBehaviour:
   m_PersistentViewDataDictionary: {fileID: 0}
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: fc5b0000
+    m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 6afaffff7cfafffff6faffff22fbffff2efbffff5efbffff96fbffff9efbffff00000000
+    m_ExpandedIDs: 9efbffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
