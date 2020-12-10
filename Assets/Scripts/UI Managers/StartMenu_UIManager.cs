@@ -54,5 +54,20 @@ public class StartMenu_UIManager : MonoBehaviour {
         // Tells the GM to open the options menu.
         gm.ShowOptionsMenu();
     }
+
+    // Called when the player finished editing the player name input for either player.
+    public void OnPlayerNameInputEdited(int player)
+    {
+        // If this was for Player1,
+        if (player == 1)
+        {
+
+        }
+        // Else, this was for Player2.
+        else
+        {
+
+        }
+    }
     #endregion Dev-Defined Methods
 }

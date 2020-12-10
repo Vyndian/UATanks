@@ -20,9 +20,6 @@ public class Player_SpawnPoint : MonoBehaviour {
 
     // Private fields --v
 
-    // A STATIC variable for whether the player has already been spawned once.
-    private static bool playerSpawned = false;
-
     // A reference to the GM.
     private GameManager gm;
     #endregion Fields
@@ -62,20 +59,17 @@ public class Player_SpawnPoint : MonoBehaviour {
 
     #region Dev-Defined Methods
     // Spawns the player on this spawn point. This should only be called once via the GM.
-    public void SpawnPlayer()
+    // Returns the Camera attached to the tank so that the GM can manipulate it for multiplayer.
+    public InputController SpawnPlayer()
     {
-        // If the player has not yet been spawned,
-        if (!playerSpawned)
-        {
-            // then set playerSpawned to true.
-            playerSpawned = true;
+        // Spawn the player with this spawner as the parent.
+        GameObject player = Instantiate(playerPrefab, tf.position, Quaternion.identity, tf);
 
-            // Spawn the player with this spawner as the parent.
-            GameObject player = Instantiate(playerPrefab, tf.position, Quaternion.identity, tf);
+        // Have the player face the same way as the spawner.
+        player.transform.rotation = tf.rotation;
 
-            // Have the player face the same way as the spawner.
-            player.transform.rotation = tf.rotation;
-        }
+        // Get the InputController on the tank and return for this function.
+        return player.GetComponentInChildren<InputController>();
     }
     #endregion Dev-Defined Methods
 }

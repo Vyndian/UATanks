@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour {
     // The audio clip that plays in the background during the game.
     public AudioClip musicClip_GameBGM;
 
-    // References the Main camera's audio source.
+    // References the main audio source, attached to the AudioSource prefab centered in the game.
     public AudioSource main_AudioSource;
 
 
@@ -110,6 +110,17 @@ public class GameManager : MonoBehaviour {
 
     [Header("Score")]
     public List<ScoreData> scores;
+
+
+    [Header("Cameras")]
+    // The X and Y values of the camera for Player1.
+    [SerializeField] private Vector2 viewportRectPosition_Player1 = new Vector2(0, (float)0.5);
+
+    // The X and Y values of the camera for Player2.
+    [SerializeField] private Vector2 viewportRectPosition_Player2 = new Vector2(0, 0);
+
+    // The H and W that needs to be applied to the Camera on both players.
+    [SerializeField] private Vector2 viewportRectSize = new Vector2(1, (float)0.5);
     #endregion Fields
 
     #region Unity Methods
@@ -148,8 +159,13 @@ public class GameManager : MonoBehaviour {
         // If this var is null,
         if (main_AudioSource == null)
         {
-            // then set it up.
-            main_AudioSource = Camera.main.GetComponent<AudioSource>();
+            // then log an error.
+            Debug.LogError("ERROR: Main audio source not found.");
+        }
+        // Else, the main audio source is set up correctly.
+        else
+        {
+            ChangeMainAudio(musicClip_StartMenu, volume_Music);
         }
 
         // Apply the player's preferences.
@@ -180,8 +196,6 @@ public class GameManager : MonoBehaviour {
             // then set apply that preference.
             randomSeedMethod = (MapGenerator.RandomSeedMethod)PlayerPrefs.GetInt("RANDOM_SEED_METHOD");
         }
-        // Start playing the StartMenu music.
-        ChangeMainAudio(musicClip_StartMenu, volume_Music);
     }
 
     // Called every frame.
@@ -199,27 +213,40 @@ public class GameManager : MonoBehaviour {
     #endregion Unity Methods
 
     #region Dev-Defined Methods
-    // Assign a camera to the tank that called this method.
-    // Currently only works with main camera.
-    public void AssignCamera(Transform newParent)
-    {
-        Transform mainCamTf = Camera.main.transform;
-        mainCamTf.parent = newParent;
-        mainCamTf.position = newParent.position;
-        mainCamTf.rotation = newParent.rotation;
-    }
-
     // Spawns the player is a random Player_SpawnPoint.
-    public void Player_RandomSpawn()
+    public void Players_RandomSpawn()
     {
         // If player_SpawnPoints is not empty or null,
         if (player_SpawnPoints != null && player_SpawnPoints.Count != 0)
         {
-            // then determine a random number representing an index in that list.
-            int randIndex = UnityEngine.Random.Range(0, player_SpawnPoints.Count);
+            // then shuffle/randomize that list.
+            ShuffleList<Player_SpawnPoint>(player_SpawnPoints);
 
-            // Tell that spawn point to spawn its player.
-            player_SpawnPoints[randIndex].SpawnPlayer();
+            // Tell the first spawn point in the shuffled list to spawn its player.
+            // Save a reference to its InputController.
+            InputController player = player_SpawnPoints[0].SpawnPlayer();
+
+            // If numPlayers is 2,
+            if (numPlayers == 2)
+            {
+                // then get a reference to that player's Camera.
+                Camera cam = player.GetComponentInChildren<Camera>();
+                
+                // Set this camera's Viewport Rect appropriately for Player1.
+                cam.rect = new Rect(viewportRectPosition_Player1, viewportRectSize);
+
+                // Tell the next spawn point to spawn their player.
+                InputController player2 = player_SpawnPoints[1].SpawnPlayer();
+
+                // Set the new player to use arrow keys for input.
+                player2.input = InputController.InputScheme.arrowKeys;
+
+                // Get the new player's Camera.
+                Camera cam2 = player2.GetComponentInChildren<Camera>();
+
+                // Set that tank's camera's Viewport Rect appropriately for Player2.
+                cam2.rect = new Rect(viewportRectPosition_Player2, viewportRectSize);
+            }
         }
         // Else, it was either empty or null.
         else
@@ -261,7 +288,7 @@ public class GameManager : MonoBehaviour {
         if (numRooms_Created >= numRooms_Expected)
         {
             // then spawn the player.
-            Player_RandomSpawn();
+            Players_RandomSpawn();
 
             // Spawn the AI tanks.
             AITank_RandomSpawns();

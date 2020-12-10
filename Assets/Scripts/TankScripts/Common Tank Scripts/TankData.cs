@@ -86,8 +86,8 @@ public class TankData : MonoBehaviour {
 
 
     [Header("Object References")]
-    // The CameraPosition object, childed to the cannon, where this player's camera should go.
-    [SerializeField] private GameObject cameraPosition;
+    // The Camera attached to this player tank.
+    public Camera tankCamera;
 
 
     [Header("Component variables")]
@@ -116,6 +116,13 @@ public class TankData : MonoBehaviour {
             // then set it.
             tf = transform;
         }
+
+        // If tankCamera is null,
+        if (tankCamera == null)
+        {
+            // then find it in the tank's children.
+            tankCamera = GetComponentInChildren<Camera>();
+        }
     }
 
     // Called before the first frame.
@@ -133,8 +140,8 @@ public class TankData : MonoBehaviour {
             // Put this TankData on the GM's list of players.
             gm.player_tanks.Add(this);
 
-            // Set camera.
-            AssignCamera();
+            //// Set camera.
+            //AssignCamera();
         }
         // Else, this is an AI. Leave isPlayer as false.
         else
@@ -293,13 +300,6 @@ public class TankData : MonoBehaviour {
             // then set pointsValue equal to the minimum instead.
             pointsValue = minPointsValue;
         }
-    }
-
-    // Assign a camera to this player.
-    private void AssignCamera()
-    {
-        // then call AssignCamera on the GM.
-        GameManager.instance.AssignCamera(cameraPosition.transform);
     }
     #endregion Dev-Defined Methods
 }
