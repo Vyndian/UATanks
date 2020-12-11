@@ -20,7 +20,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 6}
-  m_MinSize: {x: 950, y: 542}
+  m_MinSize: {x: 950, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &2
 MonoBehaviour:
@@ -42,10 +42,10 @@ MonoBehaviour:
     y: 30
     width: 1920
     height: 947
-  m_MinSize: {x: 679, y: 492}
-  m_MaxSize: {x: 14002, y: 14042}
+  m_MinSize: {x: 683, y: 492}
+  m_MaxSize: {x: 14004, y: 14042}
   vertical: 0
-  controlID: 123
+  controlID: 127
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -64,8 +64,8 @@ MonoBehaviour:
     y: 0
     width: 417
     height: 947
-  m_MinSize: {x: 275, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 277, y: 71}
+  m_MaxSize: {x: 4002, y: 4021}
   m_ActualView: {fileID: 14}
   m_Panes:
   - {fileID: 14}
@@ -89,8 +89,8 @@ MonoBehaviour:
     y: 0
     width: 352
     height: 636
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 202, y: 221}
+  m_MaxSize: {x: 4002, y: 4021}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
@@ -143,7 +143,7 @@ MonoBehaviour:
     y: 0
     width: 1920
     height: 997
-  m_MinSize: {x: 950, y: 542}
+  m_MinSize: {x: 950, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &7
 MonoBehaviour:
@@ -206,10 +206,10 @@ MonoBehaviour:
     y: 0
     width: 1503
     height: 947
-  m_MinSize: {x: 404, y: 492}
+  m_MinSize: {x: 406, y: 492}
   m_MaxSize: {x: 10002, y: 14042}
   vertical: 1
-  controlID: 10
+  controlID: 54
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -230,10 +230,10 @@ MonoBehaviour:
     y: 0
     width: 1503
     height: 636
-  m_MinSize: {x: 404, y: 221}
-  m_MaxSize: {x: 8004, y: 4021}
+  m_MinSize: {x: 406, y: 221}
+  m_MaxSize: {x: 8006, y: 4021}
   vertical: 0
-  controlID: 11
+  controlID: 55
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -327,19 +327,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Objects/UI
+    - Assets/Audio/One-Shot Sounds
   m_ViewMode: 1
   m_StartGridSize: 96
   m_LastFolders:
-  - Assets/Objects/UI
+  - Assets/Audio/One-Shot Sounds
   m_LastFoldersGridSize: 96
   m_LastProjectPath: C:\Users\Vyndi\Documents\Doc-repos\JThornton_UATanks (GPE104)
   m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 367}
-    m_SelectedIDs: 6a290000
-    m_LastClickedID: 10602
-    m_ExpandedIDs: 00000000a4270000a8270000b6270000ca270000f0270000f8270000062800001028000012280000502800009c280000b828000008290000222900003c2900005a29000064290000662900007e2900009a290000583700005a3700005c3700005e37000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 79}
+    m_SelectedIDs: d62d0000
+    m_LastClickedID: 11734
+    m_ExpandedIDs: 000000007c2c0000802c00008c2c00009c2c0000be2c0000c62c0000d22c0000dc2c0000de2c0000102d0000402d0000562d0000982d0000b22d0000c62d0000da2d0000e22d0000e42d0000fa2d0000122e0000c0370000c2370000c4370000c637000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -367,7 +367,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000a4270000a8270000b6270000ca270000f0270000f8270000062800001028000012280000502800009c280000b8280000082900003c2900005a29000064290000662900007e2900009a290000583700005a3700005c3700005e370000
+    m_ExpandedIDs: 000000007c2c0000802c00008c2c00009c2c0000be2c0000c62c0000d22c0000dc2c0000de2c0000102d0000402d0000562d0000982d0000b22d0000c62d0000da2d0000e22d0000e42d0000fa2d0000122e0000c0370000c2370000c4370000c6370000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -449,7 +449,7 @@ MonoBehaviour:
     width: 415
     height: 926
   m_PersistentViewDataDictionary: {fileID: 0}
-  m_ScrollPosition: {x: 0, y: 0}
+  m_ScrollPosition: {x: 0, y: 238.95508}
   m_InspectorMode: 0
   m_PreviewResizer:
     m_CachedPref: 168
@@ -484,10 +484,10 @@ MonoBehaviour:
     height: 615
   m_PersistentViewDataDictionary: {fileID: 0}
   m_TreeViewState:
-    scrollPos: {x: 0, y: 26}
-    m_SelectedIDs: 6a290000
-    m_LastClickedID: 0
-    m_ExpandedIDs: 820bf8ff940bf8ff9a0bf8ffb4cdf8ffbecdf8fff2cdf8ff9cd0f8ff30d1f8ffde67f9ffe267f9ff1668f9fff069f9ff6c71f9fffc1bfaff001cfaff341cfaff0e1efaff3836fbff3c36fbff9836fbff0a3afbff483cfbff4c3cfbff803cfbff5a3efbff8c56fbff9056fbffc456fbff9e58fbffb2e2fcffb6e2fcffeae2fcffc4e4fcff6285feff70edfefffe27ffffe65bffff04e3fffff2e6ffffa2f9ffffecf9ffff60fbffff92fbffff9efbffff00000000f62900001c2a0000282a000046aa000064aa0000b2af0000d0af0000
+    scrollPos: {x: 0, y: 0}
+    m_SelectedIDs: 52faffff
+    m_LastClickedID: -1454
+    m_ExpandedIDs: 48f8ffff98f8ffff14faffff54faffff00000000502e0000522e0000542e0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -571,7 +571,7 @@ MonoBehaviour:
   m_Rotation:
     m_Target: {x: 0.19701338, y: -0.0023312601, z: 0.00046981868, w: 0.9803979}
     speed: 2
-    m_Value: {x: 0.1970134, y: -0.0023312604, z: 0.0004698187, w: 0.98039794}
+    m_Value: {x: -0.19701338, y: 0.0023312601, z: -0.00046981868, w: -0.9803979}
   m_Size:
     m_Target: 2134.32
     speed: 2

@@ -99,8 +99,16 @@ public class GameManager : MonoBehaviour {
     // The audio clip that plays in the background during the GameOver screen.
     public AudioClip musicClip_GameOver;
 
+    // The audio clip that plays when a player's pointer is pressed down on a button.
+    public AudioClip feedback_PointerDown;
+
+    // The audio clip that plays when a player's pointer is released from a button.
+    public AudioClip feedback_PointerUp;
+
     // References the main audio source, attached to the AudioSource prefab centered in the game.
     public AudioSource main_AudioSource;
+
+
 
 
     [Header("Player Preference Keys")]
@@ -462,6 +470,20 @@ public class GameManager : MonoBehaviour {
             // then play the clip.
             main_AudioSource.Play();
         }
+    }
+
+    // Play the sound for when a player's pointer is pressed over a button.
+    public void PointerDownFeedback()
+    {
+        // Play the feedback for pointer down.
+        AudioSource.PlayClipAtPoint(feedback_PointerDown, audioPoint, (float)(volume_SFX * 0.6));
+    }
+
+    // Play the sound for when a player's pointer is released from a button.
+    public void PointerUpFeedback()
+    {
+        // Play the feedback for pointer up.
+        AudioSource.PlayClipAtPoint(feedback_PointerUp, audioPoint, (float)(volume_SFX * 0.75));
     }
     #endregion Dev-Defined Methods
 }
