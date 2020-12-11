@@ -72,8 +72,8 @@ public class Pickup : MonoBehaviour {
             // If feedback has been set up,
             if (feedback != null)
             {
-                // then play that feedback sound as the gameObject's point.
-                AudioSource.PlayClipAtPoint(feedback, tf.position, gm.volume_SFX);
+                // then play that feedback sound at the GM's audioPoint.
+                AudioSource.PlayClipAtPoint(feedback, gm.audioPoint, gm.volume_SFX);
             }
             // Else, the feedback was not set up.
             else

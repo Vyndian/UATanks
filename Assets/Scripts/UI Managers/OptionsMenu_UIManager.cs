@@ -75,13 +75,6 @@ public class OptionsMenu_UIManager : MonoBehaviour {
             // then set the dropdown value to match.
             numPlayers_Dropdown.value = PlayerPrefs.GetInt(gm.key_NumPlayers);
         }
-
-        // If the PlayerPreferences has a key for random seed method,
-        if (PlayerPrefs.HasKey(gm.key_RandomSeedMethod))
-        {
-            // then set the dropdown value to match.
-            randomSeedMethod_Dropdown.value = PlayerPrefs.GetInt(gm.key_RandomSeedMethod);
-        }
     }
 
     // Called every frame.
@@ -137,30 +130,18 @@ public class OptionsMenu_UIManager : MonoBehaviour {
         {
             // In the case of the value being 0 (Random, meaning DateTime),
             case 0:
-                // Update the value.
-                gm.randomSeedMethod = MapGenerator.RandomSeedMethod.DateTime;
-
-                // Set the manual seed entry input field to disabled.
                 manualSeed_InputField.gameObject.SetActive(false);
                 break;
 
 
             // In the case of the value being 1 (Map of the Day),
             case 1:
-                // Update the value.
-                gm.randomSeedMethod = MapGenerator.RandomSeedMethod.MapOfTheDay;
-
-                // Set the manual seed entry input field to disabled.
                 manualSeed_InputField.gameObject.SetActive(false);
                 break;
 
 
             // In the case of the value being 2 (Manual),
             case 2:
-                // Update the value.
-                gm.randomSeedMethod = MapGenerator.RandomSeedMethod.Manual;
-
-                // Set the manual seed entry input field to enabled.
                 manualSeed_InputField.gameObject.SetActive(true);
                 break;
         }   

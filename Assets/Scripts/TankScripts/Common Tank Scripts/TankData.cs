@@ -9,6 +9,9 @@ public class TankData : MonoBehaviour {
     // Whether or not this is a player tank or AI. Initialized as false as default.
     [HideInInspector] public bool isPlayer = false;
 
+    // The player number of this player (the 1 or 2 in Player, Player2).
+    [HideInInspector] public int playerNumber;
+
 
     [Header("Score")]
     // This player's current score.
@@ -23,9 +26,6 @@ public class TankData : MonoBehaviour {
 
     // The amount of score that the player loses every time they die.
     [SerializeField] private readonly int pointsLostPerDeath = 30;
-
-    // The ScoreData that will serve as an element on the High Scores list.
-    private ScoreData scoreData;
 
 
     [Header("Time/Speeds")]
@@ -139,9 +139,6 @@ public class TankData : MonoBehaviour {
 
             // Put this TankData on the GM's list of players.
             gm.player_tanks.Add(this);
-
-            //// Set camera.
-            //AssignCamera();
         }
         // Else, this is an AI. Leave isPlayer as false.
         else
@@ -160,40 +157,7 @@ public class TankData : MonoBehaviour {
     // Called when this script is being destroyed.
     public void OnDestroy()
     {
-        // If this is a player,
-        if (isPlayer)
-        {
-            // Iterate through the GM's list of alive players.
-            foreach (TankData data in gm.player_tanks)
-            {
-                // If the current iteration matches this player's TankData,
-                if (data == this)
-                {
-                    // then remove it from the list.
-                    gm.player_tanks.Remove(data);
-
-                    // We are done, so return. Otherwise, will get an unumeration error.
-                    return;
-                }
-            }
-        }
-        // Else, this is an AI.
-        else
-        {
-            // Iterate through the GM's list of alive AIs.
-            foreach (TankData data in gm.ai_tanks)
-            {
-                // If the current iteration matches this AI's TankData,
-                if (data == this)
-                {
-                    // then remove it from the list.
-                    gm.ai_tanks.Remove(data);
-
-                    // We are done, so return. Otherwise, will get an unumeration error.
-                    return;
-                }
-            }
-        }
+        
     }
     #endregion Unity Methods
 
@@ -225,14 +189,17 @@ public class TankData : MonoBehaviour {
     // Kill the tank.
     public void Death(TankData killedBy)
     {
+        // Play audio clip of the tank exploding.
+        AudioSource.PlayClipAtPoint(gm.feedback_TankExplosion, gm.audioPoint, gm.volume_SFX);
+
         // If this in an enemy tank,
         if (!isPlayer)
         {
             // Add to the score of the player that killed this tank.
             killedBy.ChangeScore(pointsValue);
 
-            // Play audio clip of the tank exploding.
-            AudioSource.PlayClipAtPoint(gm.feedback_TankExplosion, tf.position, gm.volume_SFX);
+            // Remove this tank from the GM's list of AI tanks.
+            gm.ai_tanks.Remove(this);
 
             // Destroy this tank.
             Destroy(gameObject);
@@ -258,17 +225,37 @@ public class TankData : MonoBehaviour {
             // Else, the player just lost their last life. Game Over for them.
             else
             {
+                // Tell the GM this player's final score.
+                // If this player was Player1,
+                if (playerNumber == 1)
+                {
+                    // then set the current score to the GM's score for Player1.
+                    gm.score_Player1 = currentScore;
+                }
+                // Else, this must be Player2.
+                else
+                {
+                    // Set the current score to the GM's score for Player2.
+                    gm.score_Player2 = currentScore;
+                }
+
                 // If this player is the last one alive,
                 if (gm.player_tanks.Count == 1)
                 {
-                    // then transition to the GameOver screen.
-                    // TODO: GameOver.
+                    // then remove this tank from the GM's list of players.
+                    gm.player_tanks.Remove(this);
+
+                    // Transition to the GameOver screen.
+                    gm.ShowGameOver();
                 }
                 // Else, there is at least one other player.
                 else
                 {
+                    // Remove this tank from the GM's list of players.
+                    gm.player_tanks.Remove(this);
+
                     // Remove this player from the game.
-                    Destroy(this);
+                    Destroy(gameObject);
                 }
             }
         }

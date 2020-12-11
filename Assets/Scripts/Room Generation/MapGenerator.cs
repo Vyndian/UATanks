@@ -234,6 +234,9 @@ public class MapGenerator : MonoBehaviour {
                 (numColumns * roomHeight / 2),
                 12
             );
+
+        // Tell the GM this position so that clips played at points can be heard by this main AudioSource.
+        gm.audioPoint = gm.main_AudioSource.transform.position;
     }
 
     // Instantiate a room at the given coordinates.

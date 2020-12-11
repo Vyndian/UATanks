@@ -19,6 +19,9 @@ public class GameManager : MonoBehaviour {
     //References the OptionsMenu gameObject.
     public GameObject optionsMenu;
 
+    // References the GameOver gameObject.
+    public GameObject gameOver;
+
 
     [Header("Procedural Generation")]
     // A two-dimensional array holding all the Room scripts, each associated with a room tile in the grid.
@@ -78,6 +81,9 @@ public class GameManager : MonoBehaviour {
 
 
     [Header("Audio")]
+    // The point at which audio clips should be played (will equal the main AudioSource/Listener's location).
+    public Vector3 audioPoint;
+
     // The audio clip that will play when shells fired from this tank explode (where the shell hits).
     public AudioClip feedback_ShellExplosionOnImpact;
 
@@ -89,6 +95,9 @@ public class GameManager : MonoBehaviour {
 
     // The audio clip that plays in the background during the game.
     public AudioClip musicClip_GameBGM;
+
+    // The audio clip that plays in the background during the GameOver screen.
+    public AudioClip musicClip_GameOver;
 
     // References the main audio source, attached to the AudioSource prefab centered in the game.
     public AudioSource main_AudioSource;
@@ -104,12 +113,14 @@ public class GameManager : MonoBehaviour {
     // The key used to access the PlayerPreferences for the number of players.
     public string key_NumPlayers = "NUM_PLAYERS";
 
-    // The key used to access the PlayerPreferences for the random seed method.
-    public string key_RandomSeedMethod = "RANDOM_SEED_METHOD";
-
 
     [Header("Score")]
-    public List<ScoreData> scores;
+    // These scores are set by the appropriate player's TankData once they lose their last life.
+    // The score achieved by Player1
+    public int score_Player1;
+
+    // The score achieved by Player2.
+    public int score_Player2;
 
 
     [Header("Cameras")]
@@ -148,7 +159,6 @@ public class GameManager : MonoBehaviour {
         player_SpawnPoints = new List<Player_SpawnPoint>();
         ai_SpawnPoints = new List<AI_SpawnPoint>();
         spawnedPowerups = new List<Powerup>();
-        scores = new List<ScoreData>();
     }
 
     // Called before the first frame.
@@ -189,13 +199,6 @@ public class GameManager : MonoBehaviour {
             // then set apply that preference.
             numPlayers = PlayerPrefs.GetInt(key_NumPlayers);
         }
-
-        // If there is currently a key for RandomSeed method,
-        if (PlayerPrefs.HasKey("RANDOM_SEED_METHOD"))
-        {
-            // then set apply that preference.
-            randomSeedMethod = (MapGenerator.RandomSeedMethod)PlayerPrefs.GetInt("RANDOM_SEED_METHOD");
-        }
     }
 
     // Called every frame.
@@ -226,6 +229,9 @@ public class GameManager : MonoBehaviour {
             // Save a reference to its InputController.
             InputController player = player_SpawnPoints[0].SpawnPlayer();
 
+            // Set that player as Player1.
+            player.GetComponent<TankData>().playerNumber = 1;
+
             // If numPlayers is 2,
             if (numPlayers == 2)
             {
@@ -237,6 +243,9 @@ public class GameManager : MonoBehaviour {
 
                 // Tell the next spawn point to spawn their player.
                 InputController player2 = player_SpawnPoints[1].SpawnPlayer();
+
+                // Set the new player as Player2.
+                player2.GetComponent<TankData>().playerNumber = 2;
 
                 // Set the new player to use arrow keys for input.
                 player2.input = InputController.InputScheme.arrowKeys;
@@ -370,6 +379,7 @@ public class GameManager : MonoBehaviour {
         // Disable all gameObjects not necessary for the game.
         startMenu.SetActive(false);
         optionsMenu.SetActive(false);
+        gameOver.SetActive(false);
 
         // Activate the Game gameObject.
         game.SetActive(true);
@@ -385,6 +395,7 @@ public class GameManager : MonoBehaviour {
         // Disable all gameObjects not necessary for the Start menu.
         game.SetActive(false);
         optionsMenu.SetActive(false);
+        gameOver.SetActive(false);
 
         // Activate the Start menu.
         startMenu.SetActive(true);
@@ -399,12 +410,28 @@ public class GameManager : MonoBehaviour {
         // Disable all gameObjects not necessary for the Options menu.
         game.SetActive(false);
         startMenu.SetActive(false);
+        gameOver.SetActive(false);
 
         // Activate the Start menu.
         optionsMenu.SetActive(true);
 
         // Change the BGM to the Start menu clip (The Options menu is just an extension of the Start menu).
         ChangeMainAudio(musicClip_StartMenu, volume_Music);
+    }
+
+    // Activates the GameOver gameObject and disables the rest.
+    public void ShowGameOver()
+    {
+        // Disable all gameObjects not necessary for the Options menu.
+        game.SetActive(false);
+        startMenu.SetActive(false);
+        optionsMenu.SetActive(false);
+
+        // Activate the Start menu.
+        gameOver.SetActive(true);
+
+        // Change the BGM to the GameOver music clip.
+        ChangeMainAudio(musicClip_GameOver, volume_Music);
     }
 
     // Saves the current settings into player preferences.
@@ -418,9 +445,6 @@ public class GameManager : MonoBehaviour {
 
         // Save the preference for the number of players.
         PlayerPrefs.SetInt(key_NumPlayers, numPlayers);
-
-        // Save the preference for the Random seed method.
-        PlayerPrefs.SetInt(key_RandomSeedMethod, (int)randomSeedMethod);
     }
 
     // Changes the main camera's audio source's clip and volume.

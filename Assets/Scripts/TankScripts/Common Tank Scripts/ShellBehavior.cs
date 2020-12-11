@@ -94,7 +94,7 @@ public class ShellBehavior : MonoBehaviour {
     private void PlayExplosionClip()
     {
         // Create a clip of an explosion at the point where the shell was when it expired/hit something.
-        AudioSource.PlayClipAtPoint(gm.feedback_ShellExplosionOnImpact, tf.position, gm.volume_SFX);
+        AudioSource.PlayClipAtPoint(gm.feedback_ShellExplosionOnImpact, gm.audioPoint, gm.volume_SFX);
     }
     #endregion Dev-Defined Methods
 }

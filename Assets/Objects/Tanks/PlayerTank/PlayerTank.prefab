@@ -614,6 +614,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 0
+  playerNumber: 0
   currentScore: 0
   pointsValue: 100
   moveSpeed_Forward: 3
@@ -632,7 +633,7 @@ MonoBehaviour:
   maxLives: 2
   fleeThreshold_Percentage: 50
   shellDamage: 10
-  cameraPosition: {fileID: 1199916466699970}
+  tankCamera: {fileID: 0}
   tf: {fileID: 0}
 --- !u!124 &124285157117687788
 Behaviour:

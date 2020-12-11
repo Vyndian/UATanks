@@ -89,7 +89,7 @@ public class TankCannon : MonoBehaviour {
             shell.GetComponent<Rigidbody>().AddForce(transform.forward * speed);
 
             // Play sound clip of the cannon firing.
-            AudioSource.PlayClipAtPoint(feedback_ShellFiring, projSpawnPnt_tf.position, gm.volume_SFX);
+            AudioSource.PlayClipAtPoint(feedback_ShellFiring, gm.audioPoint, gm.volume_SFX);
         }
     }
     #endregion Dev-Defined Methods
