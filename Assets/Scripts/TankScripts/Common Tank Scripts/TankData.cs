@@ -90,6 +90,18 @@ public class TankData : MonoBehaviour {
     // Reference to the gameObject holding the HUD canvas.
     [SerializeField] private GameObject HUD;
 
+    // The distance that the HUD elements must be raised for single player.
+    [SerializeField] private float HUDoffset_Vertical = 25.0f;
+
+    // References the HealthBar section of the HUD.
+    [SerializeField] private GameObject healthBar_GameObject;
+
+    // References the Score section of the HUD.
+    [SerializeField] private GameObject score_GameObject;
+
+    // References the LivesRemaining section of the HUD.
+    [SerializeField] private GameObject livesRemaining_GameObject;
+
     // Reference to the Slider for the Health Bar.
     [SerializeField] private Slider healthBar_Slider;
 
@@ -158,6 +170,13 @@ public class TankData : MonoBehaviour {
 
             // Update the HUD.
             HUD_Update();
+
+            // If single player,
+            if (gm.numPlayers == 1)
+            {
+                // then raise the HUD elements to fit better for single player.
+                RaiseHUDElements();
+            }
         }
         // Else, this is an AI. Leave isPlayer as false.
         else
@@ -243,7 +262,7 @@ public class TankData : MonoBehaviour {
 
                 // Update the HUD's "Lives Remaining".
                 HUD_Update_LivesRemaining();
-
+                
                 // Fully heal the player.
                 Repair(maxHealth);
 
@@ -351,7 +370,24 @@ public class TankData : MonoBehaviour {
     private void HUD_Update_HealthBar()
     {
         // Update the health bar to match the player's health.
-        healthBar_Slider.value = maxHealth / currentHealth;
+        healthBar_Slider.value = currentHealth / maxHealth;
+    }
+
+    // Raises the HUD elements by a variable degree.
+    // Necessary for single player, since the HUD elements are so low to work with multiplayer screens.
+    private void RaiseHUDElements()
+    {
+        // Create the offset.
+        Vector3 offset = new Vector3(0, HUDoffset_Vertical, 0);
+
+        // Move the health bar.
+        healthBar_GameObject.transform.position += offset;
+
+        // Move the score.
+        score_GameObject.transform.position += offset;
+
+        // Move the LivesRemaining.
+        livesRemaining_GameObject.transform.position += offset;
     }
     #endregion Dev-Defined Methods
 }

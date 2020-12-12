@@ -1053,6 +1053,10 @@ MonoBehaviour:
   fleeThreshold_Percentage: 50
   shellDamage: 10
   HUD: {fileID: 1051587913222644}
+  HUDoffset_Vertical: 0.29
+  healthBar_GameObject: {fileID: 1290899003027250}
+  score_GameObject: {fileID: 1945694061646480}
+  livesRemaining_GameObject: {fileID: 1758044246430502}
   healthBar_Slider: {fileID: 114833121069646420}
   score_Text: {fileID: 114864490267058822}
   livesRemaining_Text: {fileID: 114796198291688784}
@@ -1349,7 +1353,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 20028652219006032}
-  m_PlaneDistance: 10
+  m_PlaneDistance: 1
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0

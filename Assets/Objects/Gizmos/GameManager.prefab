@@ -91,7 +91,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -191,6 +191,7 @@ MonoBehaviour:
   player_SpawnPoints: []
   ai_SpawnPoints: []
   spawnedPowerups: []
+  audioPoint: {x: 0, y: 0, z: 0}
   feedback_ShellExplosionOnImpact: {fileID: 8300000, guid: dd3ca293415e0d04d98f20ce9c2d8db1,
     type: 3}
   feedback_TankExplosion: {fileID: 8300000, guid: 76307980bfe042344bb299e891c915e3,
@@ -198,6 +199,9 @@ MonoBehaviour:
   musicClip_StartMenu: {fileID: 8300000, guid: e79617a9a9fc86d45b46f42440cb187f, type: 3}
   musicClip_GameBGM: {fileID: 8300000, guid: 915a44c4a8469464dade758121f1473e, type: 3}
   musicClip_GameOver: {fileID: 8300000, guid: 5660c52dfb33a8049b9b30efaecfb290, type: 3}
+  feedback_PointerDown: {fileID: 8300000, guid: ecd64199cc4100a47b48627794d3b16e,
+    type: 3}
+  feedback_PointerUp: {fileID: 8300000, guid: f82645599303a3447853196201c7c1c2, type: 3}
   main_AudioSource: {fileID: 82064544219506122}
   key_MusicVolume: MUSIC_VOLUME
   key_SFXVolume: SFX_VOLUME

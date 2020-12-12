@@ -268,7 +268,7 @@ public class GameManager : MonoBehaviour {
         // Else, it was either empty or null.
         else
         {
-            print("empty or null");
+            // Do nothing.
         }
     }
 
@@ -278,7 +278,8 @@ public class GameManager : MonoBehaviour {
         // If spawnPoint is null (no specific spawnPoint was provided),
         if (spawnPoint == null)
         {
-            // then determine which spawnPoint to use by determing a random index for the list of player_SpawnPoints.
+            // then determine which spawnPoint to use by determing
+            // a random index for the list of player_SpawnPoints.
             int randIndex = UnityEngine.Random.Range(0, player_SpawnPoints.Count);
 
             // Set spawnPoint accordingly.
