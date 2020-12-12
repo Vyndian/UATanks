@@ -1,4 +1,4 @@
-Tank Explosion (on death) by Ryan Van Eerde, obtained from zapsplat.com
+Tank Explosion (on death) sound effect by Ryan Van Eerde, obtained from zapsplat.com
 
 All other sound effects obtained from https://www.zapsplat.com
 
@@ -8,6 +8,8 @@ Start Menu background art by Skadovsk, obtained from: https://dusan-pavkovic-war
 
 Start menu button art by Fenfekx, obtained from: https://fenfekx.itch.io/button
 
-Options Menu background art by Luis Zuno, obstained from: https://ansimuz.itch.io/bulkhead-walls-environment
+Options Menu background art by Luis Zuno, obtained from: https://ansimuz.itch.io/bulkhead-walls-environment
 
 Options menu slider art by BrightRetro, obtained from: https://opengameart.org/content/various-gui-elements-part-2
+
+Health Bar's Tools icon by Ellmer Burgess, obtained from: https://toppng.com/tools-icons-clip-transparent-fix-icon-PNG-free-PNG-Images_126649

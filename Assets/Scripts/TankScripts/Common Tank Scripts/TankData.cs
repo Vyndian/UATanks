@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class TankData : MonoBehaviour {
 
@@ -85,12 +86,24 @@ public class TankData : MonoBehaviour {
         public float shellDamage = 10f;
 
 
-    [Header("Object References")]
+    [Header("HUD")]
+    // Reference to the gameObject holding the HUD canvas.
+    [SerializeField] private GameObject HUD;
+
+    // Reference to the Slider for the Health Bar.
+    [SerializeField] private Slider healthBar_Slider;
+
+    // Reference to the Text for the player's score.
+    [SerializeField] private Text score_Text;
+
+    // Reference to the Text for the player's number of lives remaining.
+    [SerializeField] private Text livesRemaining_Text;
+
+
+    [Header("Misc")]
     // The Camera attached to this player tank.
     public Camera tankCamera;
 
-
-    [Header("Component variables")]
     // The Transform on this gameObject.
     [SerializeField] private Transform tf;
     #endregion Fields
@@ -139,6 +152,12 @@ public class TankData : MonoBehaviour {
 
             // Put this TankData on the GM's list of players.
             gm.player_tanks.Add(this);
+
+            // Activate the HUD.
+            HUD.SetActive(true);
+
+            // Update the HUD.
+            HUD_Update();
         }
         // Else, this is an AI. Leave isPlayer as false.
         else
@@ -168,6 +187,9 @@ public class TankData : MonoBehaviour {
         // Apply the damage.
         currentHealth -= damage;
 
+        // Update the health bar on the HUD.
+        HUD_Update_HealthBar();
+
         // If tank is dead,
         if (currentHealth <= 0)
         {
@@ -184,6 +206,9 @@ public class TankData : MonoBehaviour {
 
         // Ensure the health is not higher than the maximum.
         currentHealth = Mathf.Min(currentHealth, maxHealth);
+
+        // Update the health bar on the HUD.
+        HUD_Update_HealthBar();
     }
 
     // Kill the tank.
@@ -215,6 +240,9 @@ public class TankData : MonoBehaviour {
             {
                 // then consume a life/respawn.
                 remainingLives--;
+
+                // Update the HUD's "Lives Remaining".
+                HUD_Update_LivesRemaining();
 
                 // Fully heal the player.
                 Repair(maxHealth);
@@ -273,6 +301,9 @@ public class TankData : MonoBehaviour {
             // then set it to 0.
             currentScore = 0;
         }
+
+        // Update the HUD's Score.
+        HUD_Update_Score();
     }
 
     // Change the amount of points a tank would get from killing this tank. +change adds, -change subtracts.
@@ -287,6 +318,40 @@ public class TankData : MonoBehaviour {
             // then set pointsValue equal to the minimum instead.
             pointsValue = minPointsValue;
         }
+    }
+
+    // Updates all values on the HUD.
+    private void HUD_Update()
+    {
+        // Update the HUD's lives remaining.
+        HUD_Update_LivesRemaining();
+
+        // Update the HUD's score.
+        HUD_Update_Score();
+
+        // Update the HUD's health bar.
+        HUD_Update_HealthBar();
+    }
+
+    // Update the HUD's "Lives Left" section.
+    private void HUD_Update_LivesRemaining()
+    {
+        // Update the value visible to players on the HUD to match the correct number of lives remaining.
+        livesRemaining_Text.text = remainingLives.ToString();
+    }
+
+    // Update the HUD's "Score" section.
+    private void HUD_Update_Score()
+    {
+        // Update the value visible to players on the HUD to match the correct score.
+        score_Text.text = currentScore.ToString();
+    }
+
+    // Update the HUD's "Health Bar" section.
+    private void HUD_Update_HealthBar()
+    {
+        // Update the health bar to match the player's health.
+        healthBar_Slider.value = maxHealth / currentHealth;
     }
     #endregion Dev-Defined Methods
 }

@@ -1,0 +1,2 @@
+C:\Users\Vyndi\Documents\Doc-repos\JThornton_UATanks (GPE104)\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
+C:\Users\Vyndi\Documents\Doc-repos\JThornton_UATanks (GPE104)\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache
