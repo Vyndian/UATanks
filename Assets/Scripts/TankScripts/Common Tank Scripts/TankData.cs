@@ -236,12 +236,12 @@ public class TankData : MonoBehaviour {
         // Play audio clip of the tank exploding.
         AudioSource.PlayClipAtPoint(gm.feedback_TankExplosion, gm.audioPoint, gm.volume_SFX);
 
+        // Add to the score of the player that killed this tank.
+        killedBy.ChangeScore(pointsValue);
+
         // If this in an enemy tank,
         if (!isPlayer)
         {
-            // Add to the score of the player that killed this tank.
-            killedBy.ChangeScore(pointsValue);
-
             // Remove this tank from the GM's list of AI tanks.
             gm.ai_tanks.Remove(this);
 
