@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class TankData : MonoBehaviour {
 
@@ -189,7 +190,10 @@ public class TankData : MonoBehaviour {
     // Called every frame.
     public void Update()
     {
-
+        if (playerNumber == 1)
+        {
+            print(currentHealth);
+        }
     }
 
     // Called when this script is being destroyed.
@@ -203,28 +207,34 @@ public class TankData : MonoBehaviour {
     // The tank takes damage equal to the prescribed amount.
     public void TakeDamage(float damage, TankData dealtBy)
     {
-        // Apply the damage.
-        currentHealth -= damage;
-
-        // Update the health bar on the HUD.
-        HUD_Update_HealthBar();
-
-        // If tank is dead,
-        if (currentHealth <= 0)
+        // If this damage would kill the tank,
+        if ((currentHealth - damage) <= 0)
         {
             // then kill the tank.
             Death(dealtBy);
+        }
+        // Else, this damage would not kill the tank.
+        else
+        {
+            // Apply the damage.
+            currentHealth -= damage;
+
+            // Update the health bar on the HUD.
+            HUD_Update_HealthBar();
         }
     }
 
     // The tank repairs/heals by the prescribed amount.
     public void Repair(float healing)
     {
+        print("Repair() called.");
         // Apply the healing/repair.
         currentHealth += healing;
+        print("Healing applied.");
 
         // Ensure the health is not higher than the maximum.
         currentHealth = Mathf.Min(currentHealth, maxHealth);
+        print("Healing clamped.");
 
         // Update the health bar on the HUD.
         HUD_Update_HealthBar();
@@ -233,6 +243,7 @@ public class TankData : MonoBehaviour {
     // Kill the tank.
     public void Death(TankData killedBy)
     {
+        print("Death() called.");
         // Play audio clip of the tank exploding.
         AudioSource.PlayClipAtPoint(gm.feedback_TankExplosion, gm.audioPoint, gm.volume_SFX);
 
@@ -262,9 +273,6 @@ public class TankData : MonoBehaviour {
 
                 // Update the HUD's "Lives Remaining".
                 HUD_Update_LivesRemaining();
-                
-                // Fully heal the player.
-                Repair(maxHealth);
 
                 // Respawn the player in a random spawn point.
                 gm.Player_Respawn(tf);
@@ -362,15 +370,23 @@ public class TankData : MonoBehaviour {
     // Update the HUD's "Score" section.
     private void HUD_Update_Score()
     {
-        // Update the value visible to players on the HUD to match the correct score.
-        score_Text.text = currentScore.ToString();
+        // If this is a player,
+        if (isPlayer)
+        {
+            // Update the value visible to players on the HUD to match the correct score.
+            score_Text.text = currentScore.ToString();
+        }
     }
 
     // Update the HUD's "Health Bar" section.
     private void HUD_Update_HealthBar()
     {
-        // Update the health bar to match the player's health.
-        healthBar_Slider.value = currentHealth / maxHealth;
+        // If this is a player,
+        if (isPlayer)
+        {
+            // Update the health bar to match the player's health.
+            healthBar_Slider.value = currentHealth / maxHealth;
+        }
     }
 
     // Raises the HUD elements by a variable degree.

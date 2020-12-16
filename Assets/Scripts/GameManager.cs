@@ -275,10 +275,11 @@ public class GameManager : MonoBehaviour {
     // Respawn the player in a random player_SpawnPoint, or at the one provided (if provided).
     public void Player_Respawn(Transform player, Player_SpawnPoint spawnPoint = null)
     {
+        print("Player_Respawn() called.");
         // If spawnPoint is null (no specific spawnPoint was provided),
         if (spawnPoint == null)
         {
-            // then determine which spawnPoint to use by determing
+            // then determine which spawnPoint to use by determining
             // a random index for the list of player_SpawnPoints.
             int randIndex = UnityEngine.Random.Range(0, player_SpawnPoints.Count);
 
