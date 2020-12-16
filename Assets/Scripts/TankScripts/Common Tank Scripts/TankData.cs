@@ -190,10 +190,7 @@ public class TankData : MonoBehaviour {
     // Called every frame.
     public void Update()
     {
-        if (playerNumber == 1)
-        {
-            print(currentHealth);
-        }
+
     }
 
     // Called when this script is being destroyed.

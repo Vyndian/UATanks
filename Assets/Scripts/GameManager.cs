@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
@@ -21,6 +22,9 @@ public class GameManager : MonoBehaviour {
 
     // References the GameOver gameObject.
     public GameObject gameOver;
+
+    // References the PauseMenu gameObject.
+    public GameObject pauseMenu;
 
 
     [Header("Procedural Generation")]
@@ -212,7 +216,12 @@ public class GameManager : MonoBehaviour {
     // Called every frame.
     public void Update()
     {
-
+        // If the player just pressed down the escape key,
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            // then toggle pause.
+            TogglePause();
+        }
     }
 
     // Called when this Monobehavior is being destroyed.
@@ -486,6 +495,73 @@ public class GameManager : MonoBehaviour {
     {
         // Play the feedback for pointer up.
         AudioSource.PlayClipAtPoint(feedback_PointerUp, audioPoint, (float)(volume_SFX * 0.75));
+    }
+
+    // Toggles whether or not the game is paused.
+    public void TogglePause()
+    {
+        // If the actual game is currently running,
+        if (game.activeSelf)
+        {
+            // and if the game is not already paused,
+            if (Time.timeScale == 1)
+            {
+                // then pause the game.
+                PauseGame();
+            }
+            // Else, the game is active AND already paused.
+            else
+            {
+                // Resume the game.
+                ResumeGame();
+            }
+        }
+        // Else, the game is not running.
+        else
+        {
+            // Do nothing.
+        }
+    }
+
+    // Pauses the game.
+    private void PauseGame()
+    {
+        // Activate the pause menu.
+        pauseMenu.SetActive(true);
+
+        // Pauses the game by setting the time scale to 0.
+        Time.timeScale = 0;
+    }
+
+    // Resumes the game.
+    private void ResumeGame()
+    {
+        // If the pause menu is active,
+        if (pauseMenu.activeSelf)
+        {
+            // then deactivate it.
+            pauseMenu.SetActive(false);
+        }
+
+        // Resume the game by setting the time scale back to 1.
+        Time.timeScale = 1;
+    }
+
+    // Restarts the game by reloading the Main scene.
+    public void RestartGame()
+    {
+        // Ensure the time scale is at 1.
+        Time.timeScale = 1;
+
+        // Restart the game by reloading the Main scene.
+        SceneManager.LoadScene("Main");
+    }
+
+    // Quits the game.
+    public void QuitGame()
+    {
+        // Ends the application.
+        Application.Quit();
     }
     #endregion Dev-Defined Methods
 }

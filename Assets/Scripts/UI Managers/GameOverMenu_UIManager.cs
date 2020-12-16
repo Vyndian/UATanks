@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 
 public class GameOverMenu_UIManager : MonoBehaviour {
 
@@ -204,8 +203,8 @@ public class GameOverMenu_UIManager : MonoBehaviour {
     // Called when the player clicks on the RestartGame button. Reloads the Main scene completely.
     public void OnClick_RestartGameButton()
     {
-        // Load the Main scene. This will automatically call the OnDestroy method when this script is destroyed.
-        SceneManager.LoadScene("Main");
+        // Tell the gm to restart the game.
+        gm.RestartGame();        
     }
 
     // Saves the new high scores in PlayerPrefs, and deletes unnecessary keys.

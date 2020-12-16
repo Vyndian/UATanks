@@ -58,6 +58,13 @@ public class StartMenu_UIManager : MonoBehaviour {
         gm.ShowOptionsMenu();
     }
 
+    // Called when the player clicks on the Quit button on the start menu.
+    public void OnClick_QuitButton()
+    {
+        // Tell the gm to quit the program.
+        gm.QuitGame();
+    }
+
     // Applies the player's volume preferences.
     private void ApplyVolumePreferences()
     {

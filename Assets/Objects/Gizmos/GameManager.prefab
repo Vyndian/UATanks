@@ -173,6 +173,7 @@ MonoBehaviour:
   startMenu: {fileID: 0}
   optionsMenu: {fileID: 0}
   gameOver: {fileID: 0}
+  pauseMenu: {fileID: 0}
   numRooms_Expected: 0
   numRooms_Created: 0
   volume_Music: 80
