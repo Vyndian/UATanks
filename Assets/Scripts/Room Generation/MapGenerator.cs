@@ -268,41 +268,49 @@ public class MapGenerator : MonoBehaviour {
         // If the room is in the first (bottom) row,
         if (row == 0)
         {
-            // then open the north door.
-            room.doorNorth.SetActive(false);
+            // and there is at least one more row above it,
+            if (numRows > 1)
+            {
+                // then open the north door.
+                room.doorNorth.SetTrigger("OpenDoor");
+            }
         }
         // Else, if the room is in the last (top) row,
         else if (row == (numRows - 1))
         {
             // then open the south door.
-            room.doorSouth.SetActive(false);
+            room.doorSouth.SetTrigger("OpenDoor");
         }
         // Else, the room is in a middle row.
         else
         {
             // Open both the north and south doors.
-            room.doorNorth.SetActive(false);
-            room.doorSouth.SetActive(false);
+            room.doorNorth.SetTrigger("OpenDoor");
+            room.doorSouth.SetTrigger("OpenDoor");
         }
 
         // If the room is in the first (left-most) column,
         if (column == 0)
         {
-            // then open the east door.
-            room.doorEast.SetActive(false);
+            // and if there is at least one more column to the right of it,
+            if (numColumns > 1)
+            {
+                // then open the east door.
+                room.doorEast.SetTrigger("OpenDoor");
+            }
         }
         // Else, if the room is in the last (right-most) column,
         else if (column == (numColumns - 1))
         {
             // then open the west door.
-            room.doorWest.SetActive(false);
+            room.doorWest.SetTrigger("OpenDoor");
         }
         // Else, the room is in a middle column.
         else
         {
             // Open both the east and west doors.
-            room.doorEast.SetActive(false);
-            room.doorWest.SetActive(false);
+            room.doorEast.SetTrigger("OpenDoor");
+            room.doorWest.SetTrigger("OpenDoor");
         }
     }
 

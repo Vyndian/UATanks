@@ -6,11 +6,11 @@ public class Room : MonoBehaviour {
     #region Fields
     // Public fields --v
 
-    // References to the doors on this room.
-    public GameObject doorNorth;
-    public GameObject doorSouth;
-    public GameObject doorEast;
-    public GameObject doorWest;
+    // References to the Animators on the doors on this room.
+    public Animator doorNorth;
+    public Animator doorSouth;
+    public Animator doorEast;
+    public Animator doorWest;
 
 
     // Serialized private fields --v
