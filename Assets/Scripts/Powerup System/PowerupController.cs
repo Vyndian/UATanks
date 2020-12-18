@@ -7,9 +7,12 @@ using UnityEngine;
 public class PowerupController : MonoBehaviour {
 
     #region Fields
+    [Header("Gears")]
     // Keeps track of each Powerup on this tank.
     public List<Powerup> powerups;
 
+
+    [Header("Object & Component References")]
     // Reference to the TankData on this tank.
     [SerializeField] private TankData data;
     #endregion Fields

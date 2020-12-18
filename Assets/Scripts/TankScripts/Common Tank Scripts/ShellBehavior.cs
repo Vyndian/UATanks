@@ -3,43 +3,37 @@
 public class ShellBehavior : MonoBehaviour {
 
     #region Fields
-    // Public fields --v
-
+    [Header("Levers")]
     // The amount of damage dealt by this shell. Set immediately after instantiation by the tank that fired it.
     // Defaulted to 10 just in case.
     public float damage = 10f;
 
-    // The TankData of the tank that fired this shell.
-    public TankData firedBy;
-
     // The amount of time before a shell destroys itself (even if it hits nothing at all).
     public float maxLifetime = 1.5f;
 
-    // Serialized private fields --v
 
-    // Private fields --v
-
+    [Header("Gears")]
     // The time at which the shell will self-destruct if it does not hit anything. Determined at Start().
     private float timeToSelfDestruct;
 
+
+    [Header("Object & Component References")]
     // References the GM.
     private GameManager gm;
 
-    // Reference to this gameObject's Tranform.
-    private Transform tf;
-
+    // The TankData of the tank that fired this shell.
+    public TankData firedBy;
     #endregion Fields
 
     #region Unity Methods
     // Called before Start() runs.
     public void Awake()
     {
-        // Get and save a reference to this gameObject's Transform.
-        tf = transform;
+        
     }
 
     // Called before the first frame.
-    void Start()
+    public void Start()
     {
         // Set variables --v
 
@@ -51,7 +45,7 @@ public class ShellBehavior : MonoBehaviour {
     }
 
     // Called every frame.
-    void Update()
+    public void Update()
     {
         // If the shell has run out of lifetime,
         if (Time.time >= timeToSelfDestruct)

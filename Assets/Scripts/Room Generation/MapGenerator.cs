@@ -5,45 +5,30 @@ using System;
 public class MapGenerator : MonoBehaviour {
 
     #region Fields
-    // Public fields --v
+    // Enum definition for the different methods available for seeding Random for map generation.
+    public enum RandomSeedMethod { DateTime, Manual, MapOfTheDay };
 
 
-    // Serialized private fields --v
-
-    // All of the Room prefabs that the game can use to generate the game map.
-    [SerializeField] private GameObject[] gridPrefabs;
-
+    [Header("Levers")]
     // The number of rows of rooms that should be generated.
     [SerializeField] private int numRows;
 
     // The number of columns of rooms that should be generated.
     [SerializeField] private int numColumns;
 
-    // The seed that will be used for RNGs if useSeed is true.
-    [SerializeField] private int mapSeed_Manual = 123;
-
-    // Enum for which method should be used for seeding Random.
-    public RandomSeedMethod randomSeedMethod = RandomSeedMethod.DateTime;
-
-
-    [Header("Component variables")]
-    // The Transform on this gameObject.
-    [SerializeField] private Transform tf;
-
-
-    // Private fields --v
-
-    // Enum definition for the different methods available for seeding Random for map generation.
-    public enum RandomSeedMethod { DateTime, Manual, MapOfTheDay };
-
-    // A reference to the GameManager.
-    private GameManager gm;
-
     // The hieght of the room prefabs.
     private float roomHeight = 50.0f;
 
     // The width of the room prefabs.
     private float roomWidth = 50.0f;
+
+
+    [Header("Gears")]
+    // The seed that will be used for RNGs if useSeed is true.
+    [SerializeField] private int mapSeed_Manual = 123;
+
+    // Enum for which method should be used for seeding Random.
+    public RandomSeedMethod randomSeedMethod = RandomSeedMethod.DateTime;
 
     // A randomized list of all the elements in the array of roomPrefabs.
     // Randomizing the array into a list, and then stepping through that new in order, is a way of
@@ -56,6 +41,17 @@ public class MapGenerator : MonoBehaviour {
 
     // The map seed to use for the "MapOfTheDay".
     private int mapSeed_MapOfTheDay;
+
+
+    [Header("Object & Component variables")]
+    // The Transform on this gameObject.
+    [SerializeField] private Transform tf;
+
+    // All of the Room prefabs that the game can use to generate the game map.
+    [SerializeField] private GameObject[] gridPrefabs;
+
+    // A reference to the GameManager.
+    private GameManager gm;
     #endregion Fields
 
 

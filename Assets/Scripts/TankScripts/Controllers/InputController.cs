@@ -3,16 +3,16 @@
 public class InputController : MonoBehaviour {
 
     #region Fields
-    // Public fields --v
-
     // The Enum definition for input types.
     public enum InputScheme { WASD, arrowKeys };
 
+
+    [Header("Gears")]
     // An instance of InputScheme for this InputController component.
     public InputScheme input = InputScheme.WASD;
 
-    // Serialized private fields --v
 
+    [Header("Object & Component References")]
     // The TankMotor on this gameObject.
     [SerializeField] private TankMotor motor;
 
@@ -21,10 +21,8 @@ public class InputController : MonoBehaviour {
 
     // The TankCannon on this gameObject.
     [SerializeField] private TankCannon cannon;
-
-    // Private fields --v
-
     #endregion Fields
+
 
     #region Unity Methods
     // Performed before Start.
@@ -140,6 +138,7 @@ public class InputController : MonoBehaviour {
         }
     }
     #endregion Unity Methods
+
 
     #region Dev-Defined Methods
 

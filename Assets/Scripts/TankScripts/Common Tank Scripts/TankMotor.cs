@@ -10,14 +10,13 @@ using System.Collections.Generic;
 public class TankMotor : MonoBehaviour {
 
     #region Fields
-    // Public fields --v
+    [Header("Gears")]
+    // References the ai_Tanks on the GM.
+    private List<TankData> enemies;
 
-    // Serialized private fields --v
-
+    [Header("Object & Component References")]
     // References the transform on the cannon of this tank.
     [SerializeField] private Transform cannon_tf;
-
-    // Private fields --v
 
     // References the CharacterMovement component.
     private CharacterController characterController;
@@ -27,9 +26,6 @@ public class TankMotor : MonoBehaviour {
 
     // References the TankData on this tank.
     private TankData data;
-
-    // References the ai_Tanks on the GM.
-    private List<TankData> enemies;
     #endregion Fields
 
 

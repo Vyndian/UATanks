@@ -4,6 +4,7 @@
 public class Powerup {
 
     #region Fields
+	[Header("Levers")]
     // Can modify the tank's speed.
     public float speedModifier;
 

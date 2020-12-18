@@ -3,11 +3,12 @@
 public class TankCannon : MonoBehaviour {
 
     #region Fields
-    // Public fields --v
+    [Header("Levers")]
+    // The AudioClip file to be played when the cannon fires a shell.
+    [SerializeField] private AudioClip feedback_ShellFiring;
 
 
-    // Serialized private fields --v
-
+    [Header("Object & Component References")]
     // References the TankData on this tank object.
     [SerializeField] private TankData data;
 
@@ -16,12 +17,6 @@ public class TankCannon : MonoBehaviour {
 
     // References the transform on the projectile spawn point beloning to the cannon's barrel.
     [SerializeField] private Transform projSpawnPnt_tf;
-
-    // The AudioClip file to be played when the cannon fires a shell.
-    [SerializeField] private AudioClip feedback_ShellFiring;
-
-
-    // Private fields --v
 
     // Reference to the GM.
     private GameManager gm;

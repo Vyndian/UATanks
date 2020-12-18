@@ -3,22 +3,13 @@
 public class AI_SpawnPoint : MonoBehaviour {
 
     #region Fields
-    // Public fields --v
-
+    [Header("Object & Component variables")]
     // The waypoints that should be set to the spawned tank's waypoints variable.
     // The AI_Controller sets its own list from this array.
     public Transform[] waypoints;
 
-
-    // Serialized private fields --v
-
-
-    [Header("Component variables")]
     // The Tranform on this gameObject.
     [SerializeField] private Transform tf;
-
-
-    // Private fields --v
 
     // References the GM.
     private GameManager gm;

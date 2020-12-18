@@ -3,34 +3,20 @@
 public class PowerupSpawner : MonoBehaviour {
 
     #region Fields
-    // Public fields --v
+    // Definition for an enum describing the choices for how Pickups might be chosen when spawning them.
+    private enum SpawnMethod { Random, Sequential, PingPing, AlwaysFirst };
 
 
-    // Serialized private fields --v
-
-    [Tooltip("The next Pickup chosen can be chosen from the array completely randomly, or go in order (0-1-2-0-1-2)," +
-        "or PingPong (0-1-2-1-0), or always choose the first in the array.")]
-    // Enum for the three choices of how pickups may be chosen.
-    [SerializeField] private SpawnMethod spawnMethod = SpawnMethod.Random;
-
-    // An array of all possible Pickup prefabs that this spawner can spawn.
-    // Putting the same prefab into the array multiple times increases its chances of being randomly chosen.
-    [SerializeField] private GameObject[] pickupPrefabs;
-
+    [Header("Levers")]
     // The delay between when one pickup is picked up and another pickup is spawned.
     [SerializeField] private float spawnDelay = 7.0f;
 
 
-
-    [Header("Component variables")]
-    // The Transform of this gameObject.
-    [SerializeField] private Transform tf;
-
-
-    // Private fields --v
-
-    // Definition for an enum describing the choices for how Pickups might be chosen when spawning them.
-    private enum SpawnMethod { Random, Sequential, PingPing, AlwaysFirst };
+    [Header("Gears")]
+    // Enum for the three choices of how pickups may be chosen.
+    [SerializeField, Tooltip("The next Pickup chosen can be chosen from the array completely randomly," +
+        "or go in order (0-1-2-0-1-2), or PingPong (0-1-2-1-0), or always choose the first in the array.")]
+        private SpawnMethod spawnMethod = SpawnMethod.Random;
 
     // The next time that a Pickup is allowed to spawn.
     private float nextSpawnTime;
@@ -43,6 +29,17 @@ public class PowerupSpawner : MonoBehaviour {
 
     // The number to add to nextIndex for DetermineNextIndex. Flips occasionaly if using PingPong method.
     private int addTo_NextIndex = 1;
+
+
+    [Header("Object & Component References")]
+    // The Transform of this gameObject.
+    [SerializeField] private Transform tf;
+
+
+    [Header("Prefab References")]
+    // An array of all possible Pickup prefabs that this spawner can spawn.
+    // Putting the same prefab into the array multiple times increases its chances of being randomly chosen.
+    [SerializeField] private GameObject[] pickupPrefabs;
     #endregion Fields
 
 

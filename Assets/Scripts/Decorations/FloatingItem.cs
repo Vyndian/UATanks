@@ -3,11 +3,7 @@
 public class FloatingItem : MonoBehaviour {
 
     #region Fields
-    // Public fields --v
-
-
-    // Serialized private fields --v
-
+    [Header("Levers")]
     // The duration that the item moves up or down before switching directions.
     [SerializeField] private float duration = 2.0f;
 
@@ -18,18 +14,17 @@ public class FloatingItem : MonoBehaviour {
     [SerializeField] private bool startFloatingDownwards = false;
 
 
-    [Header("Component Variables")]
-    // The Transform on this gameObject.
-    [SerializeField] private Transform tf;
-
-
-    // Private fields --v
-
+    [Header("Gears")]
     // The time that the item last switched the direction is was floating in.
     private float timeLastSwitched = 0.0f;
 
     // The direction the item is currently floating. 1 for up, -1 for down.
     private int direction = 1;
+
+
+    [Header("Component Variables")]
+    // The Transform on this gameObject.
+    [SerializeField] private Transform tf;
     #endregion Fields
 
 

@@ -1,20 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 public class TankData : MonoBehaviour {
 
     #region Fields
-    // Reference for the GM.
-    private GameManager gm;
-
-    // Whether or not this is a player tank or AI. Initialized as false as default.
-    [HideInInspector] public bool isPlayer = false;
-
-    // The player number of this player (the 1 or 2 in Player, Player2).
-    [HideInInspector] public int playerNumber;
-
-
     [Header("Score")]
     // This player's current score.
     public int currentScore = 0;
@@ -113,12 +102,25 @@ public class TankData : MonoBehaviour {
     [SerializeField] private Text livesRemaining_Text;
 
 
-    [Header("Misc")]
+    [Header("Camera")]
     // The Camera attached to this player tank.
     public Camera tankCamera;
 
+
+    [Header("Metagame Info")]
+    // Whether or not this is a player tank or AI. Initialized as false as default.
+    [HideInInspector] public bool isPlayer = false;
+
+    // The player number of this player (the 1 or 2 in Player, Player2).
+    [HideInInspector] public int playerNumber;
+
+
+    [Header("Other Object & Component References")]
     // The Transform on this gameObject.
     [SerializeField] private Transform tf;
+
+    // Reference for the GM.
+    private GameManager gm;
     #endregion Fields
 
     #region Unity Methods

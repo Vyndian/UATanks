@@ -5,25 +5,22 @@
 public class Pickup : MonoBehaviour {
 
     #region Fields
-    // Public fields --v
-
-
-    // Serialized private fields --v
-
-    // The audio clip that will be played when the Powerup is picked up.
-    [SerializeField] private AudioClip feedback;
-
+    [Header("Gears")]
     // The Powerup that is to be picked up.
     [SerializeField] private Powerup powerup;
 
+
+    [Header("Object & Component References")]
     // The Transform on this gameObject.
     [SerializeField] private Transform tf;
 
-
-    // Private fields --v
-
     // Reference to the GM.
     private GameManager gm;
+
+
+    [Header("Prefab References")]
+    // The audio clip that will be played when the Powerup is picked up.
+    [SerializeField] private AudioClip feedback;
     #endregion Fields
 
 

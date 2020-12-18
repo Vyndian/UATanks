@@ -1,22 +1,14 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class Room : MonoBehaviour {
 
     #region Fields
-    // Public fields --v
-
+    [Header("Object & Component References")]
     // References to the Animators on the doors on this room.
     public Animator doorNorth;
     public Animator doorSouth;
     public Animator doorEast;
     public Animator doorWest;
-
-
-    // Serialized private fields --v
-
-
-    // Private fields --v
     #endregion Fields
 
 

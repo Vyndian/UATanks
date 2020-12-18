@@ -3,19 +3,14 @@
 public class RotatingItem : MonoBehaviour {
 
     #region Fields
-    // Public fields --v
-
-
-    // Serialized private fields --v
-
-    // The Transform of this gameObject.
-    [SerializeField] private Transform tf;
-
+    [Header("Levers")]
     // The Vector3 to rotate this item by each second.
     [SerializeField] private Vector3 spin = new Vector3(50, 35, 50);
 
 
-    // Private fields --v
+    [Header("Object & Component References")]
+    // The Transform of this gameObject.
+    [SerializeField] private Transform tf;
     #endregion Fields
 
 

@@ -166,7 +166,7 @@ public class AI_Controller : MonoBehaviour {
     private float chasing_CloseEnough_Squared;
 
 
-    [Header("Guard & Caravan Info")]
+    [Header("Guard & Caravan variables")]
     // The actual enum variable set by designers for how this tank should traverse the waypoints.
     public LoopType loopType = LoopType.Loop;
 
@@ -234,7 +234,7 @@ public class AI_Controller : MonoBehaviour {
     public float hiding_UndamagedHealth;
 
 
-    [Header("Component & Object References")]
+    [Header("Object & Component References")]
     // The transform on this gameObject.
     [SerializeField] private Transform tf;
 
@@ -263,6 +263,7 @@ public class AI_Controller : MonoBehaviour {
     private List<TankData> playerList;
 
     #endregion Fields
+
 
     #region Unity Methods
     // Performed before Start.
@@ -412,6 +413,7 @@ public class AI_Controller : MonoBehaviour {
         }
     }
     #endregion Unity Methods
+
 
     #region Dev-Defined Methods
     // Changes the Personality of the tank and makes any necessary adjustments.

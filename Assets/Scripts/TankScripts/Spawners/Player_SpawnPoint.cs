@@ -3,22 +3,13 @@
 public class Player_SpawnPoint : MonoBehaviour {
 
     #region Fields
-    // Public fields --v
-
-
-    // Serialized private fields --v
+    [Header("Object & Component variables")]
+    // The Tranform on this gameObject.
+    [SerializeField] private Transform tf;
 
     // The playerTank prefab that this spawn point will use to instantiate the player if this
     // spawn point is chosen to be the player's original spawn point.
     [SerializeField] private GameObject playerPrefab;
-
-
-    [Header("Component variables")]
-    // The Tranform on this gameObject.
-    [SerializeField] private Transform tf;
-
-
-    // Private fields --v
 
     // A reference to the GM.
     private GameManager gm;

@@ -5,23 +5,28 @@ using System.Collections.Generic;
 public class GameOverMenu_UIManager : MonoBehaviour {
 
     #region Fields
-    // Public fields --v
-
-
-    // Serialized private fields --v
-
+    [Header("Levers")]
     // Accessing High Scores through PlayerPrefs will require dynamc keys.
     // This string is the base for the name of the keys used to gather those scores.
     [SerializeField] private string keyBase_HighScores = "HIGH_SCORES_";
 
-    // List of high scores achieved on this program.
-    [SerializeField] private List<int> highScores;
-
     // How many of the highScores should be shown on the GameOver screen.
     [SerializeField] private int numScoresToShow = 6;
 
+
+    [Header("Gears")]
+    // List of high scores achieved on this program.
+    [SerializeField] private List<int> highScores;
+
+    // This int is used when constructing the dynamic keys for accessing the High Scores.
+    // It is increased every time the next score needs to be accessed (or set, if setting).
+    // It should be reset to 0 once completed with either getting or setting.
+    private int keyIndex_HighScores = 0;
+
+
+    [Header("Object & Component References")]
     // References the parent gameObject for the Player2 "this Game" score and label.
-    [SerializeField] private GameObject thisGame_Player2;
+    [SerializeField] private GameObject section_ThisGame_Player2;
 
     // References the Player1 score Text.
     [SerializeField] private Text player1Score_Text;
@@ -31,14 +36,6 @@ public class GameOverMenu_UIManager : MonoBehaviour {
 
     // References the Text showing the players' scores in the high score list.
     [SerializeField] private Text highScores_Text;
-
-
-    // Private fields --v
-
-    // This int is used when constructing the dynamic keys for accessing the High Scores.
-    // It is increased every time the next score needs to be accessed (or set, if setting).
-    // It should be reset to 0 once completed with either getting or setting.
-    private int keyIndex_HighScores = 0;
 
     // References the GM.
     private GameManager gm;
@@ -103,7 +100,7 @@ public class GameOverMenu_UIManager : MonoBehaviour {
         if (gm.numPlayers == 2)
         {
             // then activate the Player2 section of the "This Game" area.
-            thisGame_Player2.SetActive(true);
+            section_ThisGame_Player2.SetActive(true);
 
             // Set the Text for the Player2 score for this game.
             player2Score_Text.text = gm.score_Player2.ToString();
@@ -112,7 +109,7 @@ public class GameOverMenu_UIManager : MonoBehaviour {
         else
         {
             // Deactivate the Player2 section of the "This Game" area.
-            thisGame_Player2.SetActive(false);
+            section_ThisGame_Player2.SetActive(false);
         }
     }
 
