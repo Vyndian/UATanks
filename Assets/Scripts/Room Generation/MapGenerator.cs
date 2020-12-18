@@ -5,10 +5,6 @@ using System;
 public class MapGenerator : MonoBehaviour {
 
     #region Fields
-    // Enum definition for the different methods available for seeding Random for map generation.
-    public enum RandomSeedMethod { DateTime, Manual, MapOfTheDay };
-
-
     [Header("Levers")]
     // The number of rows of rooms that should be generated.
     [SerializeField] private int numRows;
@@ -24,12 +20,6 @@ public class MapGenerator : MonoBehaviour {
 
 
     [Header("Gears")]
-    // The seed that will be used for RNGs if useSeed is true.
-    [SerializeField] private int mapSeed_Manual = 123;
-
-    // Enum for which method should be used for seeding Random.
-    public RandomSeedMethod randomSeedMethod = RandomSeedMethod.DateTime;
-
     // A randomized list of all the elements in the array of roomPrefabs.
     // Randomizing the array into a list, and then stepping through that new in order, is a way of
     // choosing a random element of the array every time, but never getting the same one twice.
@@ -38,9 +28,6 @@ public class MapGenerator : MonoBehaviour {
 
     // The current index of the randomized grid prefab that is to be used.
     private int currentIndex = 0;
-
-    // The map seed to use for the "MapOfTheDay".
-    private int mapSeed_MapOfTheDay;
 
 
     [Header("Object & Component variables")]
@@ -70,9 +57,6 @@ public class MapGenerator : MonoBehaviour {
             // then set it.
             tf = transform;
         }
-
-        // Initialize the mapSeed_MapOfTheDay.
-        mapSeed_MapOfTheDay = DateToInt(DateTime.Now.Date);
     }
 
     // Called before the first frame.
@@ -89,22 +73,22 @@ public class MapGenerator : MonoBehaviour {
         gm.numRooms_Expected = numColumns * numRows;
 
         // If the randomSeedMethod is set to DateTime,
-        if (randomSeedMethod == RandomSeedMethod.DateTime)
+        if (gm.randomSeedMethod == GameManager.RandomSeedMethod.DateTime)
         {
             // then set the random seed using the current DateTime.
             UnityEngine.Random.InitState(DateToInt(DateTime.Now));
         }
         // Else, if the randomSeedMethod is set to Manual,
-        else if (randomSeedMethod == RandomSeedMethod.Manual)
+        else if (gm.randomSeedMethod == GameManager.RandomSeedMethod.Manual)
         {
             // then set the random seed using the manually-entered mapSeed.
-            UnityEngine.Random.InitState(mapSeed_Manual);
+            UnityEngine.Random.InitState(gm.manualSeed_Value);
         }
         // Else, the randomSeedMethod is set to MapOfTheDay.
-        else if (randomSeedMethod == RandomSeedMethod.MapOfTheDay)
+        else if (gm.randomSeedMethod == GameManager.RandomSeedMethod.MapOfTheDay)
         {
             // Set the random seed using the manually-entered mapSeed.
-            UnityEngine.Random.InitState(mapSeed_MapOfTheDay);
+            UnityEngine.Random.InitState(DateToInt(DateTime.Today));
         }
 
         // Initialize the list of randomized grid prefabs.

@@ -55,26 +55,18 @@ public class OptionsMenu_UIManager : MonoBehaviour {
         gm = GameManager.instance;
 
         // Apply the player preferences to the menu icons.
-        // If the PlayerPreferences has a key for music volume,
-        if (PlayerPrefs.HasKey(gm.key_MusicVolume))
-        {
-            // then set the slider value to match.
-            musicSlider.value = PlayerPrefs.GetFloat(gm.key_MusicVolume);
-        }
+        // Set the music volume slider.
+        musicSlider.value = gm.volume_Music;
 
-        // If the PlayerPreferences has a key for SFX volume,
-        if (PlayerPrefs.HasKey(gm.key_SFXVolume))
-        {
-            // then set the slider value to match.
-            sfxSlider.value = PlayerPrefs.GetFloat(gm.key_SFXVolume);
-        }
+        // Set the SFX volume slider.
+        sfxSlider.value = gm.volume_SFX;
 
-        // If the PlayerPreferences has a key for number of players,
-        if (PlayerPrefs.HasKey(gm.key_NumPlayers))
-        {
-            // then set the dropdown value to match.
-            numPlayers_Dropdown.value = PlayerPrefs.GetInt(gm.key_NumPlayers) - 1;
-        }
+        // Set the number of players dropdown value.
+        // NOTE: GM stores the actual number of players. The dropdown value is 1 less than the actual amount.
+        numPlayers_Dropdown.value = gm.numPlayers - 1;
+
+        // Set the Random Seed method dropdown value.
+        randomSeedMethod_Dropdown.value = (int)gm.randomSeedMethod;
     }
 
     // Called every frame.
@@ -119,6 +111,7 @@ public class OptionsMenu_UIManager : MonoBehaviour {
     public void OnDropdownValueChanged_NumPlayers()
     {
         // Update the value.
+        // NOTE: The GM stores the actual number of players (1 or 2). The dropdown starts the count from 0.
         gm.numPlayers = numPlayers_Dropdown.value + 1;
     }
 
@@ -130,19 +123,37 @@ public class OptionsMenu_UIManager : MonoBehaviour {
         {
             // In the case of the value being 0 (Random, meaning DateTime),
             case 0:
+                // then deactivate the manual input field.
                 manualSeed_InputField.gameObject.SetActive(false);
+
+                // Tell the GM the new value.
+                gm.randomSeedMethod = GameManager.RandomSeedMethod.DateTime;
+                print((int)(GameManager.RandomSeedMethod.DateTime));
+                print((int)gm.randomSeedMethod);
                 break;
 
 
             // In the case of the value being 1 (Map of the Day),
             case 1:
+                // then deactivate the manual input field.
                 manualSeed_InputField.gameObject.SetActive(false);
+
+                // Tell the GM the new value.
+                gm.randomSeedMethod = GameManager.RandomSeedMethod.MapOfTheDay;
+                print((int)(GameManager.RandomSeedMethod.MapOfTheDay));
+                print((int)gm.randomSeedMethod);
                 break;
 
 
             // In the case of the value being 2 (Manual),
             case 2:
+                // then activate the manual input field.
                 manualSeed_InputField.gameObject.SetActive(true);
+
+                // Tell the GM the new value.
+                gm.randomSeedMethod = GameManager.RandomSeedMethod.Manual;
+                print((int)(GameManager.RandomSeedMethod.Manual));
+                print((int)gm.randomSeedMethod);
                 break;
         }   
     }

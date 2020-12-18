@@ -30,9 +30,6 @@ public class StartMenu_UIManager : MonoBehaviour {
 
         // Get a reference to the GM.
         gm = GameManager.instance;
-
-        // Set the music and SFX volumes to the player's preferences.
-        ApplyVolumePreferences();
     }
 
     // Called every frame.
@@ -63,30 +60,6 @@ public class StartMenu_UIManager : MonoBehaviour {
     {
         // Tell the gm to quit the program.
         gm.QuitGame();
-    }
-
-    // Applies the player's volume preferences.
-    private void ApplyVolumePreferences()
-    {
-        // If there is a preference saved for music volume,
-        if (PlayerPrefs.HasKey(gm.key_MusicVolume))
-        {
-            // then get that value.
-            float musicVolume = PlayerPrefs.GetFloat(gm.key_MusicVolume);
-
-            // Set the music volume to that value.
-            gm.main_AudioSource.volume = musicVolume;
-
-            // Set the GM's music volume accordingly.
-            gm.volume_Music = musicVolume;
-        }
-
-        // If there is a preference saved for SFX volume,
-        if (PlayerPrefs.HasKey(gm.key_SFXVolume))
-        {
-            // then set the GM's SFX volume accordingly.
-            gm.volume_SFX = PlayerPrefs.GetFloat(gm.key_SFXVolume);
-        }
     }
     #endregion Dev-Defined Methods
 }

@@ -5,6 +5,10 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour {
 
     #region Fields
+    // Enum definition for the different methods available for seeding Random for map generation.
+    public enum RandomSeedMethod { DateTime, MapOfTheDay, Manual };
+
+
     [Header("Singleton")]
     // The single instance of GameManager allowed.
     public static GameManager instance;
@@ -50,7 +54,7 @@ public class GameManager : MonoBehaviour {
     public int numPlayers = 1;
 
     // The current value for which method should be used to determine the seed for Random.
-    public MapGenerator.RandomSeedMethod randomSeedMethod = MapGenerator.RandomSeedMethod.DateTime;
+    public RandomSeedMethod randomSeedMethod = RandomSeedMethod.DateTime;
 
     // The current value for the random seed that was manually entered by the player.
     public int manualSeed_Value;
@@ -113,8 +117,6 @@ public class GameManager : MonoBehaviour {
     public AudioSource main_AudioSource;
 
 
-
-
     [Header("Player Preference Keys")]
     // The key used to access the PlayerPreferences for music volume.
     public string key_MusicVolume = "MUSIC_VOLUME";
@@ -124,6 +126,9 @@ public class GameManager : MonoBehaviour {
 
     // The key used to access the PlayerPreferences for the number of players.
     public string key_NumPlayers = "NUM_PLAYERS";
+
+    // The key used to access the PlayerPrefereences for the Random Generation method.
+    public string key_RandomSeedMethod = "RANDOM_SEED_METHOD";
 
 
     [Header("Score")]
@@ -191,27 +196,8 @@ public class GameManager : MonoBehaviour {
             ChangeMainAudio(musicClip_StartMenu, volume_Music);
         }
 
-        // Apply the player's preferences.
-        // If there is currently a key for music volume,
-        if (PlayerPrefs.HasKey(key_MusicVolume))
-        {
-            // then set apply that preference.
-            volume_Music = PlayerPrefs.GetFloat(key_MusicVolume);
-        }
-
-        // If there is currently a key for SFX volume,
-        if (PlayerPrefs.HasKey(key_SFXVolume))
-        {
-            // then set apply that preference.
-            volume_SFX = PlayerPrefs.GetFloat(key_SFXVolume);
-        }
-
-        // If there is currently a key for number of players,
-        if (PlayerPrefs.HasKey(key_NumPlayers))
-        {
-            // then set apply that preference.
-            numPlayers = PlayerPrefs.GetInt(key_NumPlayers);
-        }
+        // Apply the player's preferences to the appropriate variables on the GM.
+        GetPreferences();
     }
 
     // Called every frame.
@@ -454,9 +440,46 @@ public class GameManager : MonoBehaviour {
         ChangeMainAudio(musicClip_GameOver, volume_Music);
     }
 
+    // Gets the preferences and sets them to the appropriate variables.
+    public void GetPreferences()
+    {
+        // If there is currently a key for music volume,
+        if (PlayerPrefs.HasKey(key_MusicVolume))
+        {
+            // then set apply that preference.
+            volume_Music = PlayerPrefs.GetFloat(key_MusicVolume);
+
+            // Apply the change to the main audio.
+            main_AudioSource.volume = volume_Music;
+        }
+
+        // If there is currently a key for SFX volume,
+        if (PlayerPrefs.HasKey(key_SFXVolume))
+        {
+            // then set apply that preference.
+            volume_SFX = PlayerPrefs.GetFloat(key_SFXVolume);
+        }
+
+        // If there is currently a key for number of players,
+        if (PlayerPrefs.HasKey(key_NumPlayers))
+        {
+            // then set apply that preference.
+            numPlayers = PlayerPrefs.GetInt(key_NumPlayers);
+        }
+
+        // If there is currently a key for the Random Generation Method,
+        if (PlayerPrefs.HasKey(key_RandomSeedMethod))
+        {
+            print("Getting RSG method: " + (int)(RandomSeedMethod)(PlayerPrefs.GetInt(key_RandomSeedMethod)));
+            // then set apply that preference.
+            randomSeedMethod = (RandomSeedMethod)(PlayerPrefs.GetInt(key_RandomSeedMethod));
+        }
+    }
+
     // Saves the current settings into player preferences.
     public void SavePreferences()
     {
+        print("Saving RSG method: " + (int)randomSeedMethod);
         // Save the preference for the music volume.
         PlayerPrefs.SetFloat(key_MusicVolume, volume_Music);
 
@@ -465,6 +488,9 @@ public class GameManager : MonoBehaviour {
 
         // Save the preference for the number of players.
         PlayerPrefs.SetInt(key_NumPlayers, numPlayers);
+
+        // Save the preferences for the Randon Seed Method.
+        PlayerPrefs.SetInt(key_RandomSeedMethod, (int)randomSeedMethod);
     }
 
     // Changes the main camera's audio source's clip and volume.
