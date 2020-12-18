@@ -73,7 +73,7 @@ public class OptionsMenu_UIManager : MonoBehaviour {
         if (PlayerPrefs.HasKey(gm.key_NumPlayers))
         {
             // then set the dropdown value to match.
-            numPlayers_Dropdown.value = PlayerPrefs.GetInt(gm.key_NumPlayers);
+            numPlayers_Dropdown.value = PlayerPrefs.GetInt(gm.key_NumPlayers) - 1;
         }
     }
 

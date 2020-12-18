@@ -418,19 +418,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Scripts
+    - Assets/Art/Sprites/UI Buttons & Icons
   m_ViewMode: 1
   m_StartGridSize: 96
   m_LastFolders:
-  - Assets/Scripts
+  - Assets/Art/Sprites/UI Buttons & Icons
   m_LastFoldersGridSize: 96
   m_LastProjectPath: C:\Users\Vyndi\Documents\Doc-repos\JThornton_UATanks (GPE104)
   m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 670}
-    m_SelectedIDs: e4360000
-    m_LastClickedID: 14052
-    m_ExpandedIDs: 000000002c360000303600003836000042360000683600006e360000783600008236000084360000b0360000cc360000e0360000e436000018370000303700003237000044370000563700005e370000603700007037000088370000de380000e0380000e2380000e438000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 79}
+    m_SelectedIDs: 4e290000
+    m_LastClickedID: 10574
+    m_ExpandedIDs: 00000000c2270000c6270000d4270000e8270000162800001e2800002c28000036280000382800007a280000ca280000e2280000e62800003e290000582900005a2900007429000098290000a6290000a8290000c2290000de2900009038000092380000943800009638000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -458,7 +458,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000002c360000303600003836000042360000683600006e360000783600008236000084360000b0360000cc360000e0360000e436000018370000303700003237000044370000563700005e370000603700007037000088370000de380000e0380000e2380000e4380000
+    m_ExpandedIDs: 00000000c2270000c6270000d4270000e8270000162800001e2800002c28000036280000382800007a280000ca280000e2280000e62800003e290000582900005a2900007429000098290000a6290000a8290000c2290000de29000090380000923800009438000096380000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -576,9 +576,9 @@ MonoBehaviour:
   m_PersistentViewDataDictionary: {fileID: 0}
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: fa050000
+    m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 708fffff748fffffb88fffff6a92fffffeb7ffff02b8ffff36b8ffff18baffffd4e5ffffaae8ffff00000000b8370000d2370000
+    m_ExpandedIDs: 4664ffff4a64ffffa664ffff2068ffffc8f8ffff90fbffff9efbffff00000000f8290000102a0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -629,14 +629,14 @@ MonoBehaviour:
     height: 614
   m_PersistentViewDataDictionary: {fileID: 0}
   m_SceneLighting: 1
-  lastFramingTime: 2336.5929357
+  lastFramingTime: 735.2898981999999
   m_2DMode: 0
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -95.299324, y: -52.53647, z: -48.815063}
+    m_Target: {x: 574.5, y: 298.5, z: 0}
     speed: 2
-    m_Value: {x: -95.299324, y: -52.53647, z: -48.815063}
+    m_Value: {x: 574.5, y: 298.5, z: 0}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -660,19 +660,19 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
   m_Rotation:
-    m_Target: {x: 0.11327994, y: -0.84903944, z: 0.20266056, w: 0.47458228}
+    m_Target: {x: -0.11327994, y: 0.84903944, z: -0.20266056, w: -0.47458228}
     speed: 2
     m_Value: {x: 0.11327994, y: -0.84903944, z: 0.20266056, w: 0.47458228}
   m_Size:
-    m_Target: 122.31071
+    m_Target: 776.1767
     speed: 2
-    m_Value: 122.31071
+    m_Value: 776.1767
   m_Ortho:
     m_Target: 0
     speed: 2
     m_Value: 0
   m_ShowGlobalGrid: 1
-  m_LastSceneViewRotation: {x: -0.08717229, y: 0.89959055, z: -0.21045254, w: -0.3726226}
+  m_LastSceneViewRotation: {x: -0.11327994, y: 0.84903944, z: -0.20266056, w: -0.47458228}
   m_LastSceneViewOrtho: 0
   m_ReplacementShader: {fileID: 0}
   m_ReplacementString: 

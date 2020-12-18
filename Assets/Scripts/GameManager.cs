@@ -146,6 +146,7 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private Vector2 viewportRectSize = new Vector2(1, (float)0.5);
     #endregion Fields
 
+
     #region Unity Methods
     // Runs when created, before Start().
     public void Awake()
@@ -232,6 +233,7 @@ public class GameManager : MonoBehaviour {
     }
     #endregion Unity Methods
 
+
     #region Dev-Defined Methods
     // Spawns the player is a random Player_SpawnPoint.
     public void Players_RandomSpawn()
@@ -284,7 +286,6 @@ public class GameManager : MonoBehaviour {
     // Respawn the player in a random player_SpawnPoint, or at the one provided (if provided).
     public void Player_Respawn(Transform player, Player_SpawnPoint spawnPoint = null)
     {
-        print("Player_Respawn() called.");
         // If spawnPoint is null (no specific spawnPoint was provided),
         if (spawnPoint == null)
         {

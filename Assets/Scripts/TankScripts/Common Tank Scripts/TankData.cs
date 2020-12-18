@@ -226,14 +226,11 @@ public class TankData : MonoBehaviour {
     // The tank repairs/heals by the prescribed amount.
     public void Repair(float healing)
     {
-        print("Repair() called.");
         // Apply the healing/repair.
         currentHealth += healing;
-        print("Healing applied.");
 
         // Ensure the health is not higher than the maximum.
         currentHealth = Mathf.Min(currentHealth, maxHealth);
-        print("Healing clamped.");
 
         // Update the health bar on the HUD.
         HUD_Update_HealthBar();
@@ -242,7 +239,6 @@ public class TankData : MonoBehaviour {
     // Kill the tank.
     public void Death(TankData killedBy)
     {
-        print("Death() called.");
         // Play audio clip of the tank exploding.
         AudioSource.PlayClipAtPoint(gm.feedback_TankExplosion, gm.audioPoint, gm.volume_SFX);
 
@@ -272,6 +268,9 @@ public class TankData : MonoBehaviour {
 
                 // Update the HUD's "Lives Remaining".
                 HUD_Update_LivesRemaining();
+
+                // Fully heal the player.
+                Repair(maxHealth);
 
                 // Respawn the player in a random spawn point.
                 gm.Player_Respawn(tf);
