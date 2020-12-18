@@ -3,7 +3,7 @@
 ### What is this repository for? ###
 
 * This repo houses the code and necessary Unity files to run the UATanks game in the editor. UATanks is a 3D Tank game.
-* Version 4.1
+* Version 5.0
 
 ### How do I get set up? ###
 

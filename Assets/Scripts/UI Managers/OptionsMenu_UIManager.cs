@@ -128,8 +128,6 @@ public class OptionsMenu_UIManager : MonoBehaviour {
 
                 // Tell the GM the new value.
                 gm.randomSeedMethod = GameManager.RandomSeedMethod.DateTime;
-                print((int)(GameManager.RandomSeedMethod.DateTime));
-                print((int)gm.randomSeedMethod);
                 break;
 
 
@@ -140,8 +138,6 @@ public class OptionsMenu_UIManager : MonoBehaviour {
 
                 // Tell the GM the new value.
                 gm.randomSeedMethod = GameManager.RandomSeedMethod.MapOfTheDay;
-                print((int)(GameManager.RandomSeedMethod.MapOfTheDay));
-                print((int)gm.randomSeedMethod);
                 break;
 
 
@@ -152,8 +148,6 @@ public class OptionsMenu_UIManager : MonoBehaviour {
 
                 // Tell the GM the new value.
                 gm.randomSeedMethod = GameManager.RandomSeedMethod.Manual;
-                print((int)(GameManager.RandomSeedMethod.Manual));
-                print((int)gm.randomSeedMethod);
                 break;
         }   
     }

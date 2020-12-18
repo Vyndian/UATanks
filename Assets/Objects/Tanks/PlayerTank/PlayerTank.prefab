@@ -1015,12 +1015,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c42355175453573488dd11e3cc7bff62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  feedback_ShellFiring: {fileID: 8300000, guid: 2fdd6a8dddfba38448cc3b0af6b799bb,
+    type: 3}
   data: {fileID: 114754970967145914}
   prefab_ShellProjectile: {fileID: 1557841587920104, guid: 1920cd07ce4cd954a952b34e329185df,
     type: 2}
   projSpawnPnt_tf: {fileID: 4251502029735230}
-  feedback_ShellFiring: {fileID: 8300000, guid: 2fdd6a8dddfba38448cc3b0af6b799bb,
-    type: 3}
 --- !u!114 &114754970967145914
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1032,8 +1032,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21ec3ff0efaa1eb43b6cd33ad07d82fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPlayer: 0
-  playerNumber: 0
   currentScore: 0
   pointsValue: 100
   moveSpeed_Forward: 3
@@ -1061,6 +1059,8 @@ MonoBehaviour:
   score_Text: {fileID: 114864490267058822}
   livesRemaining_Text: {fileID: 114796198291688784}
   tankCamera: {fileID: 0}
+  isPlayer: 0
+  playerNumber: 0
   tf: {fileID: 0}
 --- !u!114 &114773505523385484
 MonoBehaviour:

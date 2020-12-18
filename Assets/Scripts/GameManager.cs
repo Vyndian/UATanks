@@ -470,7 +470,6 @@ public class GameManager : MonoBehaviour {
         // If there is currently a key for the Random Generation Method,
         if (PlayerPrefs.HasKey(key_RandomSeedMethod))
         {
-            print("Getting RSG method: " + (int)(RandomSeedMethod)(PlayerPrefs.GetInt(key_RandomSeedMethod)));
             // then set apply that preference.
             randomSeedMethod = (RandomSeedMethod)(PlayerPrefs.GetInt(key_RandomSeedMethod));
         }
@@ -479,7 +478,6 @@ public class GameManager : MonoBehaviour {
     // Saves the current settings into player preferences.
     public void SavePreferences()
     {
-        print("Saving RSG method: " + (int)randomSeedMethod);
         // Save the preference for the music volume.
         PlayerPrefs.SetFloat(key_MusicVolume, volume_Music);
 
